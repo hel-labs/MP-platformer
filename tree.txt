@@ -1,0 +1,64 @@
+.
+├── build.gradle
+├── settings.gradle
+├── src
+│   └── main
+│       ├── java
+│       │   └── com
+│       │       └── echoes
+│       │           ├── animation
+│       │           │   ├── AnimationController.java
+│       │           │   ├── Animation.java
+│       │           │   └── SpriteSheet.java
+│       │           ├── battle
+│       │           │   ├── actions
+│       │           │   │   ├── BattleAction.java
+│       │           │   │   ├── FightAction.java
+│       │           │   │   ├── FleeAction.java
+│       │           │   │   ├── SpareAction.java
+│       │           │   │   └── TalkAction.java
+│       │           │   ├── BattleContext.java
+│       │           │   ├── BattleEngine.java
+│       │           │   ├── BattleResult.java
+│       │           │   └── strategies
+│       │           │       ├── DamageStrategy.java
+│       │           │       ├── EscalatingDice.java
+│       │           │       ├── HighVarianceDice.java
+│       │           │       ├── StandardDice.java
+│       │           │       └── WeakSteadyDice.java
+│       │           ├── core
+│       │           │   ├── BattleState.java
+│       │           │   └── BattleTest.java
+│       │           ├── {core,battle
+│       │           │   └── {actions,strategies},entities
+│       │           │       └── enemies,animation,audio,input,ui,exceptions,utils,dialogue,riddle}
+│       │           ├── dialogue
+│       │           │   └── DialogueBox.java
+│       │           ├── entities
+│       │           │   ├── enemies
+│       │           │   │   ├── StoneGolem.java
+│       │           │   │   └── WanderingSlime.java
+│       │           │   ├── Enemy.java
+│       │           │   ├── Entity.java
+│       │           │   └── Player.java
+│       │           ├── exceptions
+│       │           │   ├── BattleException.java
+│       │           │   ├── DataException.java
+│       │           │   ├── EnemyAlreadyDeadException.java
+│       │           │   └── GameException.java
+│       │           ├── input
+│       │           │   └── InputHandler.java
+│       │           ├── riddle
+│       │           │   └── Riddle.java
+│       │           ├── ui
+│       │           │   └── BattleUI.java
+│       │           └── utils
+│       │               └── GameLogger.java
+│       └── resources
+│           ├── audio
+│           │   ├── music
+│           │   └── sfx
+│           └── sprites
+└── tree.txt
+
+27 directories, 35 files
