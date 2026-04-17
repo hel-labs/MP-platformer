@@ -2,13 +2,13 @@ package com.platformer.core;
 
 import java.awt.Graphics;
 
-import audio.AudioPlayer;
-import gamestates.Credits;
-import gamestates.GameOptions;
-import gamestates.Gamestate;
-import gamestates.Menu;
-import gamestates.Playing;
-import ui.AudioOptions;
+import com.platformer.overworld.audio.AudioPlayer;
+//import gamestates.Credits;
+//import gamestates.GameOptions;
+import com.platformer.gamestate.Gamestate;
+import com.platformer.overworld.states.Menu;
+import com.platformer.overworld.states.Playing;
+import com.platformer.overworld.ui.AudioOptions;
 
 public class Game implements Runnable {
 
@@ -64,9 +64,13 @@ public class Game implements Runnable {
 		case MENU -> menu.update();
 		case PLAYING -> playing.update();
 		case OPTIONS -> gameOptions.update();
-        case BATTLE -> battleManager.update();
+        case BATTLE:
+    battleManager.handleInput();
+    battleManager.update(1f / UPS_SET);
+    break;
 		case CREDITS -> credits.update();
 		case QUIT -> System.exit(0);
+		case Game_OVER -> //stub 
 		}
 	}
 
@@ -160,20 +164,18 @@ public class Game implements Runnable {
 	public AudioPlayer getAudioPlayer() {
 		return audioPlayer;
 	}
-//incomplete, snapshot and manager remaining.
-    public void startBattle(Player player, Enemy enemy){
-        BattleContext ctx = new BattleContext(player, enemy);
-        battleManager.init(ctx);
-        setGamestate(BATTLE);
+/public void startBattle(BattleSnapshot snapshot, BattleEnemy enemy) {
+    battleManager.init(snapshot, enemy, inputHandler, this::onBattleEnd);
+    Gamestate.state = Gamestate.BATTLE;
+}
+
+private void onBattleEnd(BattleOutcome outcome) {
+    if (outcome.isWin() || outcome.isFlee()) {
+        playing.applyBattleOutcome(outcome);
+        Gamestate.state = Gamestate.PLAYING;
+    } else {
+        playing.applyBattleOutcome(outcome);
+        Gamestate.state = Gamestate.GAME_OVER;
     }
-//incomplete, result neds a seperste final outcome i think
-    public void onBattleEnd(BattleResult result){
-        if(result.survived){
-            playing.getPlayer().setCurrentHealth(result.remainingHP);
-            setGamestate(Playing);
-        }
-        else{
-            setGamestate(Game_OVER);//gameover not defined
-        }
-    }
+}
 }

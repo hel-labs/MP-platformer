@@ -24,6 +24,11 @@ import com.platformer.overworld.utils.LoadSave;
 
 public class Player extends Entity {
 
+	private int hp     = 80;
+private int maxHp  = 80;
+private int attack = 10;
+private boolean frozen = false;
+
 	private BufferedImage[][] animations;
 	private int playerAction = IDLE;
 
@@ -57,6 +62,16 @@ public class Player extends Entity {
 		currentHealth = maxHealth;
 		walkSpeed = playerSpeed;
 	}
+
+	public BattleSnapshot createSnapshot() {
+    return new BattleSnapshot(hp, maxHp, attack);
+}
+public void applyOutcome(BattleOutcome outcome) {
+    if (outcome.isLose()) hp = Math.max(1, hp / 2);
+    else                  hp = outcome.hpRemaining;
+}
+public void setFrozen(boolean frozen) { this.frozen = frozen; }
+public boolean isFrozen()            { return frozen; }
 
 	private void initAttackBox() {
 		attackBoxOffsetX = (int) (Game.SCALE * 20);
@@ -124,6 +139,7 @@ public class Player extends Entity {
 	}
 
 	private void updatePos() {
+		if(frozen) return;
 		moving = false;
 
 		if (jump) {

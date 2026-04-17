@@ -5,6 +5,7 @@ import com.platformer.battle.engine.BattleResult;
 import com.platformer.battle.talk.TalkOption;
 import com.platformer.battle.actions.BattleAction;
 import com.platformer.battle.dialogue.DIalogueBox;
+import com.platformer.battle.entities.*;
 
 import java.awt.*;
 import java.util.List;

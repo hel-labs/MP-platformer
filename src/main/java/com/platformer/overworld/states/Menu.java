@@ -2,7 +2,7 @@ package com.platformer.overworld.states;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import.java.awt.event.MouseEvent;
+import java.awt.event.MouseEvent;
 import com.platformer.input.InputHandler;
 import com.platformer.core.Game;
 import com.platformer.gamestate.GameState;

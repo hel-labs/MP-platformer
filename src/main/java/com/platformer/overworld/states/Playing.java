@@ -25,6 +25,9 @@ import com.platformer.overworld.utils.LoadSave;
 
 public class Playing {
 
+	//stub
+	private java.awt.Rectangle placeholderEnemyRect = new java.awt.Rectangle(400, 300, 40, 40);
+	private boolean battleTriggered = false;
 	private final Game game;
 	private final InputHandler input;
 	private final Player player;
@@ -106,6 +109,16 @@ public class Playing {
 
 		levelManager.update();
 		player.update();
+		private void detectEnemyContact() {
+    if (battleTriggered) return;
+    java.awt.geom.Rectangle2D.Float phb = player.getHitbox();
+    if (phb.intersects(placeholderEnemyRect)) {
+        battleTriggered = true;
+        player.setFrozen(true);
+        BattleSnapshot snapshot = player.createSnapshot();
+        game.startBattle(snapshot, new PlaceholderEnemy());
+    }
+}
 		checkCloseToBorder();
 
 		enemyManager.update(levelManager.getCurrentLevel().getLevelData());
@@ -118,7 +131,18 @@ public class Playing {
 		if (player.getCurrentHealth() <= 0) {
 			gameOver = true;
 		}
+		detectEnemyContact();
 	}
+	public void applyBattleOutcome(BattleOutcome outcome) {
+    player.applyOutcome(outcome);
+    player.setFrozen(false);
+    battleTriggered = false;
+    if (outcome.isLose()) {
+        // push player back to spawn — reset hitbox position
+        player.getHitbox().x = 200;
+        player.getHitbox().y = 200;
+    }
+}
 	private void handleInput(){
 
 		if (input.isJustPressed(InputHandler.ESCAPE)) {
@@ -333,11 +357,5 @@ public class Playing {
 		return game;
 	}
 
-	//Incomplete implementation for battle transition
-	private void detectEnemyContact(){
-		//Create battle snaps from overowlrd
-		BattleSnapshot snapshot = new BattleSnapshot(player);
-		setGamestate(BATTLE);
-		Game.startBattle(snapshot, enemy);
-	}
+	
 }

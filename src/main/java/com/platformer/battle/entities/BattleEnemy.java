@@ -1,70 +1,42 @@
 package com.platformer.battle.entities;
 
-import com.platformer.overworld.entities.Entity;
 import com.platformer.battle.engine.BattleContext;
-import com.platformer.battle.talk.TalkOption;
 import com.platformer.battle.strategies.DamageStrategy;
+import com.platformer.battle.talk.TalkOption;
 
-import java.awt.*;
 import java.util.List;
 
-public abstract class Enemy extends Entity {
-    protected boolean blocking = false;
+public abstract class BattleEnemy {
+
+    protected int     hp;
+    protected int     maxHp;
+    protected int     attack;
     protected boolean fleeAllowed = true;
 
     public abstract String getName();
-
-    public boolean isBattleEnemy(){return true};
-
-    public String getBlockingDialogue();
-    public Riddle getRiddle();
-    public String getSuccessDialogue();
-    public String getFailureDialogue();
-    public void onCorrect();
-    public void onIncorrect(BattlePlayer player);
-
     public abstract String getEncounterDialogue();
-    public abstract int getBaseHostility();
-
+    public abstract int    getBaseHostility();
     public abstract List<TalkOption> getTalkOptions(int talkCount);
-    public boolean isMercyReady(BattleContext ctx){return ctx.isMercyAvailable()};
-    public String getMercyHint(BattleContext ctx){
-        int h = ctx.getHostility();
-        if(h>7){
-            return getName() + " is still extremely wary of you!";
-        }
-        else if(h>5){
-            return getName() + " is wary of you.";
-        }
-        else if(h>3){
-            return getName() + " is relaxing";
-        }
-        else if(h>0){
-            return getName() + " has almost opened up!";
-        }
+    public abstract DamageStrategy  getDamageStrategy();
+
+    public boolean isMercyReady(BattleContext ctx) {
+        return ctx.isMercyAvailable();
     }
 
-    public void onSpared(){
-        setDefeated(true);
+    public String getMercyHint(BattleContext ctx) {
+        return "* " + getName() + " is still hostile. ("
+             + ctx.getHostility() + " remaining)";
     }
 
-    public DamageStrategy getDamageStrategy(){
-        return new DamageStrategy() {
-    @Override
-    public int roll(int attackStat) {
-        return 0;
+    public void onSpared() { hp = 0; }
+
+    public void takeDamage(int amount) {
+        hp = Math.max(0, hp - amount);
     }
 
-    @Override
-    public String describe() {
-        return "does nothing";
-    }
-};
-    }
-
-    public abstract BufferedImage getBattleSprite();
-    public abstract String getBattleMusic();
-
-    public boolean isBlocking(){return blocking};
-    public boolean isFleeAllowed(){return fleeAllowed};
+    public boolean isDefeated()    { return hp <= 0;     }
+    public boolean isFleeAllowed() { return fleeAllowed; }
+    public int     getHp()         { return hp;          }
+    public int     getMaxHp()      { return maxHp;       }
+    public int     getAttack()     { return attack;      }
 }
