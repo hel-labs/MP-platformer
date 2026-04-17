@@ -3,8 +3,7 @@ package com.platformer.battle.action;
 import com.platformer.battle.engine.BattleContext;
 import com.platformer.battle.engine.BattleResult;
 import com.platformer.battle.strategies.DamageStrategy;
-import com.platformer.battle.entities.BattleEnemy;
-import com.platformer.battle.entities.BattlePlayer;
+import com.platformer.battle.entities.*;
 
 public class FightAction extends BattleAction {
     @Override

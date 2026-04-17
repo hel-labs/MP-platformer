@@ -2,8 +2,7 @@ package com.platformer.battle.engine;
 
 import com.platformer.battle.entities.BattleEnemy;
 import com.platformer.battle.entities.BattlePlayer;
-import com.platformer.overworld.entities.Player;
-import com.platformer.overworld.entities.Enemy;
+import com.platformer.overworld.entities.*;
 
 public class BattleContext {
     private final BattlePlayer player;

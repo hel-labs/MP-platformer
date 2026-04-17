@@ -2,8 +2,7 @@ package come.platformer.battle.actions;
 
 import com.platformer.battle.engine.BattleContext;
 import com.platformer.battle.engine.BattleResult;
-import com.platformer.battle.entities.BattleEnemy;
-import com.platformer.battle.entities.BattlePlayer;
+import com.platformer.battle.entities.*;
 import com.platformer.battle.talk.TalkOption;
 
 import java.util.List;

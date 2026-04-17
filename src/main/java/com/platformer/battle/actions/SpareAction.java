@@ -2,7 +2,7 @@ package com.platformer.battle.actions;
 
 import com.platformer.battle.engine.BattleContext;
 import com.platformer.battle.engine.BattleResult;
-import com.platformer.battle.entities.BattleEnemy;
+import com.platformer.battle.entities.*;
 
 public class SpareAction extends BattleAction{
     @Override
