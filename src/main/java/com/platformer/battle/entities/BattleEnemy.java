@@ -49,7 +49,17 @@ public abstract class Enemy extends Entity {
     }
 
     public DamageStrategy getDamageStrategy(){
-        return attackState .> 0;
+        return new DamageStrategy() {
+    @Override
+    public int roll(int attackStat) {
+        return 0;
+    }
+
+    @Override
+    public String describe() {
+        return "does nothing";
+    }
+};
     }
 
     public abstract BufferedImage getBattleSprite();

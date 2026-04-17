@@ -4,11 +4,11 @@ import static com.platformer.gamestate.GameState.MENU;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import com.platformer.input.InputHandler;
 import com.platformer.core.Game;
 import com.platformer.gamestate.GameState;
 import com.platformer.overworld.effects.DialogueEffect;
@@ -26,6 +26,7 @@ import com.platformer.overworld.utils.LoadSave;
 public class Playing {
 
 	private final Game game;
+	private final InputHandler input;
 	private final Player player;
 	private final LevelManager levelManager;
 	private final EnemyManager enemyManager;
@@ -51,8 +52,9 @@ public class Playing {
 	private final Rain rain;
 	private final BufferedImage dialogueBubble;
 
-	public Playing(Game game) {
+	public Playing(Game game, InputHandler input) {
 		this.game = game;
+		this.input=input;
 
 		levelManager = new LevelManager(game);
 		player = new Player(200, 200, (int) (64 * Game.SCALE), (int) (40 * Game.SCALE));
@@ -82,6 +84,8 @@ public class Playing {
 	}
 
 	public void update() {
+		handleInput();
+
 		if (paused) {
 			pauseOverlay.update();
 			return;
@@ -114,6 +118,24 @@ public class Playing {
 		if (player.getCurrentHealth() <= 0) {
 			gameOver = true;
 		}
+	}
+	private void handleInput(){
+
+		if (input.isJustPressed(InputHandler.ESCAPE)) {
+            paused = !paused;
+        }
+		if(gameOver || levelCompleted||paused){
+			return;
+		}
+
+
+		player.setLeft(input.isHeld(InputHandler.LEFT));
+        player.setRight(input.isHeld(InputHandler.RIGHT));
+        player.setJump(input.isHeld(InputHandler.UP));
+
+		if (input.isJustPressed(InputHandler.CANCEL)) {
+            setGamestate(MENU);
+        }
 	}
 
 	private void updateDialogues() {
@@ -249,49 +271,7 @@ public class Playing {
 				levelCompletedOverlay.mouseMoved(e);
 			}
 		}
-	}
-
-	public void keyPressed(KeyEvent e) {
-		if (gameOver || levelCompleted) {
-			return;
-		}
-
-		switch (e.getKeyCode()) {
-		case KeyEvent.VK_A:
-			player.setLeft(true);
-			break;
-		case KeyEvent.VK_D:
-			player.setRight(true);
-			break;
-		case KeyEvent.VK_SPACE:
-			player.setJump(true);
-			break;
-		case KeyEvent.VK_ESCAPE:
-			paused = !paused;
-			break;
-		case KeyEvent.VK_BACK_SPACE:
-			setGamestate(MENU);
-			break;
-		default:
-			break;
-		}
-	}
-
-	public void keyReleased(KeyEvent e) {
-		switch (e.getKeyCode()) {
-		case KeyEvent.VK_A:
-			player.setLeft(false);
-			break;
-		case KeyEvent.VK_D:
-			player.setRight(false);
-			break;
-		case KeyEvent.VK_SPACE:
-			player.setJump(false);
-			break;
-		default:
-			break;
-		}
-	}
+	}	
 
 	public void windowFocusLost() {
 		player.resetDirBooleans();
@@ -351,5 +331,13 @@ public class Playing {
 
 	public Game getGame() {
 		return game;
+	}
+
+	//Incomplete implementation for battle transition
+	private void detectEnemyContact(){
+		//Create battle snaps from overowlrd
+		BattleSnapshot snapshot = new BattleSnapshot(player);
+		setGamestate(BATTLE);
+		Game.startBattle(snapshot, enemy);
 	}
 }
