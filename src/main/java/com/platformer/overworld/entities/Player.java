@@ -21,6 +21,8 @@ import java.awt.image.BufferedImage;
 
 import com.platformer.core.Game;
 import com.platformer.overworld.utils.LoadSave;
+import com.platformer.core.BattleSnapshot;
+import com.platformer.battle.core.BattleSnapshot;
 
 public class Player extends Entity {
 

@@ -35,7 +35,7 @@ public class AnimationController{
         }
         currentKey=key;
         current=animations.get(key);
-        current.reset;
+        current.reset();
     }
 
     public void update(float delta){

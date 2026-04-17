@@ -1,4 +1,4 @@
-package com.platformer.core;
+package com.platformer.battle.core;
 
 public class BattleOutcome {
 

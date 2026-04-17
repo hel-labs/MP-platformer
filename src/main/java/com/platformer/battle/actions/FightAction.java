@@ -7,7 +7,7 @@ import com.platformer.battle.entities.*;
 
 public class FightAction extends BattleAction {
     @Override
-    public Battle execute(BattleContext ctx){
+    public BattleResult execute(BattleContext ctx){
         BattlePlayer player = ctx.getPlayer();
         BattleEnemy enemy = ctx.getEnemy();
 

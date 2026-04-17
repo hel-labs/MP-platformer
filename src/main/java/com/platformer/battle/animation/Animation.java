@@ -1,4 +1,4 @@
-package com.platform.battle.animation;
+package com.platformer.battle.animation;
 
 import java.awt.image.BufferedImage;
 

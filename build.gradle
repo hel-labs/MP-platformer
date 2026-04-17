@@ -4,7 +4,6 @@ plugins {
 }
 group = 'com.platformer'
 version = '1.0'
-sourceCompatibility = JavaVersion.VERSION_17
 application {
     mainClass = 'com.platformer.core.MainClass'
 }

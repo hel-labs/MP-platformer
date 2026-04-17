@@ -1,17 +1,18 @@
 //needs refactoring
-package com.echoes.core;
+package com.platformer.battle.core;
 
-import com.echoes.battle.*;
-import com.echoes.battle.actions.BattleAction;
-import com.echoes.battle.actions.TalkAction;
-import com.echoes.dialogue.DialogueBox;
-import com.echoes.entities.Enemy;
-import com.echoes.entities.Player;
-import com.echoes.exceptions.GameException;
-import com.echoes.input.InputHandler;
-import com.echoes.states.GameState;
-import com.echoes.ui.BattleUI;
-import com.echoes.utils.GameLogger;
+import com.platformer.battle.*;
+import com.platformer.battle.actions.BattleAction;
+import com.platformer.battle.actions.TalkAction;
+import com.platformer.dialogue.DialogueBox;
+import com.platformer.entities.Enemy;
+import com.platformer.entities.Player;
+import com.platformer.exceptions.GameException;
+import com.platformer.input.InputHandler;
+import com.platformer.states.GameState;
+import com.platformer.ui.BattleUI;
+import com.platformer.utils.GameLogger;
+import com.platformer.*;
 
 import java.awt.*;
 import java.util.List;
@@ -33,8 +34,8 @@ public class BattleState extends GameState {
     }
 
     // ── Dependencies ─────────────────────────────────────────────────
-    private final Enemy          enemy;
-    private final Player         player;
+    private final BattleEnemy          enemy;
+    private final BattlePlayer         player;
     private final BattleEngine   engine;
     private final BattleUI       ui;
     private final DialogueBox    dialogueBox;

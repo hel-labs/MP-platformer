@@ -3,10 +3,10 @@ package com.platformer.core;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import javax.swing.JPanel;
-import come.platformer.input.InputHandler;
+import com.platformer.input.InputHandler;
 import inputs.MouseInputs;
 import static com.platformer.core.Game.GAME_HEIGHT;
-import static com.platformer.core.main.Game.GAME_WIDTH;
+import static com.platformer.core.Game.GAME_WIDTH;
 
 public class GamePanel extends JPanel {
 

@@ -23,7 +23,7 @@ public class State {
 	}
 
 	@SuppressWarnings("incomplete-switch")
-	public void setGamestate(Gamestate state) {
+	public void setGamestate(GameState state) {
 		switch (state) {
 		case MENU -> game.getAudioPlayer().playSong(AudioPlayer.MENU_1);
 		case PLAYING -> game.getAudioPlayer().setLevelSong(game.getPlaying().getLevelManager().getLevelIndex());

@@ -1,4 +1,4 @@
-package com.echoes.input;
+package com.platformer.input;
 
 import java.awt.event.KeyEvent;
 import java.util.Arrays;

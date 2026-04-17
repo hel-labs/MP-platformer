@@ -1,9 +1,9 @@
 package com.platformer.gamestate;
 
-public enum Gamestate {
+public enum GameState {
 
 	PLAYING, MENU, OPTIONS, QUIT, CREDITS, BATTLE, GAME_OVER;
 
-	public static Gamestate state = MENU;
+	public static GameState state = MENU;
 
 }

@@ -22,340 +22,335 @@ import com.platformer.overworld.ui.GameOverOverlay;
 import com.platformer.overworld.ui.LevelCompletedOverlay;
 import com.platformer.overworld.ui.PauseOverlay;
 import com.platformer.overworld.utils.LoadSave;
+import com.platformer.core.BattleSnapshot;
+import com.platformer.core.BattleOutcome;
+import com.platformer.battle.entities.PlaceholderEnemy;
 
 public class Playing {
 
-	//stub
-	private java.awt.Rectangle placeholderEnemyRect = new java.awt.Rectangle(400, 300, 40, 40);
-	private boolean battleTriggered = false;
-	private final Game game;
-	private final InputHandler input;
-	private final Player player;
-	private final LevelManager levelManager;
-	private final EnemyManager enemyManager;
-	private final ObjectManager objectManager;
+    private java.awt.Rectangle placeholderEnemyRect = new java.awt.Rectangle(400, 300, 40, 40);
+    private boolean battleTriggered = false;
 
-	private final PauseOverlay pauseOverlay;
-	private final GameOverOverlay gameOverOverlay;
-	private final LevelCompletedOverlay levelCompletedOverlay;
-	private final GameCompletedOverlay gameCompletedOverlay;
+    private final Game game;
+    private final InputHandler input;
+    private final Player player;
+    private final LevelManager levelManager;
+    private final EnemyManager enemyManager;
+    private final ObjectManager objectManager;
 
-	private final ArrayList<DialogueEffect> dialogues = new ArrayList<>();
+    private final PauseOverlay pauseOverlay;
+    private final GameOverOverlay gameOverOverlay;
+    private final LevelCompletedOverlay levelCompletedOverlay;
+    private final GameCompletedOverlay gameCompletedOverlay;
 
-	private int xLvlOffset;
-	private int leftBorder = (int) (0.2f * Game.GAME_WIDTH);
-	private int rightBorder = (int) (0.8f * Game.GAME_WIDTH);
-	private int maxLvlOffsetX;
+    private final ArrayList<DialogueEffect> dialogues = new ArrayList<>();
 
-	private boolean paused;
-	private boolean gameOver;
-	private boolean levelCompleted;
-	private boolean gameCompleted;
+    private int xLvlOffset;
+    private int leftBorder = (int) (0.2f * Game.GAME_WIDTH);
+    private int rightBorder = (int) (0.8f * Game.GAME_WIDTH);
+    private int maxLvlOffsetX;
 
-	private final Rain rain;
-	private final BufferedImage dialogueBubble;
+    private boolean paused;
+    private boolean gameOver;
+    private boolean levelCompleted;
+    private boolean gameCompleted;
 
-	public Playing(Game game, InputHandler input) {
-		this.game = game;
-		this.input=input;
+    private final Rain rain;
+    private final BufferedImage dialogueBubble;
 
-		levelManager = new LevelManager(game);
-		player = new Player(200, 200, (int) (64 * Game.SCALE), (int) (40 * Game.SCALE));
-		player.loadLvlData(levelManager.getCurrentLevel().getLevelData());
+    public Playing(Game game, InputHandler input) {
+        this.game = game;
+        this.input = input;
 
-		enemyManager = new EnemyManager(this);
-		enemyManager.loadEnemies(levelManager.getCurrentLevel());
+        levelManager = new LevelManager(game);
 
-		objectManager = new ObjectManager(this);
-		objectManager.loadObjects(levelManager.getCurrentLevel());
+        player = new Player(200, 200, (int) (64 * Game.SCALE), (int) (40 * Game.SCALE));
+        player.loadLvlData(levelManager.getCurrentLevel().getLevelData());
 
-		pauseOverlay = new PauseOverlay(this);
-		gameOverOverlay = new GameOverOverlay(this);
-		levelCompletedOverlay = new LevelCompletedOverlay(this);
-		gameCompletedOverlay = new GameCompletedOverlay(this);
+        enemyManager = new EnemyManager(this);
+        enemyManager.loadEnemies(levelManager.getCurrentLevel());
 
-		rain = new Rain();
-		dialogueBubble = LoadSave.GetSpriteAtlas(LoadSave.DIALOGUE_BUBBLE_ATLAS);
+        objectManager = new ObjectManager(this);
+        objectManager.loadObjects(levelManager.getCurrentLevel());
 
-		calcLvlOffset();
-	}
+        pauseOverlay = new PauseOverlay(this);
+        gameOverOverlay = new GameOverOverlay(this);
+        levelCompletedOverlay = new LevelCompletedOverlay(this);
+        gameCompletedOverlay = new GameCompletedOverlay(this);
 
-	private void calcLvlOffset() {
-		int levelTilesWide = levelManager.getCurrentLevel().getLevelData()[0].length;
-		int maxTilesOffset = levelTilesWide - Game.TILES_IN_WIDTH;
-		maxLvlOffsetX = Game.TILES_SIZE * maxTilesOffset;
-	}
+        rain = new Rain();
+        dialogueBubble = LoadSave.GetSpriteAtlas(LoadSave.DIALOGUE_BUBBLE_ATLAS);
 
-	public void update() {
-		handleInput();
-
-		if (paused) {
-			pauseOverlay.update();
-			return;
-		}
-		if (gameOver) {
-			gameOverOverlay.update();
-			return;
-		}
-		if (levelCompleted) {
-			if (levelManager.getLevelIndex() >= levelManager.getAmountOfLevels() - 1) {
-				gameCompleted = true;
-				gameCompletedOverlay.update();
-			} else {
-				levelCompletedOverlay.update();
-			}
-			return;
-		}
-
-		levelManager.update();
-		player.update();
-		private void detectEnemyContact() {
-    if (battleTriggered) return;
-    java.awt.geom.Rectangle2D.Float phb = player.getHitbox();
-    if (phb.intersects(placeholderEnemyRect)) {
-        battleTriggered = true;
-        player.setFrozen(true);
-        BattleSnapshot snapshot = player.createSnapshot();
-        game.startBattle(snapshot, new PlaceholderEnemy());
+        calcLvlOffset();
     }
-}
-		checkCloseToBorder();
 
-		enemyManager.update(levelManager.getCurrentLevel().getLevelData());
-		objectManager.update(levelManager.getCurrentLevel().getLevelData(), player);
-		objectManager.checkObjectTouched(player.getHitbox());
-
-		rain.update(xLvlOffset);
-		updateDialogues();
-
-		if (player.getCurrentHealth() <= 0) {
-			gameOver = true;
-		}
-		detectEnemyContact();
-	}
-	public void applyBattleOutcome(BattleOutcome outcome) {
-    player.applyOutcome(outcome);
-    player.setFrozen(false);
-    battleTriggered = false;
-    if (outcome.isLose()) {
-        // push player back to spawn — reset hitbox position
-        player.getHitbox().x = 200;
-        player.getHitbox().y = 200;
+    private void calcLvlOffset() {
+        int levelTilesWide = levelManager.getCurrentLevel().getLevelData()[0].length;
+        int maxTilesOffset = levelTilesWide - Game.TILES_IN_WIDTH;
+        maxLvlOffsetX = Game.TILES_SIZE * maxTilesOffset;
     }
-}
-	private void handleInput(){
 
-		if (input.isJustPressed(InputHandler.ESCAPE)) {
+    public void update() {
+        handleInput();
+
+        if (paused) {
+            pauseOverlay.update();
+            return;
+        }
+        if (gameOver) {
+            gameOverOverlay.update();
+            return;
+        }
+        if (levelCompleted) {
+            if (levelManager.getLevelIndex() >= levelManager.getAmountOfLevels() - 1) {
+                gameCompleted = true;
+                gameCompletedOverlay.update();
+            } else {
+                levelCompletedOverlay.update();
+            }
+            return;
+        }
+
+        levelManager.update();
+        player.update();
+
+        checkCloseToBorder();
+
+        enemyManager.update(levelManager.getCurrentLevel().getLevelData());
+        objectManager.update(levelManager.getCurrentLevel().getLevelData(), player);
+        objectManager.checkObjectTouched(player.getHitbox());
+
+        rain.update(xLvlOffset);
+        updateDialogues();
+
+        if (player.getCurrentHealth() <= 0) {
+            gameOver = true;
+        }
+
+        detectEnemyContact();
+    }
+	private void detectEnemyContact() {
+        if (battleTriggered) return;
+
+        java.awt.geom.Rectangle2D.Float phb = player.getHitbox();
+
+        if (phb.intersects(placeholderEnemyRect)) {
+            battleTriggered = true;
+            player.setFrozen(true);
+
+            BattleSnapshot snapshot = player.createSnapshot();
+            game.startBattle(snapshot, new PlaceholderEnemy());
+        }
+    }
+
+    public void applyBattleOutcome(BattleOutcome outcome) {
+        player.applyOutcome(outcome);
+        player.setFrozen(false);
+        battleTriggered = false;
+
+        if (outcome.isLose()) {
+            player.getHitbox().x = 200;
+            player.getHitbox().y = 200;
+        }
+    }
+
+    private void handleInput() {
+        if (input.isJustPressed(InputHandler.ESCAPE)) {
             paused = !paused;
         }
-		if(gameOver || levelCompleted||paused){
-			return;
-		}
 
+        if (gameOver || levelCompleted || paused) {
+            return;
+        }
 
-		player.setLeft(input.isHeld(InputHandler.LEFT));
+        player.setLeft(input.isHeld(InputHandler.LEFT));
         player.setRight(input.isHeld(InputHandler.RIGHT));
         player.setJump(input.isHeld(InputHandler.UP));
 
-		if (input.isJustPressed(InputHandler.CANCEL)) {
+        if (input.isJustPressed(InputHandler.CANCEL)) {
             setGamestate(MENU);
         }
-	}
+    }
 
-	private void updateDialogues() {
-		for (int i = dialogues.size() - 1; i >= 0; i--) {
-			DialogueEffect d = dialogues.get(i);
-			d.update();
-			if (!d.isActive()) {
-				dialogues.remove(i);
-			}
-		}
-	}
+    private void updateDialogues() {
+        for (int i = dialogues.size() - 1; i >= 0; i--) {
+            DialogueEffect d = dialogues.get(i);
+            d.update();
+            if (!d.isActive()) {
+                dialogues.remove(i);
+            }
+        }
+    }
 
-	private void checkCloseToBorder() {
-		int playerX = (int) player.getHitbox().x;
-		int diff = playerX - xLvlOffset;
+    private void checkCloseToBorder() {
+        int playerX = (int) player.getHitbox().x;
+        int diff = playerX - xLvlOffset;
 
-		if (diff > rightBorder) {
-			xLvlOffset += diff - rightBorder;
-		} else if (diff < leftBorder) {
-			xLvlOffset += diff - leftBorder;
-		}
+        if (diff > rightBorder) {
+            xLvlOffset += diff - rightBorder;
+        } else if (diff < leftBorder) {
+            xLvlOffset += diff - leftBorder;
+        }
 
-		if (xLvlOffset < 0) {
-			xLvlOffset = 0;
-		} else if (xLvlOffset > maxLvlOffsetX) {
-			xLvlOffset = maxLvlOffsetX;
-		}
-	}
+        if (xLvlOffset < 0) {
+            xLvlOffset = 0;
+        } else if (xLvlOffset > maxLvlOffsetX) {
+            xLvlOffset = maxLvlOffsetX;
+        }
+    }
 
-	public void draw(Graphics g) {
-		g.setColor(new Color(150, 200, 255));
-		g.fillRect(0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT);
+    public void draw(Graphics g) {
+        g.setColor(new Color(150, 200, 255));
+        g.fillRect(0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT);
 
-		rain.draw(g, xLvlOffset);
-		levelManager.draw(g, xLvlOffset);
-		objectManager.drawBackgroundTrees(g, xLvlOffset);
-		objectManager.draw(g, xLvlOffset);
-		enemyManager.draw(g, xLvlOffset);
-		player.render(g, xLvlOffset);
-		drawDialogues(g);
+        rain.draw(g, xLvlOffset);
+        levelManager.draw(g, xLvlOffset);
+        objectManager.drawBackgroundTrees(g, xLvlOffset);
+        objectManager.draw(g, xLvlOffset);
+        enemyManager.draw(g, xLvlOffset);
+        player.render(g, xLvlOffset);
+        drawDialogues(g);
 
-		if (paused) {
-			pauseOverlay.draw(g);
-		} else if (gameOver) {
-			gameOverOverlay.draw(g);
-		} else if (levelCompleted) {
-			if (gameCompleted) {
-				gameCompletedOverlay.draw(g);
-			} else {
-				levelCompletedOverlay.draw(g);
-			}
-		}
-	}
+        if (paused) {
+            pauseOverlay.draw(g);
+        } else if (gameOver) {
+            gameOverOverlay.draw(g);
+        } else if (levelCompleted) {
+            if (gameCompleted) {
+                gameCompletedOverlay.draw(g);
+            } else {
+                levelCompletedOverlay.draw(g);
+            }
+        }
+    }
 
-	private void drawDialogues(Graphics g) {
-		if (dialogueBubble == null) {
-			return;
-		}
+    private void drawDialogues(Graphics g) {
+        if (dialogueBubble == null) return;
 
-		int w = 14;
-		int h = 12;
+        int w = 14;
+        int h = 12;
 
-		for (DialogueEffect d : dialogues) {
-			int x = d.getAniIndex() * w;
-			int y = d.getType() * h;
-			g.drawImage(dialogueBubble.getSubimage(x, y, w, h), d.getX() - xLvlOffset, d.getY() - (int) (20 * Game.SCALE), (int) (w * Game.SCALE), (int) (h * Game.SCALE), null);
-		}
-	}
+        for (DialogueEffect d : dialogues) {
+            int x = d.getAniIndex() * w;
+            int y = d.getType() * h;
+            g.drawImage(
+                dialogueBubble.getSubimage(x, y, w, h),
+                d.getX() - xLvlOffset,
+                d.getY() - (int) (20 * Game.SCALE),
+                (int) (w * Game.SCALE),
+                (int) (h * Game.SCALE),
+                null
+            );
+        }
+    }
 
-	public void mouseDragged(MouseEvent e) {
-		if (paused) {
-			pauseOverlay.mouseDragged(e);
-		}
-	}
+    public void mouseDragged(MouseEvent e) {
+        if (paused) pauseOverlay.mouseDragged(e);
+    }
 
-	public void mousePressed(MouseEvent e) {
-		if (paused) {
-			pauseOverlay.mousePressed(e);
-			return;
-		}
+    public void mousePressed(MouseEvent e) {
+        if (paused) {
+            pauseOverlay.mousePressed(e);
+            return;
+        }
+        if (gameOver) {
+            gameOverOverlay.mousePressed(e);
+            return;
+        }
+        if (levelCompleted) {
+            if (gameCompleted) gameCompletedOverlay.mousePressed(e);
+            else levelCompletedOverlay.mousePressed(e);
+        }
+    }
 
-		if (gameOver) {
-			gameOverOverlay.mousePressed(e);
-			return;
-		}
+    public void mouseReleased(MouseEvent e) {
+        if (paused) {
+            pauseOverlay.mouseReleased(e);
+            return;
+        }
+        if (gameOver) {
+            gameOverOverlay.mouseReleased(e);
+            return;
+        }
+        if (levelCompleted) {
+            if (gameCompleted) gameCompletedOverlay.mouseReleased(e);
+            else levelCompletedOverlay.mouseReleased(e);
+            return;
+        }
 
-		if (levelCompleted) {
-			if (gameCompleted) {
-				gameCompletedOverlay.mousePressed(e);
-			} else {
-				levelCompletedOverlay.mousePressed(e);
-			}
-			return;
-		}
-	}
+        if (e.getButton() == MouseEvent.BUTTON1) {
+            player.setAttacking(true);
+            enemyManager.checkEnemyHit(player.getAttackBox());
+            objectManager.checkObjectHit(player.getAttackBox());
+        }
+    }
 
-	public void mouseReleased(MouseEvent e) {
-		if (paused) {
-			pauseOverlay.mouseReleased(e);
-			return;
-		}
+    public void mouseMoved(MouseEvent e) {
+        if (paused) pauseOverlay.mouseMoved(e);
+        else if (gameOver) gameOverOverlay.mouseMoved(e);
+        else if (levelCompleted) {
+            if (gameCompleted) gameCompletedOverlay.mouseMoved(e);
+            else levelCompletedOverlay.mouseMoved(e);
+        }
+    }
 
-		if (gameOver) {
-			gameOverOverlay.mouseReleased(e);
-			return;
-		}
+    public void windowFocusLost() {
+        player.resetDirBooleans();
+    }
 
-		if (levelCompleted) {
-			if (gameCompleted) {
-				gameCompletedOverlay.mouseReleased(e);
-			} else {
-				levelCompletedOverlay.mouseReleased(e);
-			}
-			return;
-		}
+    public void resetAll() {
+        player.loadLvlData(levelManager.getCurrentLevel().getLevelData());
+        enemyManager.resetAllEnemies();
+        objectManager.resetAllObjects();
 
-		if (e.getButton() == MouseEvent.BUTTON1) {
-			player.setAttacking(true);
-			enemyManager.checkEnemyHit(player.getAttackBox());
-			objectManager.checkObjectHit(player.getAttackBox());
-		}
-	}
+        xLvlOffset = 0;
+        gameOver = false;
+        levelCompleted = false;
+        paused = false;
+    }
 
-	public void mouseMoved(MouseEvent e) {
-		if (paused) {
-			pauseOverlay.mouseMoved(e);
-		} else if (gameOver) {
-			gameOverOverlay.mouseMoved(e);
-		} else if (levelCompleted) {
-			if (gameCompleted) {
-				gameCompletedOverlay.mouseMoved(e);
-			} else {
-				levelCompletedOverlay.mouseMoved(e);
-			}
-		}
-	}	
+    public void resetGameCompleted() {
+        gameCompleted = false;
+    }
 
-	public void windowFocusLost() {
-		player.resetDirBooleans();
-	}
+    public void loadNextLevel() {
+        levelManager.loadNextLevel();
+        player.loadLvlData(levelManager.getCurrentLevel().getLevelData());
+        enemyManager.loadEnemies(levelManager.getCurrentLevel());
+        objectManager.loadObjects(levelManager.getCurrentLevel());
+        calcLvlOffset();
+        resetAll();
+    }
 
-	public void resetAll() {
-		player.loadLvlData(levelManager.getCurrentLevel().getLevelData());
-		enemyManager.resetAllEnemies();
-		objectManager.resetAllObjects();
+    public void addDialogue(int x, int y, int type) {
+        dialogues.add(new DialogueEffect(x, y, type));
+    }
 
-		xLvlOffset = 0;
-		gameOver = false;
-		levelCompleted = false;
-		paused = false;
-	}
+    public void unpauseGame() {
+        paused = false;
+    }
 
-	public void resetGameCompleted() {
-		gameCompleted = false;
-	}
+    public void setGamestate(GameState state) {
+        GameState.state = state;
+    }
 
-	public void loadNextLevel() {
-		levelManager.loadNextLevel();
-		player.loadLvlData(levelManager.getCurrentLevel().getLevelData());
-		enemyManager.loadEnemies(levelManager.getCurrentLevel());
-		objectManager.loadObjects(levelManager.getCurrentLevel());
-		calcLvlOffset();
-		resetAll();
-	}
+    public void setLevelCompleted(boolean levelCompleted) {
+        this.levelCompleted = levelCompleted;
+    }
 
-	public void addDialogue(int x, int y, int type) {
-		dialogues.add(new DialogueEffect(x, y, type));
-	}
+    public Player getPlayer() {
+        return player;
+    }
 
-	public void unpauseGame() {
-		paused = false;
-	}
+    public ObjectManager getObjectManager() {
+        return objectManager;
+    }
 
-	public void setGamestate(GameState state) {
-		GameState.state = state;
-	}
+    public LevelManager getLevelManager() {
+        return levelManager;
+    }
 
-	public void setLevelCompleted(boolean levelCompleted) {
-		this.levelCompleted = levelCompleted;
-	}
-
-	public Player getPlayer() {
-		return player;
-	}
-
-	public ObjectManager getObjectManager() {
-		return objectManager;
-	}
-
-	public LevelManager getLevelManager() {
-		return levelManager;
-	}
-
-	public Game getGame() {
-		return game;
-	}
-
-	
+    public Game getGame() {
+        return game;
+    }
 }

@@ -1,4 +1,4 @@
-package come.platformer.battle.actions;
+package com.platformer.battle.actions;
 
 import com.platformer.battle.engine.BattleContext;
 import com.platformer.battle.engine.BattleResult;
@@ -16,9 +16,9 @@ public class TalkAction extends BattleAction {
     @Override
     public BattleResult resolveOption(TalkOption option, BattleContext ctx){
         ctx.applyHostilityDelta(option.getHostilityDelta());
-        //ctx.incrementTalkCount();
+        ctx.incrementTalkCount();
 
-        String prefix:
+        String prefix;
         if(option.isCalming()){
             prefix = "The enemy seems calmer.";
         }

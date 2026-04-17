@@ -26,6 +26,6 @@ public class SpareAction extends BattleAction{
 
     @Override
     public String getDescription(){
-        return "Show mercy and spare the enemy if you feel the time is right."
+        return "Show mercy and spare the enemy if you feel the time is right.";
     }
 }

@@ -1,7 +1,7 @@
 package com.platformer.battle.engine;
 
 public class BattleResult{
-    player enum Type{
+    public enum Type{
         PLAYER_ATTACKED,
         ENEMY_ATTACKED,
         PLAYER_FLED,
