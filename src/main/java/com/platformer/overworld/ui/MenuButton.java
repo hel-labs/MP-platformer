@@ -4,19 +4,19 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
-import com.platformer.gamestate.GameState;
+import com.platformer.gamestate.Gamestate;
 import com.platformer.overworld.utils.LoadSave;
 import static com.platformer.overworld.utils.Constants.UI.Buttons.*;
 
 public class MenuButton {
 	private int xPos, yPos, rowIndex, index;
 	private int xOffsetCenter = B_WIDTH / 2;
-	private GameState state;
+	private Gamestate state;
 	private BufferedImage[] imgs;
 	private boolean mouseOver, mousePressed;
 	private Rectangle bounds;
 
-	public MenuButton(int xPos, int yPos, int rowIndex, GameState state) {
+	public MenuButton(int xPos, int yPos, int rowIndex, Gamestate state) {
 		this.xPos = xPos;
 		this.yPos = yPos;
 		this.rowIndex = rowIndex;
@@ -69,14 +69,14 @@ public class MenuButton {
 	}
  
 	public void applyGamestate() {
-		GameState.state = state;
+		Gamestate.state = state;
 	}
 
 	public void resetBools() {
 		mouseOver = false;
 		mousePressed = false;
 	}
-	public GameState getState() {
+	public Gamestate getState() {
 		return state;
 	}
 

@@ -3,7 +3,6 @@ package com.platformer.battle.core;
 import com.platformer.battle.engine.BattleContext;
 import com.platformer.battle.entities.BattleEnemy;
 import com.platformer.battle.entities.BattlePlayer;
-import com.platformer.core.BattleOutcome;
 import com.platformer.core.BattleSnapshot;
 import com.platformer.input.InputHandler;
 

@@ -2,7 +2,7 @@ package com.platformer.gamestate;
 
 import java.awt.event.MouseEvent;
 
-import com.platformer.overworld.audio.AudioPlayer;
+import com.platformer.utils.AudioPlayer;
 import com.platformer.core.Game;
 import com.platformer.overworld.ui.MenuButton;
 
@@ -23,7 +23,7 @@ public class State {
 	}
 
 	@SuppressWarnings("incomplete-switch")
-	public void setGamestate(GameState state) {
+	public void setGamestate(Gamestate state) {
 		switch (state) {
 		case MENU -> game.getAudioPlayer().playSong(AudioPlayer.MENU_1);
 		case PLAYING -> game.getAudioPlayer().setLevelSong(game.getPlaying().getLevelManager().getLevelIndex());

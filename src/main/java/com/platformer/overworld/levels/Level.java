@@ -1,35 +1,101 @@
 package com.platformer.overworld.levels;
 
+import java.awt.Color;
+import java.awt.Point;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.List;
 
-import com.platformer.overworld.entities.Crabby;
-import com.platformer.overworld.entities.Pinkstar;
-import com.platformer.overworld.entities.Shark;
-import com.platformer.overworld.objects.BackgroundTree;
-import com.platformer.overworld.objects.Cannon;
-import com.platformer.overworld.objects.GameContainer;
-import com.platformer.overworld.objects.Grass;
-import com.platformer.overworld.objects.Potion;
-import com.platformer.overworld.objects.Spike;
+import com.platformer.overworld.entities.*;
+import com.platformer.overworld.objects.*;
+import com.platformer.core.Game;
+
+import static com.platformer.overworld.utils.Constants.EnemyConstants.*;
+import static com.platformer.overworld.utils.Constants.ObjectConstants.*;
 
 public class Level {
 
-	private final int[][] lvlData;
+	private BufferedImage img;
+	private int[][] lvlData;
 
-	private final ArrayList<Crabby> crabs = new ArrayList<>();
-	private final ArrayList<Pinkstar> pinkstars = new ArrayList<>();
-	private final ArrayList<Shark> sharks = new ArrayList<>();
+	private ArrayList<Crabby> crabs = new ArrayList<>();
+	private ArrayList<Pinkstar> pinkstars = new ArrayList<>();
+	private ArrayList<Shark> sharks = new ArrayList<>();
+	private ArrayList<Potion> potions = new ArrayList<>();
+	private ArrayList<Spike> spikes = new ArrayList<>();
+	private ArrayList<GameContainer> containers = new ArrayList<>();
+	private ArrayList<Cannon> cannons = new ArrayList<>();
+	private ArrayList<BackgroundTree> trees = new ArrayList<>();
+	private ArrayList<Grass> grass = new ArrayList<>();
 
-	private final ArrayList<Spike> spikes = new ArrayList<>();
-	private final ArrayList<Potion> potions = new ArrayList<>();
-	private final ArrayList<GameContainer> containers = new ArrayList<>();
-	private final ArrayList<Cannon> cannons = new ArrayList<>();
-	private final ArrayList<BackgroundTree> trees = new ArrayList<>();
-	private final ArrayList<Grass> grass = new ArrayList<>();
+	private int lvlTilesWide;
+	private int maxTilesOffset;
+	private int maxLvlOffsetX;
+	private Point playerSpawn;
 
-	public Level(int[][] lvlData) {
-		this.lvlData = lvlData;
+	public Level(BufferedImage img) {
+		this.img = img;
+		lvlData = new int[img.getHeight()][img.getWidth()];
+		loadLevel();
+		calcLvlOffsets();
+	}
+
+	private void loadLevel() {
+
+		// Looping through the image colors just once. Instead of one per
+		// object/enemy/etc..
+		// Removed many methods in HelpMethods class.
+
+		for (int y = 0; y < img.getHeight(); y++)
+			for (int x = 0; x < img.getWidth(); x++) {
+				Color c = new Color(img.getRGB(x, y));
+				int red = c.getRed();
+				int green = c.getGreen();
+				int blue = c.getBlue();
+
+				loadLevelData(red, x, y);
+				loadEntities(green, x, y);
+				loadObjects(blue, x, y);
+			}
+	}
+
+	private void loadLevelData(int redValue, int x, int y) {
+		if (redValue >= 50)
+			lvlData[y][x] = 0;
+		else
+			lvlData[y][x] = redValue;
+		switch (redValue) {
+		case 0, 1, 2, 3, 30, 31, 33, 34, 35, 36, 37, 38, 39 -> 
+		grass.add(new Grass((int) (x * Game.TILES_SIZE), (int) (y * Game.TILES_SIZE) - Game.TILES_SIZE, getRndGrassType(x)));
+		}
+	}
+
+	private int getRndGrassType(int xPos) {
+		return xPos % 2;
+	}
+
+	private void loadEntities(int greenValue, int x, int y) {
+		switch (greenValue) {
+		case CRABBY -> crabs.add(new Crabby(x * Game.TILES_SIZE, y * Game.TILES_SIZE));
+		case PINKSTAR -> pinkstars.add(new Pinkstar(x * Game.TILES_SIZE, y * Game.TILES_SIZE));
+		case SHARK -> sharks.add(new Shark(x * Game.TILES_SIZE, y * Game.TILES_SIZE));
+		case 100 -> playerSpawn = new Point(x * Game.TILES_SIZE, y * Game.TILES_SIZE);
+		}
+	}
+
+	private void loadObjects(int blueValue, int x, int y) {
+		switch (blueValue) {
+		case RED_POTION, BLUE_POTION -> potions.add(new Potion(x * Game.TILES_SIZE, y * Game.TILES_SIZE, blueValue));
+		case BOX, BARREL -> containers.add(new GameContainer(x * Game.TILES_SIZE, y * Game.TILES_SIZE, blueValue));
+		case SPIKE -> spikes.add(new Spike(x * Game.TILES_SIZE, y * Game.TILES_SIZE, SPIKE));
+		case CANNON_LEFT, CANNON_RIGHT -> cannons.add(new Cannon(x * Game.TILES_SIZE, y * Game.TILES_SIZE, blueValue));
+		case TREE_ONE, TREE_TWO, TREE_THREE -> trees.add(new BackgroundTree(x * Game.TILES_SIZE, y * Game.TILES_SIZE, blueValue));
+		}
+	}
+
+	private void calcLvlOffsets() {
+		lvlTilesWide = img.getWidth();
+		maxTilesOffset = lvlTilesWide - Game.TILES_IN_WIDTH;
+		maxLvlOffsetX = Game.TILES_SIZE * maxTilesOffset;
 	}
 
 	public int getSpriteIndex(int x, int y) {
@@ -40,20 +106,20 @@ public class Level {
 		return lvlData;
 	}
 
+	public int getLvlOffset() {
+		return maxLvlOffsetX;
+	}
+
+	public Point getPlayerSpawn() {
+		return playerSpawn;
+	}
+
 	public ArrayList<Crabby> getCrabs() {
 		return crabs;
 	}
 
-	public ArrayList<Pinkstar> getPinkstars() {
-		return pinkstars;
-	}
-
 	public ArrayList<Shark> getSharks() {
 		return sharks;
-	}
-
-	public ArrayList<Spike> getSpikes() {
-		return spikes;
 	}
 
 	public ArrayList<Potion> getPotions() {
@@ -64,8 +130,16 @@ public class Level {
 		return containers;
 	}
 
+	public ArrayList<Spike> getSpikes() {
+		return spikes;
+	}
+
 	public ArrayList<Cannon> getCannons() {
 		return cannons;
+	}
+
+	public ArrayList<Pinkstar> getPinkstars() {
+		return pinkstars;
 	}
 
 	public ArrayList<BackgroundTree> getTrees() {
@@ -76,48 +150,4 @@ public class Level {
 		return grass;
 	}
 
-	public void setCrabs(List<Crabby> list) {
-		crabs.clear();
-		crabs.addAll(list);
-	}
-
-	public void setPinkstars(List<Pinkstar> list) {
-		pinkstars.clear();
-		pinkstars.addAll(list);
-	}
-
-	public void setSharks(List<Shark> list) {
-		sharks.clear();
-		sharks.addAll(list);
-	}
-
-	public void setSpikes(List<Spike> list) {
-		spikes.clear();
-		spikes.addAll(list);
-	}
-
-	public void setPotions(List<Potion> list) {
-		potions.clear();
-		potions.addAll(list);
-	}
-
-	public void setContainers(List<GameContainer> list) {
-		containers.clear();
-		containers.addAll(list);
-	}
-
-	public void setCannons(List<Cannon> list) {
-		cannons.clear();
-		cannons.addAll(list);
-	}
-
-	public void setTrees(List<BackgroundTree> list) {
-		trees.clear();
-		trees.addAll(list);
-	}
-
-	public void setGrass(List<Grass> list) {
-		grass.clear();
-		grass.addAll(list);
-	}
 }

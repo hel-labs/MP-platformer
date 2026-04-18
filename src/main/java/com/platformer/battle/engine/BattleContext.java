@@ -18,6 +18,9 @@ public class BattleContext {
 
     private BattleResult lastResult = null;
 
+    private boolean waitingForPlayerAnim = false;
+    private boolean waitingForEnemyAnim  = false;
+
     public BattleContext(BattlePlayer player, BattleEnemy enemy) {
         this.player    = player;
         this.enemy     = enemy;
@@ -27,6 +30,13 @@ public class BattleContext {
     public void applyHostilityDelta(int delta) {
         hostility = Math.max(MIN_HOSTILITY,
                     Math.min(MAX_HOSTILITY, hostility + delta));
+    }
+    public void setWaitingForPlayerAnim(boolean waiting) {
+        this.waitingForPlayerAnim = waiting;
+    }
+
+    public void setWaitingForEnemyAnim(boolean waiting) {
+        this.waitingForEnemyAnim = waiting;
     }
 
     public boolean isMercyAvailable()       { return hostility <= MIN_HOSTILITY; }

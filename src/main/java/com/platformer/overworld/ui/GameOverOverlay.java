@@ -7,7 +7,7 @@ import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
-import com.platformer.gamestate.GameState;
+import com.platformer.gamestate.Gamestate;
 import com.platformer.overworld.states.Playing;
 import com.platformer.core.Game;
 import com.platformer.overworld.utils.LoadSave;
@@ -76,7 +76,7 @@ public class GameOverOverlay {
 		if (isIn(menu, e)) {
 			if (menu.isMousePressed()) {
 				playing.resetAll();
-				playing.setGamestate(GameState.MENU);
+				playing.setGamestate(Gamestate.MENU);
 			}
 		} else if (isIn(play, e))
 			if (play.isMousePressed()) {

@@ -3,6 +3,7 @@ package com.platformer.battle.entities;
 import com.platformer.battle.engine.BattleContext;
 import com.platformer.battle.strategies.DamageStrategy;
 import com.platformer.battle.talk.TalkOption;
+import java.awt.image.BufferedImage;
 
 import java.util.List;
 
@@ -23,6 +24,10 @@ public abstract class BattleEnemy {
         return ctx.isMercyAvailable();
     }
 
+    public BufferedImage getBattleSprite() {
+        return null;
+    }
+    
     public String getMercyHint(BattleContext ctx) {
         return "* " + getName() + " is still hostile. ("
              + ctx.getHostility() + " remaining)";

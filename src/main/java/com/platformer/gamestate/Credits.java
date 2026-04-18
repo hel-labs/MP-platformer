@@ -1,7 +1,6 @@
 package com.platformer.gamestate;
 
 import java.awt.Graphics;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -58,13 +57,6 @@ public class Credits extends State implements Statemethods {
 			se.draw(g);
 	}
 
-	@Override
-	public void keyReleased(KeyEvent e) {
-		if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-			bgYFloat = 0;
-			setGamestate(Gamestate.MENU);
-		}
-	}
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
@@ -88,9 +80,6 @@ public class Credits extends State implements Statemethods {
 	public void mouseClicked(MouseEvent e) {
 	}
 
-	@Override
-	public void keyPressed(KeyEvent e) {
-	}
 
 	private class ShowEntity {
 		private BufferedImage[] idleAnimation;

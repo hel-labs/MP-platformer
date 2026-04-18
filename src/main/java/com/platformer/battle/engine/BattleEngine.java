@@ -1,16 +1,19 @@
 package com.platformer.battle.engine;
 
 import com.platformer.battle.actions.*;
-import com.platformer.battle.strategies.DamageSTrategy;
-import com.platformer.battle.entities.*;
-import com.platformer.exceptions.*;
+import com.platformer.battle.entities.BattleEnemy;
+import com.platformer.battle.entities.BattlePlayer;
+import com.platformer.battle.strategies.DamageStrategy;
+import com.platformer.exceptions.BattleException;
+import com.platformer.exceptions.EnemyAlreadyDeadException;
 
 import java.util.List;
 
-public class BattleEngine{
+public class BattleEngine {
+
     private final List<BattleAction> playerActions;
 
-    public BattleEngine(){
+    public BattleEngine() {
         playerActions = List.of(
             new FightAction(),
             new TalkAction(),
@@ -19,53 +22,46 @@ public class BattleEngine{
         );
     }
 
-    public BattleResult executePlayerAction(int actionIndex, BattleContext ctx){
-        if(actionIndex <0 || actionIndex>=playerActions.size()){
-            throw new BattleException("Invalid action index. Valid: 0-3. Provided: " + actionIndex);
-        }
-        BattleAction action = playerActions.get(actionIndex);
-        BattleResult result = action.execute(ctx);
+    public BattleResult executePlayerAction(int index, BattleContext ctx) {
+        if (index < 0 || index >= playerActions.size())
+            throw new BattleException("Invalid action index: " + index);
 
+        BattleAction action = playerActions.get(index);
+        BattleResult result = action.execute(ctx);
         ctx.setPlayerTurn(false);
         ctx.setLastResult(result);
-
         return result;
     }
 
-    public BattleResult executeEnemyAction(BattleContext ctx){
+    public BattleResult executeEnemyTurn(BattleContext ctx) {
         BattleEnemy enemy = ctx.getEnemy();
-
-        if(enemy.isDefeated()){
+        if (enemy.isDefeated())
             throw new EnemyAlreadyDeadException(enemy.getName());
-        }
 
         BattlePlayer player = ctx.getPlayer();
 
-        DamageStrategy strategy = enemy.getDamageStrategy();
-        int baseDamage = strategy.roll(enemy.getAttack());
-        int bonusDamage = ctx.getHostilityDamageBonus();
-        int damage = baseDamage + bonusDamage;
+        DamageStrategy strategy   = enemy.getDamageStrategy();
+        int            base       = strategy.roll(enemy.getAttack());
+        int            bonus      = ctx.getHostilityDamageBonus();
+        int            damage     = base + bonus;
 
         player.takeDamage(damage);
 
-        String msg = enemy.getName() + " attacks. The attack deals " + damage + " damage!";
+        String bonusNote = bonus > 0 ? " (+" + bonus + " hostility)" : "";
+        String msg = "* " + enemy.getName() + " attacks! ("
+                   + strategy.describe() + ") — dealt " + damage
+                   + " damage!" + bonusNote;
 
         ctx.incrementTurnCount();
         ctx.setPlayerTurn(true);
         ctx.setLastResult(null);
 
-        if(player.isDefeated()){
+        if (player.isDefeated())
             return BattleResult.playerDefeated();
-        }
 
         return BattleResult.enemyAttacked(damage, msg);
     }
 
-    public List<BattleAction> getPlayerActions(){
-        return playerActions;
-    }
-
-    public int getActionCount(){
-        return playerActions.size();
-    }
+    public List<BattleAction> getPlayerActions() { return playerActions;        }
+    public int                getActionCount()   { return playerActions.size(); }
 }

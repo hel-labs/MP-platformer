@@ -1,7 +1,7 @@
 package com.platformer.overworld.entities;
 
+import static com.platformer.overworld.utils.Constants.Directions.DOWN;
 import static com.platformer.overworld.utils.Constants.Directions.LEFT;
-import static com.platformer.overworld.utils.Constants.Directions.RIGHT;
 import static com.platformer.overworld.utils.Constants.Directions.UP;
 import static com.platformer.overworld.utils.HelpMethods.CanMoveHere;
 
@@ -16,21 +16,18 @@ public abstract class Entity {
 	protected float x, y;
 	protected int width, height;
 	protected Rectangle2D.Float hitbox;
-	protected Rectangle2D.Float attackBox;
-
 	protected int aniTick, aniIndex;
 	protected int state;
-
+	protected float airSpeed;
+	protected boolean inAir = false;
 	protected int maxHealth;
 	protected int currentHealth;
+	protected Rectangle2D.Float attackBox;
 	protected float walkSpeed;
 
-	protected boolean inAir;
-	protected float airSpeed;
-
-	protected int pushBackDir = LEFT;
-	protected int pushBackOffsetDir = UP;
+	protected int pushBackDir;
 	protected float pushDrawOffset;
+	protected int pushBackOffsetDir = UP;
 
 	public Entity(float x, float y, int width, int height) {
 		this.x = x;
@@ -39,54 +36,44 @@ public abstract class Entity {
 		this.height = height;
 	}
 
-	protected void initHitbox(int width, int height) {
-		hitbox = new Rectangle2D.Float(x, y, (int) (width * Game.SCALE), (int) (height * Game.SCALE));
-	}
-
-	protected void newState(int state) {
-		this.state = state;
-		aniTick = 0;
-		aniIndex = 0;
-	}
-
-	protected void pushBack(int pushBackDir, int[][] lvlData, float speedMult) {
-		float xSpeed = 0;
-		if (pushBackDir == LEFT) {
-			xSpeed = -walkSpeed;
-		} else if (pushBackDir == RIGHT) {
-			xSpeed = walkSpeed;
-		}
-
-		if (CanMoveHere(hitbox.x + xSpeed * speedMult, hitbox.y, hitbox.width, hitbox.height, lvlData)) {
-			hitbox.x += xSpeed * speedMult;
-		}
-	}
-
 	protected void updatePushBackDrawOffset() {
-		float speed = 0.95f * Game.SCALE;
+		float speed = 0.95f;
+		float limit = -30f;
+
 		if (pushBackOffsetDir == UP) {
 			pushDrawOffset -= speed;
-			if (pushDrawOffset < -30 * Game.SCALE) {
-				pushBackOffsetDir = LEFT;
-			}
+			if (pushDrawOffset <= limit)
+				pushBackOffsetDir = DOWN;
 		} else {
-			if (pushDrawOffset < 0) {
-				pushDrawOffset += speed;
-			}
+			pushDrawOffset += speed;
+			if (pushDrawOffset >= 0)
+				pushDrawOffset = 0;
 		}
 	}
 
-	public void drawHitbox(Graphics g, int xLvlOffset) {
+	protected void pushBack(int pushBackDir, int[][] lvlData, float speedMulti) {
+		float xSpeed = 0;
+		if (pushBackDir == LEFT)
+			xSpeed = -walkSpeed;
+		else
+			xSpeed = walkSpeed;
+
+		if (CanMoveHere(hitbox.x + xSpeed * speedMulti, hitbox.y, hitbox.width, hitbox.height, lvlData))
+			hitbox.x += xSpeed * speedMulti;
+	}
+
+	protected void drawAttackBox(Graphics g, int xLvlOffset) {
+		g.setColor(Color.red);
+		g.drawRect((int) (attackBox.x - xLvlOffset), (int) attackBox.y, (int) attackBox.width, (int) attackBox.height);
+	}
+
+	protected void drawHitbox(Graphics g, int xLvlOffset) {
 		g.setColor(Color.PINK);
 		g.drawRect((int) hitbox.x - xLvlOffset, (int) hitbox.y, (int) hitbox.width, (int) hitbox.height);
 	}
 
-	public void drawAttackBox(Graphics g, int xLvlOffset) {
-		if (attackBox == null) {
-			return;
-		}
-		g.setColor(Color.RED);
-		g.drawRect((int) attackBox.x - xLvlOffset, (int) attackBox.y, (int) attackBox.width, (int) attackBox.height);
+	protected void initHitbox(int width, int height) {
+		hitbox = new Rectangle2D.Float(x, y, (int) (width * Game.SCALE), (int) (height * Game.SCALE));
 	}
 
 	public Rectangle2D.Float getHitbox() {
@@ -99,5 +86,11 @@ public abstract class Entity {
 
 	public int getAniIndex() {
 		return aniIndex;
+	}
+
+	protected void newState(int state) {
+		this.state = state;
+		aniTick = 0;
+		aniIndex = 0;
 	}
 }

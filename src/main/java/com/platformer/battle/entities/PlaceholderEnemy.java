@@ -1,4 +1,4 @@
-package com.platformer.battle.entities.enemies;
+package com.platformer.battle.entities;
 
 import com.platformer.battle.engine.BattleContext;
 import com.platformer.battle.entities.BattleEnemy;

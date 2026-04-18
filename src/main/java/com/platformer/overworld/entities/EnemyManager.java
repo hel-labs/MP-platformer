@@ -3,7 +3,6 @@ package com.platformer.overworld.entities;
 import java.awt.Graphics;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-
 import com.platformer.overworld.states.Playing;
 import com.platformer.overworld.levels.Level;
 import com.platformer.overworld.utils.LoadSave;

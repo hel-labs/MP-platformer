@@ -5,8 +5,8 @@ import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
-import com.platformer.gamestate.GameState;
 import com.platformer.overworld.states.Playing;
+import com.platformer.gamestate.Gamestate;
 import com.platformer.core.Game;
 import com.platformer.overworld.utils.LoadSave;
 
@@ -23,8 +23,8 @@ public class GameCompletedOverlay {
 	}
 
 	private void createButtons() {
-		quit = new MenuButton(Game.GAME_WIDTH / 2, (int) (270 * Game.SCALE), 2, GameState.MENU);
-		credit = new MenuButton(Game.GAME_WIDTH / 2, (int) (200 * Game.SCALE), 3, GameState.CREDITS);
+		quit = new MenuButton(Game.GAME_WIDTH / 2, (int) (270 * Game.SCALE), 2, Gamestate.MENU);
+		credit = new MenuButton(Game.GAME_WIDTH / 2, (int) (200 * Game.SCALE), 3, Gamestate.CREDITS);
 	}
 
 	private void createImg() {
@@ -70,14 +70,14 @@ public class GameCompletedOverlay {
 			if (quit.isMousePressed()) {
 				playing.resetAll();
 				playing.resetGameCompleted();
-				playing.setGamestate(GameState.MENU);
+				playing.setGamestate(Gamestate.MENU);
 
 			}
 		} else if (isIn(credit, e))
 			if (credit.isMousePressed()) {
 				playing.resetAll();
 				playing.resetGameCompleted();
-				playing.setGamestate(GameState.CREDITS);
+				playing.setGamestate(Gamestate.CREDITS);
 			}
 
 		quit.resetBools();

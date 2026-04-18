@@ -1,48 +1,107 @@
 package com.platformer.overworld.states;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 
-import com.platformer.input.InputHandler;
 import com.platformer.core.Game;
-import com.platformer.gamestate.GameState;
+import com.platformer.overworld.ui.MenuButton;
+import com.platformer.overworld.utils.LoadSave;
 
-public class Menu {
+import com.platformer.gamestate.*;
 
-    private final Game game;
-    private final InputHandler input;
+public class Menu extends State implements Statemethods {
 
-    public Menu(Game game, InputHandler input) {
-        this.game = game;
-        this.input = input;
-    }
+	private MenuButton[] buttons = new MenuButton[4];
+	private BufferedImage backgroundImg, backgroundImgPink;
+	private int menuX, menuY, menuWidth, menuHeight;
 
-    public void update() {
-        if (input.isJustPressed(InputHandler.CONFIRM)) {
-            GameState.state = GameState.PLAYING;
-        }
-    }
+	public Menu(Game game) {
+		super(game);
+		loadButtons();
+		loadBackground();
+		backgroundImgPink = LoadSave.GetSpriteAtlas(LoadSave.MENU_BACKGROUND_IMG);
 
-    public void draw(Graphics g) {
-        g.setColor(Color.BLACK);
-        g.fillRect(0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT);
+	}
 
-        g.setColor(Color.WHITE);
-        g.drawString("OVERWORLD MENU - PRESS Z",
-                Game.GAME_WIDTH / 2 - 95,
-                Game.GAME_HEIGHT / 2);
-    }
+	private void loadBackground() {
+		backgroundImg = LoadSave.GetSpriteAtlas(LoadSave.MENU_BACKGROUND);
+		menuWidth = (int) (backgroundImg.getWidth() * Game.SCALE);
+		menuHeight = (int) (backgroundImg.getHeight() * Game.SCALE);
+		menuX = Game.GAME_WIDTH / 2 - menuWidth / 2;
+		menuY = (int) (25 * Game.SCALE);
+	}
 
-    public void mouseClicked(MouseEvent e) {}
+	private void loadButtons() {
+		buttons[0] = new MenuButton(Game.GAME_WIDTH / 2, (int) (130 * Game.SCALE), 0, Gamestate.PLAYING);
+		buttons[1] = new MenuButton(Game.GAME_WIDTH / 2, (int) (200 * Game.SCALE), 1, Gamestate.OPTIONS);
+		buttons[2] = new MenuButton(Game.GAME_WIDTH / 2, (int) (270 * Game.SCALE), 3, Gamestate.CREDITS);
+		buttons[3] = new MenuButton(Game.GAME_WIDTH / 2, (int) (340 * Game.SCALE), 2, Gamestate.QUIT);
+	}
 
-    public void mousePressed(MouseEvent e) {}
+	@Override
+	public void update() {
+		for (MenuButton mb : buttons)
+			mb.update();
+	}
 
-    public void mouseReleased(MouseEvent e) {}
+	@Override
+	public void draw(Graphics g) {
+		g.drawImage(backgroundImgPink, 0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT, null);
+		g.drawImage(backgroundImg, menuX, menuY, menuWidth, menuHeight, null);
 
-    public void mouseMoved(MouseEvent e) {}
+		for (MenuButton mb : buttons)
+			mb.draw(g);
+	}
 
-    public Game getGame() {
-        return game;
-    }
+	@Override
+	public void mousePressed(MouseEvent e) {
+		for (MenuButton mb : buttons) {
+			if (isIn(e, mb)) {
+				mb.setMousePressed(true);
+			}
+		}
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		for (MenuButton mb : buttons) {
+			if (isIn(e, mb)) {
+				if (mb.isMousePressed())
+					mb.applyGamestate();
+				if (mb.getState() == Gamestate.PLAYING)
+					game.getAudioPlayer().setLevelSong(game.getPlaying().getLevelManager().getLevelIndex());
+				break;
+			}
+		}
+		resetButtons();
+	}
+
+	private void resetButtons() {
+		for (MenuButton mb : buttons)
+			mb.resetBools();
+
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		for (MenuButton mb : buttons)
+			mb.setMouseOver(false);
+
+		for (MenuButton mb : buttons)
+			if (isIn(e, mb)) {
+				mb.setMouseOver(true);
+				break;
+			}
+
+	}
+
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+
 }

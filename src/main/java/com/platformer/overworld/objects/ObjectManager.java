@@ -5,8 +5,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-import com.platformer.overworld.entities.Enemy;
-import com.platformer.overworld.entities.Player;
+import com.platformer.overworld.entities.*;
 import com.platformer.overworld.states.Playing;
 import com.platformer.overworld.levels.Level;
 import com.platformer.core.Game;

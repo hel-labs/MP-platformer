@@ -1,48 +1,40 @@
-//needs refactoring
 package com.platformer.battle.core;
 
-import com.platformer.battle.*;
-import com.platformer.battle.actions.BattleAction;
-import com.platformer.battle.actions.TalkAction;
-import com.platformer.dialogue.DialogueBox;
-import com.platformer.entities.Enemy;
-import com.platformer.entities.Player;
+import com.platformer.battle.actions.*;
+import com.platformer.battle.engine.BattleContext;
+import com.platformer.battle.engine.BattleEngine;
+import com.platformer.battle.engine.BattleResult;
+import com.platformer.battle.talk.TalkOption;
+import com.platformer.battle.ui.BattleUI;
+import com.platformer.battle.dialogue.DialogueBox;
 import com.platformer.exceptions.GameException;
 import com.platformer.input.InputHandler;
-import com.platformer.states.GameState;
-import com.platformer.ui.BattleUI;
 import com.platformer.utils.GameLogger;
-import com.platformer.*;
 
-import java.awt.*;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.util.List;
+import java.util.function.Consumer;
 
+public class BattleState {
 
-public class BattleState extends GameState {
-
-    // ── Phases ───────────────────────────────────────────────────────
     private enum Phase {
         ENCOUNTER_DIALOGUE,
         PLAYER_TURN,
         TALK_SELECTION,
-        PLAYER_ANIM_WAIT,
         PLAYER_RESULT,
         ENEMY_TURN_DELAY,
-        ENEMY_ANIM_WAIT,
         ENEMY_RESULT,
         TERMINAL
     }
 
-    // ── Dependencies ─────────────────────────────────────────────────
-    private final BattleEnemy          enemy;
-    private final BattlePlayer         player;
-    private final BattleEngine   engine;
-    private final BattleUI       ui;
-    private final DialogueBox    dialogueBox;
-    private final BattleContext  ctx;
-    private final InputHandler input;
+    private final BattleContext           ctx;
+    private final BattleEngine            engine;
+    private final BattleUI                ui;
+    private final DialogueBox             dialogueBox;
+    private final InputHandler            input;
+    private final Consumer<BattleOutcome> onDone;
 
-    // ── Mutable state ────────────────────────────────────────────────
     private Phase            phase           = Phase.ENCOUNTER_DIALOGUE;
     private int              selectedAction  = 0;
     private float            enemyTurnTimer  = 0f;
@@ -52,140 +44,53 @@ public class BattleState extends GameState {
 
     private static final float ENEMY_TURN_DELAY_SECS = 1.2f;
 
-    // Fallback callback — used by BattleTest standalone runner.
-    // Replaced automatically when gameCtx is provided.
-    private Runnable onWin  = () -> {};
-    private Runnable onLose = () -> {};
-    private Runnable onFlee = () -> {};
-
-    // ---------------------------------------------------------------
-    // Constructors
-    // ---------------------------------------------------------------
-
-    /**
-     * Full game constructor — transitions back to overworld automatically.
-     *
-     * @param enemy   the enemy being fought
-     * @param gameCtx shared game context
-     */
-    public BattleState(BattleContext ctx, InputHandler input) {
-        this.enemy      = ctx.getEnemy();
-        this.player     = ctx.getPlayer();
-        this.ctx = ctx;
-        this.engine     = new BattleEngine();
-        this.ui         = new BattleUI();
-        this.dialogueBox = new DialogueBox();
-        this.battleCtx  = new BattleContext(player, enemy);
-        this.input = input;
-
-        // Wire exit callbacks to game state transitions
-        // OverworldState and GameOverState are imported at runtime —
-        // referenced by class name string to avoid circular imports
-        // during incremental development. Replace with direct
-        // constructors once those classes exist:
-        //
-        //   this.onWin  = () -> gameCtx.setState(new OverworldState(gameCtx));
-        //   this.onLose = () -> gameCtx.setState(new GameOverState(gameCtx));
-        //   this.onFlee = () -> gameCtx.setState(new OverworldState(gameCtx));
-        //
-        // For now they fall through to the standalone callbacks below.
-        this.onWin  = () -> GameLogger.get().info("Battle won — wire OverworldState here");
-        this.onLose = () -> GameLogger.get().info("Battle lost — wire GameOverState here");
-        this.onFlee = () -> GameLogger.get().info("Player fled — wire OverworldState here");
-    }
-
-    /**
-     * Standalone constructor — used by BattleTest with no overworld.
-     * Use setOnWin/setOnLose/setOnFlee to register callbacks.
-     */
-    public BattleState(Player player, Enemy enemy) {
-        this.enemy       = enemy;
-        this.player      = player;
-        this.gameCtx     = null;
+    public BattleState(BattleContext ctx,
+                       InputHandler input,
+                       Consumer<BattleOutcome> onDone) {
+        this.ctx         = ctx;
+        this.input       = input;
+        this.onDone      = onDone;
         this.engine      = new BattleEngine();
         this.ui          = new BattleUI();
         this.dialogueBox = new DialogueBox();
-        this.battleCtx   = new BattleContext(player, enemy);
     }
 
-    // ---------------------------------------------------------------
-    // GameState lifecycle
-    // ---------------------------------------------------------------
-
-    @Override
     public void onEnter() {
-        GameLogger.get().info("Battle started: " + enemy.getName()
-            + "  hostility=" + battleCtx.getHostility());
-        player.setFrozen(true);
-        dialogueBox.setText(enemy.getEncounterDialogue());
-        phase = Phase.ENCOUNTER_DIALOGUE;
-        // AudioSystem.get().playMusic(enemy.getBattleMusic()); ← uncomment when wired
+        phase          = Phase.ENCOUNTER_DIALOGUE;
+        selectedAction = 0;
+        lastResult     = null;
+        dialogueBox.setText(ctx.getEnemy().getEncounterDialogue());
+        GameLogger.get().info("Battle started: " + ctx.getEnemy().getName()
+            + "  hostility=" + ctx.getHostility());
     }
 
-    @Override
     public void onExit() {
-        GameLogger.get().info("Battle ended: " + enemy.getName());
-        player.setFrozen(false);
-        // AudioSystem.get().stopMusic(); ← uncomment when wired
-        // AudioSystem.get().playMusic(gameCtx.getCurrentRoom().getMusicPath());
+        GameLogger.get().info("Battle ended: " + ctx.getEnemy().getName());
     }
 
-    // ---------------------------------------------------------------
-    // Update
-    // ---------------------------------------------------------------
-
-    @Override
     public void update(float dt) {
-        player.update(dt);
-        enemy.update(dt);
         dialogueBox.update(dt);
 
-        switch (phase) {
-            case PLAYER_ANIM_WAIT -> {
-                if (player.attackAnimationFinished()) {
-                    phase = Phase.PLAYER_RESULT;
-                    dialogueBox.setText(lastResult.getMessage());
-                }
+        if (phase == Phase.ENEMY_TURN_DELAY) {
+            enemyTurnTimer += dt;
+            if (enemyTurnTimer >= ENEMY_TURN_DELAY_SECS) {
+                enemyTurnTimer = 0f;
+                executeEnemyTurn();
             }
-            case ENEMY_TURN_DELAY -> {
-                enemyTurnTimer += dt;
-                if (enemyTurnTimer >= ENEMY_TURN_DELAY_SECS) {
-                    enemyTurnTimer = 0f;
-                    executeEnemyTurn();
-                }
-            }
-            case ENEMY_ANIM_WAIT -> {
-                if (enemy.getAnimator().currentFinished()
-                        || !enemy.getAnimator().has("hurt")) {
-                    phase = Phase.ENEMY_RESULT;
-                    dialogueBox.setText(lastResult.getMessage());
-                }
-            }
-            default -> {}
         }
     }
 
-    // ---------------------------------------------------------------
-    // Render
-    // ---------------------------------------------------------------
-
-    @Override
-    public void render(Graphics2D g) {
+    public void draw(Graphics g) {
         boolean showAction = (phase == Phase.PLAYER_TURN);
         boolean showTalk   = (phase == Phase.TALK_SELECTION);
 
-        ui.render(g, battleCtx,
+        ui.render((Graphics2D)g, ctx,
                   selectedAction, engine.getPlayerActions(), showAction,
                   talkOptions,    selectedTalkOpt,           showTalk,
                   dialogueBox);
     }
 
-    // ---------------------------------------------------------------
-    // Input
-    // ---------------------------------------------------------------
-
-    @Override
-    public void handleInput(InputHandler input) {
+    public void handleInput() {
         switch (phase) {
 
             case ENCOUNTER_DIALOGUE -> {
@@ -230,7 +135,7 @@ public class BattleState extends GameState {
                         phase = Phase.TERMINAL;
                         dialogueBox.setText(buildTerminalMessage(lastResult));
                     } else {
-                        phase = Phase.ENEMY_TURN_DELAY;
+                        phase          = Phase.ENEMY_TURN_DELAY;
                         enemyTurnTimer = 0f;
                     }
                 }
@@ -251,26 +156,20 @@ public class BattleState extends GameState {
 
             case TERMINAL -> {
                 if (input.isJustPressed(InputHandler.CONFIRM)) {
-                    if (!dialogueBox.isFinished()) {
-                        dialogueBox.skipToEnd();
-                    } else {
-                        exitBattle();
-                    }
+                    if (!dialogueBox.isFinished()) dialogueBox.skipToEnd();
+                    else                           exitBattle();
                 }
             }
 
-            default -> {}
+            case ENEMY_TURN_DELAY -> {
+            }
         }
     }
 
-    // ---------------------------------------------------------------
-    // Action resolution
-    // ---------------------------------------------------------------
-
-    private void executePlayerAction(int actionIndex) {
+    private void executePlayerAction(int index) {
         try {
-            lastResult = engine.executePlayerAction(actionIndex, battleCtx);
-            battleCtx.setLastResult(lastResult);
+            lastResult = engine.executePlayerAction(index, ctx);
+            ctx.setLastResult(lastResult);
 
             if (lastResult.isTerminal()) {
                 phase = Phase.PLAYER_RESULT;
@@ -280,12 +179,13 @@ public class BattleState extends GameState {
 
             switch (lastResult.getType()) {
                 case TALK_INITIATED -> {
-                    talkOptions     = battleCtx.getEnemy().getTalkOptions(battleCtx.getTalkCount());
+                    talkOptions     = ctx.getEnemy().getTalkOptions(ctx.getTalkCount());
                     selectedTalkOpt = 0;
                     phase           = Phase.TALK_SELECTION;
                 }
                 case PLAYER_ATTACKED -> {
-                    phase = Phase.PLAYER_ANIM_WAIT;
+                    phase = Phase.PLAYER_RESULT;
+                    dialogueBox.setText(lastResult.getMessage());
                 }
                 default -> {
                     phase = Phase.PLAYER_RESULT;
@@ -302,82 +202,53 @@ public class BattleState extends GameState {
 
     private void resolveTalkOption(TalkOption option) {
         TalkAction talkAction = (TalkAction) engine.getPlayerActions().get(1);
-        lastResult = talkAction.resolveOption(option, battleCtx);
-        battleCtx.setLastResult(lastResult);
-
+        lastResult = talkAction.resolveOption(option, ctx);
+        ctx.setLastResult(lastResult);
         GameLogger.get().info("Talk: \"" + option.getText()
             + "\" delta=" + option.getHostilityDelta()
-            + " hostility=" + battleCtx.getHostility());
-
+            + " hostility=" + ctx.getHostility());
         phase = Phase.PLAYER_RESULT;
         dialogueBox.setText(lastResult.getMessage());
     }
 
     private void executeEnemyTurn() {
         try {
-            lastResult = engine.executeEnemyTurn(battleCtx);
-            battleCtx.setLastResult(lastResult);
-
-            if (enemy.getAnimator().has("attack")) {
-                enemy.getAnimator().forcePlay("attack");
-                phase = Phase.ENEMY_ANIM_WAIT;
-            } else {
-                phase = Phase.ENEMY_RESULT;
-                dialogueBox.setText(lastResult.getMessage());
-            }
-
+            lastResult = engine.executeEnemyTurn(ctx);
+            ctx.setLastResult(lastResult);
+            phase = Phase.ENEMY_RESULT;
+            dialogueBox.setText(lastResult.getMessage());
         } catch (GameException e) {
             GameLogger.get().error("Enemy turn error", e);
             phase = Phase.PLAYER_TURN;
         }
     }
 
-    // ---------------------------------------------------------------
-    // Exit routing
-    // ---------------------------------------------------------------
-
     private void exitBattle() {
         onExit();
-        if (lastResult == null) { onWin.run(); return; }
-        switch (lastResult.getType()) {
-            case PLAYER_DEFEATED -> onLose.run();
-            case PLAYER_FLED     -> onFlee.run();
-            default              -> onWin.run();
+        BattleOutcome outcome;
+        if (lastResult == null) {
+            outcome = new BattleOutcome(BattleOutcome.Result.WIN,
+                                        ctx.getPlayer().getHp());
+        } else {
+            outcome = switch (lastResult.getType()) {
+                case PLAYER_DEFEATED -> new BattleOutcome(
+                    BattleOutcome.Result.LOSE, ctx.getPlayer().getHp());
+                case PLAYER_FLED     -> new BattleOutcome(
+                    BattleOutcome.Result.FLEE, ctx.getPlayer().getHp());
+                default              -> new BattleOutcome(
+                    BattleOutcome.Result.WIN,  ctx.getPlayer().getHp());
+            };
         }
+        onDone.accept(outcome);
     }
 
     private String buildTerminalMessage(BattleResult result) {
         return switch (result.getType()) {
             case ENEMY_DEFEATED  -> result.getMessage() + "\n* The path is clear.";
-            case MERCY_GRANTED   -> result.getMessage() + "\n* They step aside peacefully.";
+            case MERCY_GRANTED   -> result.getMessage() + "\n* They step aside.";
             case PLAYER_FLED     -> result.getMessage();
-            case PLAYER_DEFEATED -> result.getMessage() + "\n\n* Press Z to try again.";
+            case PLAYER_DEFEATED -> result.getMessage() + "\n\n* Press Z to continue.";
             default              -> result.getMessage();
         };
     }
-
-    // ---------------------------------------------------------------
-    // Standalone callbacks (used by BattleTest)
-    // ---------------------------------------------------------------
-
-    public void setOnWin(Runnable r)  { this.onWin  = r; }
-    public void setOnLose(Runnable r) { this.onLose = r; }
-    public void setOnFlee(Runnable r) { this.onFlee = r; }
-
-    /** Legacy — kept for BattleTest compatibility */
-    public void setOnBattleEnd(Runnable r) { this.onWin = r; this.onFlee = r; }
-
-    public boolean isOver() {
-        return phase == Phase.TERMINAL && dialogueBox.isFinished();
-    }
-
-    public BattleResult getLastResult() { return lastResult; }
-
-    private void resolveTalkOption(TalkOption option) {
-    TalkAction talkAction = (TalkAction) engine.getPlayerActions().get(1);
-    lastResult = talkAction.resolveOption(option, ctx);
-    ctx.setLastResult(lastResult);
-    phase = Phase.PLAYER_RESULT;
-    dialogueBox.setText(lastResult.getMessage());
-}
 }

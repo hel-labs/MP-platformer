@@ -8,6 +8,7 @@ import com.platformer.battle.dialogue.DialogueBox;
 import com.platformer.battle.entities.*;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.List;
 
 public class BattleUI{
@@ -47,7 +48,7 @@ public class BattleUI{
     public static final Color COL_HOST_ZERO  = new Color(80,  200,  80);
 
 
-    public void render(Graphics2D g, BattleContext ctx, int selectedAction, List<BattleAction> actions, boolean showActionMenu, List<TalkOption> talkOptions, int selectedTalkOpt, boolean showTalkMenu, DIalogueBox dialogueBox){
+    public void render(Graphics2D g, BattleContext ctx, int selectedAction, List<BattleAction> actions, boolean showActionMenu, List<TalkOption> talkOptions, int selectedTalkOpt, boolean showTalkMenu, DialogueBox dialogueBox){
         renderBackground(g);
         renderCombatants(g, ctx);
         renderHPBars(g, ctx);
@@ -59,7 +60,7 @@ public class BattleUI{
         }else if(showTalkMenu){
             renderTalkOptions(g, talkOptions, selectedTalkOpt, ctx);
         }else{
-            dialoguebox.render(g, 40, PANEL_Y+10, SCREEN_W-80, 90);
+            dialogueBox.render(g, 40, PANEL_Y+10, SCREEN_W-80, 90);
         }
 
         renderTurnCounter(g, ctx);

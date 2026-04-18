@@ -9,87 +9,95 @@ import com.platformer.overworld.utils.LoadSave;
 
 public class LevelManager {
 
-	private final Game game;
+	private Game game;
 	private BufferedImage[] levelSprite;
-	private final ArrayList<Level> levels = new ArrayList<>();
-	private int levelIndex;
+	private BufferedImage[] waterSprite;
+	private ArrayList<Level> levels;
+	private int lvlIndex = 0, aniTick, aniIndex;
 
 	public LevelManager(Game game) {
 		this.game = game;
 		importOutsideSprites();
-		loadLevels();
+		createWater();
+		levels = new ArrayList<>();
+		buildAllLevels();
 	}
 
-	private void loadLevels() {
-		levels.clear();
+	private void createWater() {
+		waterSprite = new BufferedImage[5];
+		BufferedImage img = LoadSave.GetSpriteAtlas(LoadSave.WATER_TOP);
+		for (int i = 0; i < 4; i++)
+			waterSprite[i] = img.getSubimage(i * 32, 0, 32, 32);
+		waterSprite[4] = LoadSave.GetSpriteAtlas(LoadSave.WATER_BOTTOM);
+	}
 
-		Level levelOne = new Level(LoadSave.GetLevelData());
-		levelOne.setCrabs(LoadSave.GetCrabs());
-		levelOne.setPinkstars(LoadSave.GetPinkstars());
-		levelOne.setSharks(LoadSave.GetSharks());
+	public void loadNextLevel() {
+		Level newLevel = levels.get(lvlIndex);
+		game.getPlaying().getEnemyManager().loadEnemies(newLevel);
+		game.getPlaying().getPlayer().loadLvlData(newLevel.getLevelData());
+		game.getPlaying().setMaxLvlOffset(newLevel.getLvlOffset());
+		game.getPlaying().getObjectManager().loadObjects(newLevel);
+	}
 
-		levelOne.setSpikes(LoadSave.GetSpikes());
-		levelOne.setPotions(LoadSave.GetPotions());
-		levelOne.setContainers(LoadSave.GetContainers());
-		levelOne.setCannons(LoadSave.GetCannons());
-		levelOne.setTrees(LoadSave.GetTrees());
-		levelOne.setGrass(LoadSave.GetGrass());
-
-		levels.add(levelOne);
-		levelIndex = 0;
+	private void buildAllLevels() {
+		BufferedImage[] allLevels = LoadSave.GetAllLevels();
+		for (BufferedImage img : allLevels)
+			levels.add(new Level(img));
 	}
 
 	private void importOutsideSprites() {
 		BufferedImage img = LoadSave.GetSpriteAtlas(LoadSave.LEVEL_ATLAS);
 		levelSprite = new BufferedImage[48];
-		for (int j = 0; j < 4; j++) {
+		for (int j = 0; j < 4; j++)
 			for (int i = 0; i < 12; i++) {
 				int index = j * 12 + i;
 				levelSprite[index] = img.getSubimage(i * 32, j * 32, 32, 32);
 			}
-		}
 	}
 
-	public void draw(Graphics g, int xLvlOffset) {
-		Level lvl = getCurrentLevel();
-		int[][] lvlData = lvl.getLevelData();
-
-		for (int j = 0; j < lvlData.length; j++) {
-			for (int i = 0; i < lvlData[j].length; i++) {
-				int index = lvl.getSpriteIndex(i, j);
-				if (index < 0 || index >= levelSprite.length) {
-					index = 0;
-				}
-				g.drawImage(levelSprite[index],
-					Game.TILES_SIZE * i - xLvlOffset,
-					Game.TILES_SIZE * j,
-					Game.TILES_SIZE,
-					Game.TILES_SIZE,
-					null);
+	public void draw(Graphics g, int lvlOffset) {
+		for (int j = 0; j < Game.TILES_IN_HEIGHT; j++)
+			for (int i = 0; i < levels.get(lvlIndex).getLevelData()[0].length; i++) {
+				int index = levels.get(lvlIndex).getSpriteIndex(i, j);
+				int x = Game.TILES_SIZE * i - lvlOffset;
+				int y = Game.TILES_SIZE * j;
+				if (index == 48)
+					g.drawImage(waterSprite[aniIndex], x, y, Game.TILES_SIZE, Game.TILES_SIZE, null);
+				else if (index == 49)
+					g.drawImage(waterSprite[4], x, y, Game.TILES_SIZE, Game.TILES_SIZE, null);
+				else
+					g.drawImage(levelSprite[index], x, y, Game.TILES_SIZE, Game.TILES_SIZE, null);
 			}
-		}
 	}
 
 	public void update() {
-		// Reserved for animated tile updates.
+		updateWaterAnimation();
+	}
+
+	private void updateWaterAnimation() {
+		aniTick++;
+		if (aniTick >= 40) {
+			aniTick = 0;
+			aniIndex++;
+
+			if (aniIndex >= 4)
+				aniIndex = 0;
+		}
 	}
 
 	public Level getCurrentLevel() {
-		return levels.get(levelIndex);
-	}
-
-	public int getLevelIndex() {
-		return levelIndex;
-	}
-
-	public void loadNextLevel() {
-		levelIndex++;
-		if (levelIndex >= levels.size()) {
-			levelIndex = 0;
-		}
+		return levels.get(lvlIndex);
 	}
 
 	public int getAmountOfLevels() {
 		return levels.size();
+	}
+
+	public int getLevelIndex() {
+		return lvlIndex;
+	}
+
+	public void setLevelIndex(int lvlIndex) {
+		this.lvlIndex = lvlIndex;
 	}
 }

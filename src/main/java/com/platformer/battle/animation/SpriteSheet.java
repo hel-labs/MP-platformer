@@ -2,7 +2,7 @@ package com.platformer.battle.animation;
 
 import com.platformer.exceptions.*;
 
-import javax.imagio.ImageIO;
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 
@@ -34,9 +34,9 @@ public class SpriteSheet{
         int y = row * frameHeight;
 
         if(x + frameWidth > sheet.getWidth() || y+frameHeight> sheet.getHeight()){
-            return makePlaceholderSheet(frameWidth, frameHeight, java.awt.Color.MAGENTA);
+            return makePlaceholderSheet(frameWidth, frameHeight);
         }
-        return sheet.getSubimage(x, y, framewidth, frameHeight);
+        return sheet.getSubimage(x, y, frameWidth, frameHeight);
     }
 
     public BufferedImage[] getRow(int row, int frameCount){

@@ -1,10 +1,10 @@
-package com.platformer.inputs;
+package com.platformer.input;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
-import com.platformer.gamestate.GameState;
+import com.platformer.gamestate.Gamestate;
 import com.platformer.core.GamePanel;
 
 public class MouseInputs implements MouseListener, MouseMotionListener {
@@ -31,14 +31,6 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
 		case MENU -> gamePanel.getGame().getMenu().mouseMoved(e);
 		case PLAYING -> gamePanel.getGame().getPlaying().mouseMoved(e);
 		case OPTIONS -> gamePanel.getGame().getGameOptions().mouseMoved(e);
-		}
-	}
-
-	@SuppressWarnings("incomplete-switch")
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		switch (Gamestate.state) {
-		case PLAYING -> gamePanel.getGame().getPlaying().mouseClicked(e);
 		}
 	}
 
@@ -71,5 +63,9 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
 	public void mouseExited(MouseEvent e) {
 		// Not In use
 	}
+
+	@Override
+public void mouseClicked(MouseEvent e) {
+}
 
 }

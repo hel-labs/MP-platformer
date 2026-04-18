@@ -2,42 +2,29 @@ package com.platformer.battle.actions;
 
 import com.platformer.battle.engine.BattleContext;
 import com.platformer.battle.engine.BattleResult;
-import com.platformer.battle.entities.*;
 
 import java.util.Random;
 
-public class FleeAction extends BattleAction{
-    private static final float BASE_CHANCE = 0.30f;
-    private static final float TALK_BONUS = 0.10f;
-    private static final float MAX_CHANCE = 0.75f;
+public class FleeAction extends BattleAction {
 
+    private static final float BASE_FLEE_CHANCE = 0.50f;
+    private static final float TALK_FLEE_BONUS  = 0.10f;
+    private static final float MAX_FLEE_CHANCE  = 0.95f;
     private final Random rand = new Random();
 
     @Override
-    public BattleResult execute(BattleContext ctx){
-        BattleEnemy = ctx.getEnemy();
-
-        if(!enemy.isFleeAllowed()){
+    public BattleResult execute(BattleContext ctx) {
+        if (!ctx.getEnemy().isFleeAllowed())
             return BattleResult.fleeFailed();
-        }
 
-        float chance = Math.min(MAX_CHANCE, BASE_CHANCE + ctx.getTalkCount() * TALK_BONUS);
+        float chance = Math.min(MAX_FLEE_CHANCE,
+            BASE_FLEE_CHANCE + ctx.getTalkCount() * TALK_FLEE_BONUS);
 
-        if(rand.nextFloat()<chance){
-            return BattleResult.fled();
-        }
-        else{
-            return BattleResult.fleeFailed();
-        }
+        return rand.nextFloat() < chance
+            ? BattleResult.fled()
+            : BattleResult.fleeFailed();
     }
 
-    @Override
-    public String getLabel(){
-        return "Flee!";
-    }
-
-    @Override
-    public String getDescription(){
-        return "Try your luck to see if you can escape.";
-    }
+    @Override public String getLabel()       { return "FLEE";                              }
+    @Override public String getDescription() { return "Talking improves escape odds."; }
 }

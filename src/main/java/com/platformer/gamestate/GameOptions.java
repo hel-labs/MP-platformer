@@ -1,14 +1,11 @@
 package com.platformer.gamestate;
 
 import java.awt.Graphics;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
 import com.platformer.core.Game;
-import com.platformer.overworld.ui.AudioOptions;
-import com.platformer.overworld.ui.PauseButton;
-import com.platformer.overworld.ui.UrmButton;
+import com.platformer.overworld.ui.*;
 import com.platformer.overworld.utils.LoadSave;
 import static com.platformer.overworld.utils.Constants.UI.URMButtons.*;
 
@@ -90,17 +87,6 @@ public class GameOptions extends State implements Statemethods {
 			audioOptions.mouseMoved(e);
 	}
 
-	@Override
-	public void keyPressed(KeyEvent e) {
-		if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
-			Gamestate.state = Gamestate.MENU;
-	}
-
-	@Override
-	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
-
-	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {

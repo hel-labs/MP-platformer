@@ -1,193 +1,380 @@
+//unused overworld methods to be removed
 package com.platformer.overworld.entities;
 
-import static com.platformer.overworld.utils.Constants.Directions.LEFT;
-import static com.platformer.overworld.utils.Constants.Directions.RIGHT;
-import static com.platformer.overworld.utils.Constants.PlayerConstants.ATTACK;
-import static com.platformer.overworld.utils.Constants.PlayerConstants.FALLING;
-import static com.platformer.overworld.utils.Constants.PlayerConstants.GetSpriteAmount;
-import static com.platformer.overworld.utils.Constants.PlayerConstants.HIT;
-import static com.platformer.overworld.utils.Constants.PlayerConstants.IDLE;
-import static com.platformer.overworld.utils.Constants.PlayerConstants.JUMP;
-import static com.platformer.overworld.utils.Constants.PlayerConstants.RUNNING;
-import static com.platformer.overworld.utils.HelpMethods.CanMoveHere;
-import static com.platformer.overworld.utils.HelpMethods.GetEntityXPosNextToWall;
-import static com.platformer.overworld.utils.HelpMethods.GetEntityYPosUnderRoofOrAboveFloor;
-import static com.platformer.overworld.utils.HelpMethods.IsEntityOnFloor;
-
+import static com.platformer.overworld.utils.Constants.PlayerConstants.*;
+import static com.platformer.overworld.utils.HelpMethods.*;
+import static com.platformer.overworld.utils.Constants.*;
+import static com.platformer.overworld.utils.Constants.Directions.*;
+import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Toolkit;
+import java.awt.Point;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
+import com.platformer.utils.AudioPlayer;
+import com.platformer.overworld.states.Playing;
+import com.platformer.battle.core.BattleOutcome;
 import com.platformer.core.Game;
 import com.platformer.overworld.utils.LoadSave;
-import com.platformer.core.BattleSnapshot;
-import com.platformer.battle.core.BattleSnapshot;
 
 public class Player extends Entity {
 
-	private int hp     = 80;
-private int maxHp  = 80;
-private int attack = 10;
-private boolean frozen = false;
-
 	private BufferedImage[][] animations;
-	private int playerAction = IDLE;
-
-	private boolean moving;
-	private boolean attacking;
-	private boolean left, up, right, down, jump;
-
-	private float playerSpeed = 1.0f * Game.SCALE;
+	private boolean moving = false, attacking = false;
+	private boolean left, right, jumpRequest;
 	private int[][] lvlData;
+	private float xDrawOffset = 21 * Game.SCALE;
+	private float yDrawOffset = 4 * Game.SCALE;
 
-	private final float xDrawOffset = 21 * Game.SCALE;
-	private final float yDrawOffset = 4 * Game.SCALE;
-
-	private float gravity = 0.04f * Game.SCALE;
+	// Jumping / Gravity
 	private float jumpSpeed = -2.25f * Game.SCALE;
 	private float fallSpeedAfterCollision = 0.5f * Game.SCALE;
 
-	private int tileY;
-	private int maxPower = 100;
-	private int currentPower = maxPower;
+	// StatusBarUI
+	private BufferedImage statusBarImg;
 
-	private int attackBoxOffsetX;
+	private int statusBarWidth = (int) (192 * Game.SCALE);
+	private int statusBarHeight = (int) (58 * Game.SCALE);
+	private int statusBarX = (int) (10 * Game.SCALE);
+	private int statusBarY = (int) (10 * Game.SCALE);
 
-	public Player(float x, float y, int width, int height) {
+	private int healthBarWidth = (int) (150 * Game.SCALE);
+	private int healthBarHeight = (int) (4 * Game.SCALE);
+	private int healthBarXStart = (int) (34 * Game.SCALE);
+	private int healthBarYStart = (int) (14 * Game.SCALE);
+	private int healthWidth = healthBarWidth;
+
+	private int powerBarWidth = (int) (104 * Game.SCALE);
+	private int powerBarHeight = (int) (2 * Game.SCALE);
+	private int powerBarXStart = (int) (44 * Game.SCALE);
+	private int powerBarYStart = (int) (34 * Game.SCALE);
+	private int powerWidth = powerBarWidth;
+	private int powerMaxValue = 200;
+	private int powerValue = powerMaxValue;
+
+	private int flipX = 0;
+	private int flipW = 1;
+
+	private boolean attackChecked;
+	private Playing playing;
+
+	private int tileY = 0;
+
+	private boolean powerAttackActive;
+	private int powerAttackTick;
+	private int powerGrowSpeed = 15;
+	private int powerGrowTick;
+
+	    // Battle stats
+    private int hp     = 80;
+    private int maxHp  = 80;
+    private int attack = 10;
+ 
+    // Freeze flag — set true during battle so physics don't run
+    private boolean frozen = false;
+
+	public Player(float x, float y, int width, int height, Playing playing) {
 		super(x, y, width, height);
+		this.playing = playing;
+		this.state = IDLE;
+		this.maxHealth = 100;
+		this.currentHealth = maxHealth;
+		this.walkSpeed = Game.SCALE * 1.0f;
 		loadAnimations();
 		initHitbox(20, 27);
 		initAttackBox();
-
-		maxHealth = 100;
-		currentHealth = maxHealth;
-		walkSpeed = playerSpeed;
 	}
 
-	public BattleSnapshot createSnapshot() {
-    return new BattleSnapshot(hp, maxHp, attack);
-}
-public void applyOutcome(BattleOutcome outcome) {
-    if (outcome.isLose()) hp = Math.max(1, hp / 2);
-    else                  hp = outcome.hpRemaining;
-}
-public void setFrozen(boolean frozen) { this.frozen = frozen; }
-public boolean isFrozen()            { return frozen; }
+	public void setSpawn(Point spawn) {
+		this.x = spawn.x;
+		this.y = spawn.y;
+		hitbox.x = x;
+		hitbox.y = y;
+	}
 
 	private void initAttackBox() {
-		attackBoxOffsetX = (int) (Game.SCALE * 20);
-		attackBox = new Rectangle2D.Float(x, y, (int) (28 * Game.SCALE), (int) (20 * Game.SCALE));
+		attackBox = new Rectangle2D.Float(x, y, (int) (35 * Game.SCALE), (int) (20 * Game.SCALE));
+		resetAttackBox();
 	}
 
 	public void update() {
-		updatePos();
+		updateHealthBar();
+		updatePowerBar();
+
+		if (currentHealth <= 0) {
+			if (state != DEAD) {
+				state = DEAD;
+				aniTick = 0;
+				aniIndex = 0;
+				playing.setPlayerDying(true);
+				playing.getGame().getAudioPlayer().playEffect(AudioPlayer.DIE);
+
+				// Check if player died in air
+				if (!IsEntityOnFloor(hitbox, lvlData)) {
+					inAir = true;
+					airSpeed = 0;
+				}
+			} else if (aniIndex == GetSpriteAmount(DEAD) - 1 && aniTick >= ANI_SPEED - 1) {
+				playing.setGameOver(true);
+				playing.getGame().getAudioPlayer().stopSong();
+				playing.getGame().getAudioPlayer().playEffect(AudioPlayer.GAMEOVER);
+			} else {
+				updateAnimationTick();
+
+				// Fall if in air
+				if (inAir)
+					if (CanMoveHere(hitbox.x, hitbox.y + airSpeed, hitbox.width, hitbox.height, lvlData)) {
+						hitbox.y += airSpeed;
+						airSpeed += GRAVITY;
+					} else
+						inAir = false;
+
+			}
+
+			return;
+		}
+
 		updateAttackBox();
+
+		if (state == HIT) {
+			if (aniIndex <= GetSpriteAmount(state) - 3)
+				pushBack(pushBackDir, lvlData, 1.25f);
+			updatePushBackDrawOffset();
+		} else
+			updatePos();
+
+		if (moving) {
+			checkPotionTouched();
+			checkSpikesTouched();
+			checkInsideWater();
+			tileY = (int) (hitbox.y / Game.TILES_SIZE);
+			if (powerAttackActive) {
+				powerAttackTick++;
+				if (powerAttackTick >= 35) {
+					powerAttackTick = 0;
+					powerAttackActive = false;
+				}
+			}
+		}
+
+		if (attacking || powerAttackActive)
+			checkAttack();
+
 		updateAnimationTick();
 		setAnimation();
 	}
 
-	private void updateAttackBox() {
-		if (right) {
-			attackBox.x = hitbox.x + hitbox.width;
-		} else if (left) {
-			attackBox.x = hitbox.x - attackBoxOffsetX;
-		} else {
-			attackBox.x = hitbox.x + hitbox.width / 2f;
-		}
-		attackBox.y = hitbox.y + Game.SCALE * 8;
+	private void checkInsideWater() {
+		if (IsEntityInWater(hitbox, playing.getLevelManager().getCurrentLevel().getLevelData()))
+			currentHealth = 0;
 	}
 
-	public void render(Graphics g, int xLvlOffset) {
-		if (animations == null) {
+	private void checkSpikesTouched() {
+		playing.checkSpikesTouched(this);
+	}
+
+	private void checkPotionTouched() {
+		playing.checkPotionTouched(hitbox);
+	}
+
+	private void checkAttack() {
+		if (attackChecked || aniIndex != 1)
 			return;
+		attackChecked = true;
+
+		if (powerAttackActive)
+			attackChecked = false;
+
+		playing.checkEnemyHit(attackBox);
+		playing.checkObjectHit(attackBox);
+		playing.getGame().getAudioPlayer().playAttackSound();
+	}
+
+	private void setAttackBoxOnRightSide() {
+		attackBox.x = hitbox.x + hitbox.width - (int) (Game.SCALE * 5);
+	}
+
+	private void setAttackBoxOnLeftSide() {
+		attackBox.x = hitbox.x - hitbox.width - (int) (Game.SCALE * 10);
+	}
+
+	private void updateAttackBox() {
+		if (right && left) {
+			if (flipW == 1) {
+				setAttackBoxOnRightSide();
+			} else {
+				setAttackBoxOnLeftSide();
+			}
+
+		} else if (right || (powerAttackActive && flipW == 1))
+			setAttackBoxOnRightSide();
+		else if (left || (powerAttackActive && flipW == -1))
+			setAttackBoxOnLeftSide();
+
+		attackBox.y = hitbox.y + (Game.SCALE * 10);
+	}
+
+	private void updateHealthBar() {
+		healthWidth = (int) ((currentHealth / (float) maxHealth) * healthBarWidth);
+	}
+
+	private void updatePowerBar() {
+		powerWidth = (int) ((powerValue / (float) powerMaxValue) * powerBarWidth);
+
+		powerGrowTick++;
+		if (powerGrowTick >= powerGrowSpeed) {
+			powerGrowTick = 0;
+			changePower(1);
 		}
-		g.drawImage(animations[playerAction][aniIndex], (int) (hitbox.x - xDrawOffset) - xLvlOffset, (int) (hitbox.y - yDrawOffset), width, height, null);
-		Toolkit.getDefaultToolkit().sync();
+	}
+
+	public void render(Graphics g, int lvlOffset) {
+		g.drawImage(animations[state][aniIndex], (int) (hitbox.x - xDrawOffset) - lvlOffset + flipX, (int) (hitbox.y - yDrawOffset + (int) (pushDrawOffset)), width * flipW, height, null);
+//		drawHitbox(g, lvlOffset);
+//		drawAttackBox(g, lvlOffset);
+		drawUI(g);
+	}
+
+	private void drawUI(Graphics g) {
+		// Background ui
+		g.drawImage(statusBarImg, statusBarX, statusBarY, statusBarWidth, statusBarHeight, null);
+
+		// Health bar
+		g.setColor(Color.red);
+		g.fillRect(healthBarXStart + statusBarX, healthBarYStart + statusBarY, healthWidth, healthBarHeight);
+
+		// Power Bar
+		g.setColor(Color.yellow);
+		g.fillRect(powerBarXStart + statusBarX, powerBarYStart + statusBarY, powerWidth, powerBarHeight);
 	}
 
 	private void updateAnimationTick() {
 		aniTick++;
-		if (aniTick >= com.platformer.overworld.utils.Constants.ANI_SPEED) {
+		if (aniTick >= ANI_SPEED) {
 			aniTick = 0;
 			aniIndex++;
-			if (aniIndex >= GetSpriteAmount(playerAction)) {
+			if (aniIndex >= GetSpriteAmount(state)) {
 				aniIndex = 0;
 				attacking = false;
-				if (playerAction == HIT) {
-					playerAction = IDLE;
+				attackChecked = false;
+				if (state == HIT) {
+					newState(IDLE);
+					airSpeed = 0f;
+					if (!IsFloor(hitbox, 0, lvlData))
+						inAir = true;
 				}
 			}
 		}
 	}
 
 	private void setAnimation() {
-		int startAni = playerAction;
+		int startAni = state;
+
+		if (state == HIT)
+			return;
+
+		if (moving)
+			state = RUNNING;
+		else
+			state = IDLE;
+
+		if (inAir) {
+			if (airSpeed < 0)
+				state = JUMP;
+			else
+				state = FALLING;
+		}
+
+		if (powerAttackActive) {
+			state = ATTACK;
+			aniIndex = 1;
+			aniTick = 0;
+			return;
+		}
 
 		if (attacking) {
-			playerAction = ATTACK;
-		} else if (inAir) {
-			playerAction = airSpeed < 0 ? JUMP : FALLING;
-		} else if (moving) {
-			playerAction = RUNNING;
-		} else {
-			playerAction = IDLE;
+			state = ATTACK;
+			if (startAni != ATTACK) {
+				aniIndex = 1;
+				aniTick = 0;
+				return;
+			}
 		}
+		if (startAni != state)
+			resetAniTick();
+	}
 
-		if (startAni != playerAction) {
-			aniTick = 0;
-			aniIndex = 0;
-		}
+	private void resetAniTick() {
+		aniTick = 0;
+		aniIndex = 0;
 	}
 
 	private void updatePos() {
-		if(frozen) return;
 		moving = false;
 
-		if (jump) {
+		if(jumpRequest){
 			jump();
+			jumpRequest=false;
 		}
+
+		if (!inAir)
+			if (!powerAttackActive)
+				if ((!left && !right) || (right && left))
+					return;
 
 		float xSpeed = 0;
-		if (left) {
-			xSpeed -= playerSpeed;
+
+		if (left && !right) {
+			xSpeed -= walkSpeed;
+			flipX = width;
+			flipW = -1;
 		}
-		if (right) {
-			xSpeed += playerSpeed;
+		if (right && !left) {
+			xSpeed += walkSpeed;
+			flipX = 0;
+			flipW = 1;
 		}
 
-		if (!inAir && lvlData != null && !IsEntityOnFloor(hitbox, lvlData)) {
-			inAir = true;
+		if (powerAttackActive) {
+			if ((!left && !right) || (left && right)) {
+				if (flipW == -1)
+					xSpeed = -walkSpeed;
+				else
+					xSpeed = walkSpeed;
+			}
+
+			xSpeed *= 3;
 		}
 
-		if (inAir) {
+		if (!inAir)
+			if (!IsEntityOnFloor(hitbox, lvlData))
+				inAir = true;
+
+		if (inAir && !powerAttackActive) {
 			if (CanMoveHere(hitbox.x, hitbox.y + airSpeed, hitbox.width, hitbox.height, lvlData)) {
 				hitbox.y += airSpeed;
-				airSpeed += gravity;
+				airSpeed += GRAVITY;
 				updateXPos(xSpeed);
 			} else {
 				hitbox.y = GetEntityYPosUnderRoofOrAboveFloor(hitbox, airSpeed);
-				if (airSpeed > 0) {
+				if (airSpeed > 0)
 					resetInAir();
-				} else {
+				else
 					airSpeed = fallSpeedAfterCollision;
-				}
 				updateXPos(xSpeed);
 			}
-		} else {
-			updateXPos(xSpeed);
-		}
 
-		tileY = (int) (hitbox.y / Game.TILES_SIZE);
+		} else
+			updateXPos(xSpeed);
+		moving = true;
 	}
 
 	private void jump() {
-		if (inAir) {
+		if (inAir)
 			return;
-		}
+		playing.getGame().getAudioPlayer().playEffect(AudioPlayer.JUMP);
 		inAir = true;
 		airSpeed = jumpSpeed;
-		jump = false;
 	}
 
 	private void resetInAir() {
@@ -196,60 +383,40 @@ public boolean isFrozen()            { return frozen; }
 	}
 
 	private void updateXPos(float xSpeed) {
-		if (xSpeed == 0 || lvlData == null) {
-			return;
-		}
-		if (CanMoveHere(hitbox.x + xSpeed, hitbox.y, hitbox.width, hitbox.height, lvlData)) {
+		if (CanMoveHere(hitbox.x + xSpeed, hitbox.y, hitbox.width, hitbox.height, lvlData))
 			hitbox.x += xSpeed;
-			moving = true;
-		} else {
+		else {
 			hitbox.x = GetEntityXPosNextToWall(hitbox, xSpeed);
-		}
-	}
-
-	private void loadAnimations() {
-		BufferedImage img = LoadSave.GetSpriteAtlas(LoadSave.PLAYER_ATLAS);
-		animations = new BufferedImage[9][6];
-		for (int i = 0; i < animations.length; i++) {
-			for (int j = 0; j < animations[i].length; j++) {
-				animations[i][j] = img.getSubimage(j * 64, i * 40, 64, 40);
+			if (powerAttackActive) {
+				powerAttackActive = false;
+				powerAttackTick = 0;
 			}
 		}
 	}
 
-	public void loadLvlData(int[][] lvlData) {
-		this.lvlData = lvlData;
-		if (lvlData != null && !IsEntityOnFloor(hitbox, lvlData)) {
-			inAir = true;
-		}
-	}
-
-	public void resetDirBooleans() {
-		left = false;
-		up = false;
-		right = false;
-		down = false;
-		jump = false;
-	}
-
 	public void changeHealth(int value) {
+		if (value < 0) {
+			if (state == HIT)
+				return;
+			else
+				newState(HIT);
+		}
+
 		currentHealth += value;
-		if (currentHealth > maxHealth) {
-			currentHealth = maxHealth;
-		}
-		if (currentHealth < 0) {
-			currentHealth = 0;
-		}
+		currentHealth = Math.max(Math.min(currentHealth, maxHealth), 0);
 	}
 
-	public void changeHealth(int value, Enemy enemy) {
+	public void changeHealth(int value, Enemy e) {
+		if (state == HIT)
+			return;
 		changeHealth(value);
-		if (value < 0) {
-			newState(HIT);
-			pushBackOffsetDir = com.platformer.overworld.utils.Constants.Directions.UP;
-			pushBackDir = enemy.getHitbox().x < hitbox.x ? RIGHT : LEFT;
-			pushDrawOffset = 0;
-		}
+		pushBackOffsetDir = UP;
+		pushDrawOffset = 0;
+
+		if (e.getHitbox().x < hitbox.x)
+			pushBackDir = RIGHT;
+		else
+			pushBackDir = LEFT;
 	}
 
 	public void kill() {
@@ -257,68 +424,100 @@ public boolean isFrozen()            { return frozen; }
 	}
 
 	public void changePower(int value) {
-		currentPower += value;
-		if (currentPower > maxPower) {
-			currentPower = maxPower;
-		}
-		if (currentPower < 0) {
-			currentPower = 0;
-		}
+		powerValue += value;
+		powerValue = Math.max(Math.min(powerValue, powerMaxValue), 0);
 	}
 
-	public int getCurrentHealth() {
-		return currentHealth;
+	private void loadAnimations() {
+		BufferedImage img = LoadSave.GetSpriteAtlas(LoadSave.PLAYER_ATLAS);
+		animations = new BufferedImage[7][8];
+		for (int j = 0; j < animations.length; j++)
+			for (int i = 0; i < animations[j].length; i++)
+				animations[j][i] = img.getSubimage(i * 64, j * 40, 64, 40);
+
+		statusBarImg = LoadSave.GetSpriteAtlas(LoadSave.STATUS_BAR);
 	}
 
-	public int getTileY() {
-		return tileY;
+	public void loadLvlData(int[][] lvlData) {
+		this.lvlData = lvlData;
+		if (!IsEntityOnFloor(hitbox, lvlData))
+			inAir = true;
 	}
 
-	public boolean isAttacking() {
-		return attacking;
+	public void resetDirBooleans() {
+		left = false;
+		right = false;
+		jumpRequest=false;
 	}
 
-	public Rectangle2D.Float getAttackBox() {
-		return attackBox;
-	}
-
-	public boolean isDown() {
-		return down;
-	}
-
-	public void setDown(boolean down) {
-		this.down = down;
-	}
-
-	public boolean isRight() {
-		return right;
-	}
-
-	public void setRight(boolean right) {
-		this.right = right;
-	}
-
-	public boolean isUp() {
-		return up;
-	}
-
-	public void setUp(boolean up) {
-		this.up = up;
+	public void setAttacking(boolean attacking) {
+		this.attacking = attacking;
 	}
 
 	public boolean isLeft() {
 		return left;
 	}
 
-	public void setLeft(boolean left) {
-		this.left = left;
+
+	public boolean isRight() {
+		return right;
 	}
 
-	public void setJump(boolean jump) {
-		this.jump = jump;
+	public void setMoving(boolean left, boolean right){
+		this.left=left;
+		this.right=right;
+	}
+	public void requestJump(){
+		this.jumpRequest=true;
 	}
 
-	public void setAttacking(boolean attacking) {
-		this.attacking = attacking;
+
+	public void resetAll() {
+		resetDirBooleans();
+		inAir = false;
+		attacking = false;
+		moving = false;
+		airSpeed = 0f;
+		state = IDLE;
+		currentHealth = maxHealth;
+		powerAttackActive = false;
+		powerAttackTick = 0;
+		powerValue = powerMaxValue;
+
+		hitbox.x = x;
+		hitbox.y = y;
+		resetAttackBox();
+
+		if (!IsEntityOnFloor(hitbox, lvlData))
+			inAir = true;
 	}
+
+	private void resetAttackBox() {
+		if (flipW == 1)
+			setAttackBoxOnRightSide();
+		else
+			setAttackBoxOnLeftSide();
+	}
+
+	public int getTileY() {
+		return tileY;
+	}
+
+	public void powerAttack() {
+		if (powerAttackActive)
+			return;
+		if (powerValue >= 60) {
+			powerAttackActive = true;
+			changePower(-60);
+		}
+
+	}
+
+	public void applyOutcome(BattleOutcome outcome) {
+    if (outcome.isLose()) hp = Math.max(1, hp / 2);
+    else                  hp = outcome.hpRemaining;
+}
+public void setFrozen(boolean frozen) { this.frozen = frozen; }
+public boolean isFrozen()            { return frozen; }
+
 }
