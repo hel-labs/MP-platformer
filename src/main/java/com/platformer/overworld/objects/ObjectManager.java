@@ -66,11 +66,9 @@ public class ObjectManager {
 	public void checkObjectHit(Rectangle2D.Float attackbox) {
 		for (GameContainer gc : containers)
 			if (gc.isActive() && !gc.doAnimation) {
-				if (gc.getHitbox().intersects(attackbox)) {
+				if (gc.getObjType() == BARREL && gc.getHitbox().intersects(attackbox)) {
 					gc.setAnimation(true);
-					int type = 0;
-					if (gc.getObjType() == BARREL)
-						type = 1;
+					int type = 1;
 					potions.add(new Potion((int) (gc.getHitbox().x + gc.getHitbox().width / 2), (int) (gc.getHitbox().y - gc.getHitbox().height / 2), type));
 					return;
 				}

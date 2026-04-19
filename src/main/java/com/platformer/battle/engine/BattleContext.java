@@ -40,7 +40,7 @@ public class BattleContext {
     }
 
     public boolean isMercyAvailable()       { return hostility <= MIN_HOSTILITY; }
-    public int     getHostilityDamageBonus(){ return hostility * 2;              }
+    public int     getHostilityDamageBonus(){ return hostility;                  }
     public int     getHostility()           { return hostility;                  }
 
     public void incrementTalkCount() { talkCount++; }

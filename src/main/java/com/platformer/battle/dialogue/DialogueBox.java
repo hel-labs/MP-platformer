@@ -14,7 +14,7 @@ public class DialogueBox {
     private static final Color BG_COLOR      = new Color(10, 10, 20, 220);
     private static final Color BORDER_COLOR  = new Color(200, 200, 220);
     private static final Color TEXT_COLOR    = Color.WHITE;
-    private static final Font  TEXT_FONT     = new Font("Monospaced", Font.PLAIN, 13);
+    private static final Font  TEXT_FONT     = new Font("Monospaced", Font.PLAIN, Math.max(14, Math.round(13 * com.platformer.core.Game.SCALE)));
 
     public void setText(String text) {
         this.fullText      = text == null ? "" : text;
@@ -60,7 +60,7 @@ public class DialogueBox {
         if (finished && !fullText.isEmpty()) {
             long ms = System.currentTimeMillis();
             if ((ms / 500) % 2 == 0) {
-                g.setFont(new Font("Monospaced", Font.BOLD, 11));
+                g.setFont(new Font("Monospaced", Font.BOLD, Math.max(12, Math.round(11 * com.platformer.core.Game.SCALE))));
                 g.setColor(new Color(200, 200, 180));
                 g.drawString("▼", x + width - PADDING - 8,
                              y + height - PADDING / 2);

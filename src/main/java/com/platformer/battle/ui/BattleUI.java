@@ -1,30 +1,35 @@
 package com.platformer.battle.ui;
 
 import com.platformer.battle.engine.BattleContext;
-//import com.platformer.battle.engine.BattleResult;
 import com.platformer.battle.talk.TalkOption;
 import com.platformer.battle.actions.BattleAction;
 import com.platformer.battle.animation.AnimationController;
 import com.platformer.battle.dialogue.DialogueBox;
-//import com.platformer.battle.entities.*;
+import com.platformer.core.Game;
+import com.platformer.overworld.utils.LoadSave;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
 public class BattleUI {
-    public static final int SCREEN_W = 800;
-    public static final int SCREEN_H = 480;
-    public static final int PANEL_Y = 290;
-    public static final int PANEL_H = SCREEN_H - PANEL_Y;
-    public static final int HP_BAR_W = 160;
-    public static final int HP_BAR_H = 10;
 
-    public static final Font FONT_LABEL = new Font("Monospaced", Font.BOLD, 12);
-    public static final Font FONT_BODY = new Font("Monospaced", Font.PLAIN, 13);
-    public static final Font FONT_ACTION = new Font("Monospaced", Font.BOLD, 14);
-    public static final Font FONT_HINT = new Font("Monospaced", Font.ITALIC, 11);
-    public static final Font FONT_SMALL = new Font("Monospaced", Font.PLAIN, 10);
+    private static int ui(int value) {
+        return Math.max(value, Math.round(value * Game.SCALE));
+    }
+
+    public static final int SCREEN_W = Game.GAME_WIDTH;
+    public static final int SCREEN_H = Game.GAME_HEIGHT;
+    public static final int PANEL_Y = (int) (SCREEN_H * 0.62f);
+    public static final int PANEL_H = SCREEN_H - PANEL_Y;
+    public static final int HP_BAR_W = ui(160);
+    public static final int HP_BAR_H = ui(8);
+
+    public static final Font FONT_LABEL = new Font("Monospaced", Font.BOLD, ui(12));
+    public static final Font FONT_BODY = new Font("Monospaced", Font.PLAIN, ui(13));
+    public static final Font FONT_ACTION = new Font("Monospaced", Font.BOLD, ui(14));
+    public static final Font FONT_HINT = new Font("Monospaced", Font.ITALIC, ui(11));
+    public static final Font FONT_SMALL = new Font("Monospaced", Font.PLAIN, ui(10));
 
     public static final Color COL_BG_TOP = new Color(10, 10, 30);
     public static final Color COL_BG_BOTTOM = new Color(5, 5, 15);
@@ -48,12 +53,40 @@ public class BattleUI {
     public static final Color COL_HOST_FILL = new Color(200, 60, 60);
     public static final Color COL_HOST_ZERO = new Color(80, 200, 80);
 
+    private final BufferedImage battleBg;
+    private final BufferedImage bigCloud;
+    private final BufferedImage smallCloud;
+    private final BufferedImage statusBarImg;
+
+    private final int statusBarWidth = (int) (192 * Game.SCALE);
+    private final int statusBarHeight = (int) (58 * Game.SCALE);
+    private final int statusBarX = (int) (10 * Game.SCALE);
+    private final int statusBarY = (int) (10 * Game.SCALE);
+
+    private final int healthBarWidth = (int) (150 * Game.SCALE);
+    private final int healthBarHeight = (int) (4 * Game.SCALE);
+    private final int healthBarXStart = (int) (34 * Game.SCALE);
+    private final int healthBarYStart = (int) (14 * Game.SCALE);
+
+    private final int staminaBarWidth = (int) (104 * Game.SCALE);
+    private final int staminaBarHeight = (int) (2 * Game.SCALE);
+    private final int staminaBarXStart = (int) (44 * Game.SCALE);
+    private final int staminaBarYStart = (int) (34 * Game.SCALE);
+
+    public BattleUI() {
+        battleBg = LoadSave.GetSpriteAtlas(LoadSave.PLAYING_BG_IMG);
+        bigCloud = LoadSave.GetSpriteAtlas(LoadSave.BIG_CLOUDS);
+        smallCloud = LoadSave.GetSpriteAtlas(LoadSave.SMALL_CLOUDS);
+        statusBarImg = LoadSave.GetSpriteAtlas(LoadSave.STATUS_BAR);
+    }
+
     public void render(Graphics2D g, BattleContext ctx, int selectedAction, List<BattleAction> actions,
             boolean showActionMenu, List<TalkOption> talkOptions, int selectedTalkOpt, boolean showTalkMenu,
             DialogueBox dialogueBox) {
         renderBackground(g);
         renderCombatants(g, ctx);
-        renderHPBars(g, ctx);
+        renderPlayerStatusTopLeft(g, ctx);
+        renderEnemyStatusTopRight(g, ctx);
         renderHostilityBar(g, ctx);
         renderPanel(g);
 
@@ -62,18 +95,43 @@ public class BattleUI {
         } else if (showTalkMenu) {
             renderTalkOptions(g, talkOptions, selectedTalkOpt, ctx);
         } else {
-            dialogueBox.render(g, 40, PANEL_Y + 10, SCREEN_W - 80, 90);
+            dialogueBox.render(g, ui(40), PANEL_Y + ui(10), SCREEN_W - ui(80), Math.max(ui(96), (int) (PANEL_H * 0.50f)));
         }
 
         renderTurnCounter(g, ctx);
     }
 
     public void renderBackground(Graphics2D g) {
-        GradientPaint grad = new GradientPaint(
-                0, 0, COL_BG_TOP,
-                0, PANEL_Y, COL_BG_BOTTOM);
-        g.setPaint(grad);
-        g.fillRect(0, 0, SCREEN_W, PANEL_Y);
+        if (battleBg != null)
+            g.drawImage(battleBg, 0, 0, SCREEN_W, PANEL_Y, null);
+        else {
+            GradientPaint grad = new GradientPaint(0, 0, COL_BG_TOP, 0, PANEL_Y, COL_BG_BOTTOM);
+            g.setPaint(grad);
+            g.fillRect(0, 0, SCREEN_W, PANEL_Y);
+        }
+
+        drawClouds(g);
+    }
+
+    private void drawClouds(Graphics2D g) {
+        if (bigCloud != null) {
+            int bigW = (int) (bigCloud.getWidth() * Game.SCALE);
+            int bigH = (int) (bigCloud.getHeight() * Game.SCALE);
+            int y = (int) (SCREEN_H * 0.35f) - bigH;
+            for (int i = -1; i <= (SCREEN_W / Math.max(1, bigW)) + 1; i++)
+                g.drawImage(bigCloud, i * bigW, y, bigW, bigH, null);
+        }
+
+        if (smallCloud != null) {
+            int sw = (int) (smallCloud.getWidth() * Game.SCALE);
+            int sh = (int) (smallCloud.getHeight() * Game.SCALE);
+            int spacing = sw * 3;
+            for (int i = 0; i < 8; i++) {
+                int x = i * spacing - sw;
+                int y = (int) (SCREEN_H * 0.18f) + (i % 3) * ui(12);
+                g.drawImage(smallCloud, x, y, sw, sh, null);
+            }
+        }
     }
 
     public void renderPanel(Graphics2D g) {
@@ -86,54 +144,91 @@ public class BattleUI {
     }
 
     private void renderCombatants(Graphics2D g, BattleContext ctx) {
-        renderEnemySprite(g, ctx);
-        renderPlayerSprite(g, ctx);
+        int groundY = PANEL_Y - ui(16);
+        int playerCenterX = (int) (SCREEN_W * 0.25f);
+        int enemyCenterX = (int) (SCREEN_W * 0.75f);
+        int targetH = (int) (SCREEN_H * 0.20f);
+
+        renderPlayerSprite(g, ctx, playerCenterX, groundY, targetH);
+        renderEnemySprite(g, ctx, enemyCenterX, groundY, targetH);
     }
 
-    private void renderEnemySprite(Graphics2D g, BattleContext ctx) {
+    private void renderEnemySprite(Graphics2D g, BattleContext ctx, int centerX, int groundY, int targetH) {
         BufferedImage sprite = ctx.getEnemy().getBattleSprite();
-        int ex = 160, ey = 80, ew = 128, eh = 128;
 
         if (sprite != null) {
-            g.drawImage(sprite, ex - ew / 2, ey - eh / 2, ew, eh, null);
+            int eh = Math.max(ui(72), targetH);
+            int ew = (int) (sprite.getWidth() * (eh / (float) sprite.getHeight()));
+            // Keep source orientation so enemy faces left with current sprites.
+            g.drawImage(sprite, centerX - ew / 2, groundY - eh, ew, eh, null);
         } else {
+            int ew = (int) (SCREEN_H * 0.18f);
+            int eh = ew;
+            int ey = groundY - eh;
             g.setColor(new Color(100, 200, 100, 180));
-            g.fillOval(ex - ew / 2, ey - eh / 2, ew, eh);
+            g.fillOval(centerX - ew / 2, ey, ew, eh);
             g.setColor(Color.WHITE);
             g.setFont(FONT_SMALL);
             FontMetrics fm = g.getFontMetrics();
             String name = ctx.getEnemy().getName();
-            g.drawString(name, ex - fm.stringWidth(name) / 2, ey + 4);
+            g.drawString(name, centerX - fm.stringWidth(name) / 2, ey + eh / 2);
         }
     }
 
-    private void renderPlayerSprite(Graphics2D g, BattleContext ctx) {
+    private void renderPlayerSprite(Graphics2D g, BattleContext ctx, int centerX, int groundY, int targetH) {
         AnimationController animator = ctx.getPlayer().getAnimator();
         BufferedImage frame = (animator != null) ? animator.getCurrentFrame() : null;
 
-        int px = 580, py = 160, pw = 64, ph = 96;
-
         if (frame != null) {
-            g.drawImage(frame, px, py, pw, ph, null);
+            int ph = Math.max(ui(72), targetH);
+            int pw = (int) (frame.getWidth() * (ph / (float) frame.getHeight()));
+            g.drawImage(frame, centerX - pw / 2, groundY - ph, pw, ph, null);
         } else {
+            int pw = Math.max(88, (int) (SCREEN_W * 0.11f));
+            int ph = (int) (pw * 1.5f);
+            int px = centerX - pw / 2;
             g.setColor(new Color(70, 130, 180, 180));
-            g.fillRect(px, py, pw, ph);
+            g.fillRect(px, groundY - ph, pw, ph);
             g.setColor(Color.WHITE);
             g.setFont(FONT_SMALL);
-            g.drawString("YOU", px + 14, py + ph / 2);
+            g.drawString("YOU", px + 14, groundY - ph / 2);
         }
     }
 
-    private void renderHPBars(Graphics2D g, BattleContext ctx) {
-        renderHPBar(g,
-                ctx.getEnemy().getName(),
-                ctx.getEnemy().getHp(), ctx.getEnemy().getMaxHp(),
-                40, PANEL_Y - 36);
+    private void renderPlayerStatusTopLeft(Graphics2D g, BattleContext ctx) {
+        if (statusBarImg != null)
+            g.drawImage(statusBarImg, statusBarX, statusBarY, statusBarWidth, statusBarHeight, null);
+        else {
+            g.setColor(new Color(18, 18, 32, 230));
+            g.fillRoundRect(statusBarX, statusBarY, statusBarWidth, statusBarHeight, ui(8), ui(8));
+            g.setColor(COL_BORDER);
+            g.drawRoundRect(statusBarX, statusBarY, statusBarWidth, statusBarHeight, ui(8), ui(8));
+        }
 
-        renderHPBar(g,
-                "HP",
-                ctx.getPlayer().getHp(), ctx.getPlayer().getMaxHp(),
-                500, PANEL_Y - 36);
+        int hp = ctx.getPlayer().getHp();
+        int maxHp = ctx.getPlayer().getMaxHp();
+        int stamina = ctx.getPlayer().getStamina();
+        int maxStamina = ctx.getPlayer().getMaxStamina();
+
+        int hpFill = maxHp > 0 ? (int) ((hp / (float) maxHp) * healthBarWidth) : 0;
+        int stFill = maxStamina > 0 ? (int) ((stamina / (float) maxStamina) * staminaBarWidth) : 0;
+
+        g.setColor(Color.RED);
+        g.fillRect(healthBarXStart + statusBarX, healthBarYStart + statusBarY, hpFill, healthBarHeight);
+
+        g.setColor(Color.YELLOW);
+        g.fillRect(staminaBarXStart + statusBarX, staminaBarYStart + statusBarY, stFill, staminaBarHeight);
+
+        g.setColor(Color.WHITE);
+        g.setFont(FONT_SMALL);
+        g.drawString(hp + "/" + maxHp, healthBarXStart + statusBarX + healthBarWidth + ui(8), healthBarYStart + statusBarY + ui(6));
+        g.drawString("ST " + stamina + "/" + maxStamina, staminaBarXStart + statusBarX + staminaBarWidth + ui(8), staminaBarYStart + statusBarY + ui(5));
+    }
+
+    private void renderEnemyStatusTopRight(Graphics2D g, BattleContext ctx) {
+        int x = SCREEN_W - HP_BAR_W - ui(48);
+        int y = ui(20);
+        renderHPBar(g, ctx.getEnemy().getName(), ctx.getEnemy().getHp(), ctx.getEnemy().getMaxHp(), x, y);
     }
 
     private void renderHPBar(Graphics2D g, String label,
@@ -163,33 +258,47 @@ public class BattleUI {
     }
 
     private void renderHostilityBar(Graphics2D g, BattleContext ctx) {
-        int x = 40, y = PANEL_Y - 18;
-        int barW = 100, barH = 6;
+        int x = statusBarX;
+        int y = statusBarY + statusBarHeight + ui(12);
+        int barW = statusBarWidth - ui(22);
+        int barH = ui(10);
 
         int hostility = ctx.getHostility();
-        float ratio = (float) hostility / BattleContext.MAX_HOSTILITY;
+        float ratio = Math.max(0f, Math.min(1f, (float) hostility / BattleContext.MAX_HOSTILITY));
         int fillW = (int) (barW * ratio);
 
-        g.setFont(FONT_SMALL);
-        g.setColor(new Color(160, 100, 100));
-        g.drawString("HOSTILITY", x, y);
+        g.setColor(new Color(16, 16, 28, 220));
+        g.fillRoundRect(x, y, statusBarWidth, ui(26), ui(6), ui(6));
+        g.setColor(COL_BORDER);
+        g.drawRoundRect(x, y, statusBarWidth, ui(26), ui(6), ui(6));
+
+        g.setFont(FONT_HINT);
+        g.setColor(new Color(176, 130, 130));
+        g.drawString("HOSTILITY", x + ui(8), y + ui(10));
+
+        String meterText = hostility + "/" + BattleContext.MAX_HOSTILITY;
+        FontMetrics fm = g.getFontMetrics();
+        g.drawString(meterText, x + statusBarWidth - fm.stringWidth(meterText) - ui(8), y + ui(10));
+
+        int barX = x + ui(8);
+        int barY = y + ui(13);
 
         g.setColor(COL_HOST_BG);
-        g.fillRoundRect(x + 68, y - 8, barW, barH, 3, 3);
+        g.fillRoundRect(barX, barY, barW, barH, ui(3), ui(3));
 
         Color fillColor = ctx.isMercyAvailable() ? COL_HOST_ZERO : COL_HOST_FILL;
         if (fillW > 0) {
             g.setColor(fillColor);
-            g.fillRoundRect(x + 68, y - 8, fillW, barH, 3, 3);
+            g.fillRoundRect(barX, barY, fillW, barH, ui(3), ui(3));
         }
 
         g.setColor(new Color(100, 60, 60));
-        g.drawRoundRect(x + 68, y - 8, barW, barH, 3, 3);
+        g.drawRoundRect(barX, barY, barW, barH, ui(3), ui(3));
 
         if (ctx.isMercyAvailable()) {
             g.setFont(FONT_HINT);
             g.setColor(COL_MERCY_RDY);
-            g.drawString("✦ mercy available", x + 176, y);
+            g.drawString("MERCY AVAILABLE", x + ui(8), y + ui(24));
         }
     }
 
@@ -197,7 +306,11 @@ public class BattleUI {
             BattleContext ctx,
             int selected,
             List<BattleAction> actions) {
-        int startX = 50, startY = PANEL_Y + 24, colW = 180, rowH = 34;
+        int colW = (int) (SCREEN_W * 0.24f);
+        int totalW = colW * 2;
+        int startX = (SCREEN_W - totalW) / 2;
+        int startY = PANEL_Y + ui(20);
+        int rowH = ui(34);
 
         for (int i = 0; i < actions.size(); i++) {
             int col = i % 2, row = i / 2;
@@ -207,10 +320,10 @@ public class BattleUI {
 
             if (sel) {
                 g.setColor(new Color(60, 50, 10, 160));
-                g.fillRoundRect(bx - 4, by, 164, 26, 6, 6);
+                g.fillRoundRect(bx - 4, by, colW - 16, 26, 6, 6);
                 g.setColor(new Color(255, 220, 80, 80));
                 g.setStroke(new BasicStroke(0.5f));
-                g.drawRoundRect(bx - 4, by, 164, 26, 6, 6);
+                g.drawRoundRect(bx - 4, by, colW - 16, 26, 6, 6);
             }
 
             g.setFont(FONT_ACTION);
@@ -223,18 +336,18 @@ public class BattleUI {
             g.setFont(FONT_HINT);
             g.setColor(new Color(160, 160, 180));
             g.drawString(actions.get(selected).getDescription(),
-                    startX, PANEL_Y + 100);
+                    startX, PANEL_Y + ui(108));
         }
 
         g.setFont(FONT_HINT);
         if (ctx.isMercyAvailable()) {
             g.setColor(COL_MERCY_RDY);
-            g.drawString("✦ spare is ready", startX, PANEL_Y + PANEL_H - 18);
+            g.drawString("✦ spare is ready", startX, PANEL_Y + PANEL_H - ui(18));
         } else {
             g.setColor(COL_MERCY_NOT);
             String hint = ctx.getEnemy().getMercyHint(ctx);
             String firstLine = hint.split("\n")[0].replace("* ", "");
-            g.drawString(firstLine, startX, PANEL_Y + PANEL_H - 18);
+            g.drawString(firstLine, startX, PANEL_Y + PANEL_H - ui(18));
         }
     }
 
@@ -317,7 +430,7 @@ public class BattleUI {
         g.setFont(FONT_SMALL);
         g.setColor(new Color(80, 80, 110));
         g.drawString("[Z] confirm   [X] cancel",
-                panX + panW - 130, panY + panH - 8);
+            panX + panW - ui(180), panY + panH - ui(8));
     }
 
     private void renderTurnCounter(Graphics2D g, BattleContext ctx) {

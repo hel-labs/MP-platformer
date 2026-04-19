@@ -12,6 +12,8 @@ public class FightAction extends BattleAction {
     public BattleResult execute(BattleContext ctx) {
         BattlePlayer player   = ctx.getPlayer();
         BattleEnemy  enemy    = ctx.getEnemy();
+        player.playAttackAnimation();
+        player.spendStamina(8);
         DamageStrategy strategy = player.getDamageStrategy();
         int damage = strategy.roll(player.getAttack());
 

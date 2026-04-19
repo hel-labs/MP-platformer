@@ -202,11 +202,11 @@ public class Constants {
 		public static int GetEnemyDmg(int enemy_type) {
 			switch (enemy_type) {
 			case CRABBY:
-				return 15;
+				return 6;
 			case PINKSTAR:
-				return 20;
+				return 10;
 			case SHARK:
-				return 25;
+				return 8;
 			default:
 				return 0;
 			}

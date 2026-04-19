@@ -10,6 +10,8 @@ public class BattlePlayer {
     private int hp;
     private int maxHp;
     private int attack;
+    private int stamina;
+    private int maxStamina;
     private final DamageStrategy damageStrategy = new StandardDice();
     private AnimationController animator;
 
@@ -17,12 +19,14 @@ public class BattlePlayer {
         this.hp = snapshot.hp;
         this.maxHp = snapshot.maxHp;
         this.attack = snapshot.attack;
+        this.stamina = snapshot.stamina;
+        this.maxStamina = snapshot.maxStamina;
     }
 
     public void initAnimations(SpriteSheet sheet) {
         this.animator = new AnimationController();
-        animator.addAnimation("idle", new Animation(sheet.getRow(0, 4), 0.15f, true));
-        animator.addAnimation("attack", new Animation(sheet.getRow(1, 3), 0.08f, false));
+        animator.addAnimation("idle", new Animation(sheet.getRow(0, 5), 0.15f, true));
+        animator.addAnimation("attack", new Animation(sheet.getRow(4, 3), 0.08f, false));
         animator.play("idle");
     }
 
@@ -34,8 +38,17 @@ public class BattlePlayer {
         hp = Math.min(maxHp, hp + amount);
     }
 
+    public void spendStamina(int amount) {
+        stamina = Math.max(0, stamina - amount);
+    }
+
+    public void recoverStamina(int amount) {
+        stamina = Math.min(maxStamina, stamina + amount);
+    }
+
     public void playAttackAnimation() {
-        animator.forceReplay("attack");
+        if (animator != null)
+            animator.forceReplay("attack");
     }
 
     public AnimationController getAnimator() {
@@ -56,6 +69,14 @@ public class BattlePlayer {
 
     public int getAttack() {
         return attack;
+    }
+
+    public int getStamina() {
+        return stamina;
+    }
+
+    public int getMaxStamina() {
+        return maxStamina;
     }
 
     public DamageStrategy getDamageStrategy() {

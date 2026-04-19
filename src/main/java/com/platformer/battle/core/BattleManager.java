@@ -23,7 +23,7 @@ public class BattleManager {
         this.onDone = onDone;
 
         BattlePlayer battlePlayer = new BattlePlayer(snapshot);
-        SpriteSheet playerSheet = new SpriteSheet("/res/player_sprites.png", 32, 32);
+        SpriteSheet playerSheet = new SpriteSheet("/res/player_sprites.png", 64, 40);
         battlePlayer.initAnimations(playerSheet);
         BattleContext ctx = new BattleContext(battlePlayer, enemy);
 

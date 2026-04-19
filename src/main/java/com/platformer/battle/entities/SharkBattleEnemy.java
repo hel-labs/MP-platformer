@@ -11,10 +11,11 @@ public class SharkBattleEnemy extends BattleEnemy {
     private final EscalatingDice strategy = new EscalatingDice();
 
     public SharkBattleEnemy() {
-        this.hp     = 40;
-        this.maxHp  = 40;
-        this.attack = 10;
+        this.hp     = 30;
+        this.maxHp  = 30;
+        this.attack = 6;
         this.fleeAllowed = false;
+        initBattleAnimation("/res/shark_atlas.png", 34, 30, 0, 8, 0.10f, 2, 8, 0.07f);
     }
 
     @Override public String getName()              { return "Shark";                           }

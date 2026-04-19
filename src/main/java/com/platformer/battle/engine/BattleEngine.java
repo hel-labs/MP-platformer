@@ -39,6 +39,7 @@ public class BattleEngine {
             throw new EnemyAlreadyDeadException(enemy.getName());
 
         BattlePlayer player = ctx.getPlayer();
+        enemy.playAttackAnimation();
 
         DamageStrategy strategy   = enemy.getDamageStrategy();
         int            base       = strategy.roll(enemy.getAttack());
@@ -46,6 +47,7 @@ public class BattleEngine {
         int            damage     = base + bonus;
 
         player.takeDamage(damage);
+        player.recoverStamina(5);
 
         String bonusNote = bonus > 0 ? " (+" + bonus + " hostility)" : "";
         String msg = "* " + enemy.getName() + " attacks! ("

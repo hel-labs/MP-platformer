@@ -9,9 +9,10 @@ import java.util.List;
 public class PinkstarBattleEnemy extends BattleEnemy {
 
     public PinkstarBattleEnemy() {
-        this.hp     = 20;
-        this.maxHp  = 20;
-        this.attack = 8;
+        this.hp     = 36;
+        this.maxHp  = 36;
+        this.attack = 7;
+        initBattleAnimation("/res/pinkstar_atlas.png", 34, 30, 0, 8, 0.12f, 2, 7, 0.08f);
     }
 
     @Override public String getName()              { return "Pinkstar";                        }

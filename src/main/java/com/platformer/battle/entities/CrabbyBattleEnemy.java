@@ -9,9 +9,10 @@ import java.util.List;
 public class CrabbyBattleEnemy extends BattleEnemy {
 
     public CrabbyBattleEnemy() {
-        this.hp     = 30;
-        this.maxHp  = 30;
-        this.attack = 6;
+        this.hp     = 22;
+        this.maxHp  = 22;
+        this.attack = 4;
+        initBattleAnimation("/res/crabby_sprite.png", 72, 32, 0, 9, 0.12f, 2, 7, 0.08f);
     }
 
     @Override public String getName()              { return "Crabby";                      }

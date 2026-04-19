@@ -449,7 +449,9 @@ public class Playing extends State implements Statemethods {
 			deathCount++;
 
 			if (deathCount >= MAX_DEATHS) {
+				player.kill();
 				gameOver = true;
+				playerDying = false;
 				getGame().getAudioPlayer().stopSong();
 				getGame().getAudioPlayer().playEffect(com.platformer.utils.AudioPlayer.GAMEOVER);
 				return;
@@ -457,14 +459,18 @@ public class Playing extends State implements Statemethods {
 
 			Point spawn = levelManager.getCurrentLevel().getPlayerSpawn();
 			player.setPosition((float) spawn.x, (float) spawn.y);
-
 			player.resetAll();
-			int respawnHp = player.getMaxHp() / 2;
-			player.setBattleHp(respawnHp);
 
+			int respawnHp = Math.max(1, player.getMaxHp() / 2);
+			player.setBattleHp(respawnHp);
 		} else {
-			player.setBattleHp(outcome.hpRemaining);
+			int syncedHp = Math.max(0, Math.min(outcome.hpRemaining, player.getMaxHp()));
+			player.setBattleHp(syncedHp);
 		}
+	}
+
+	public boolean isGameOver() {
+		return gameOver;
 	}
 
 	private void handleInput() {

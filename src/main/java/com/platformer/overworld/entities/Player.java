@@ -185,7 +185,7 @@ public class Player extends Entity {
 		if (powerAttackActive)
 			attackChecked = false;
 
-		playing.checkEnemyHit(attackBox);
+		// Overworld click attack is used for breakables only.
 		playing.checkObjectHit(attackBox);
 		playing.getGame().getAudioPlayer().playAttackSound();
 	}
@@ -270,6 +270,7 @@ public class Player extends Entity {
 		this.x = x;
 		this.y = y;
 		if (hitbox != null) {
+			hitbox.x = x;
 			hitbox.y = y;
 		}
 	}
@@ -289,6 +290,11 @@ public class Player extends Entity {
 
 	public void setCurrentHealth(int health) {
 		this.currentHealth = Math.max(0, Math.min(health, maxHealth));
+		syncBattleHealthFromCurrent();
+	}
+
+	private void syncBattleHealthFromCurrent() {
+		hp = Math.max(0, Math.min(currentHealth, maxHp));
 	}
 
 	private void setAnimation() {
@@ -428,6 +434,7 @@ public class Player extends Entity {
 
 		currentHealth += value;
 		currentHealth = Math.max(Math.min(currentHealth, maxHealth), 0);
+		syncBattleHealthFromCurrent();
 	}
 
 	public void changeHealth(int value, Enemy e) {
@@ -445,6 +452,7 @@ public class Player extends Entity {
 
 	public void kill() {
 		currentHealth = 0;
+		syncBattleHealthFromCurrent();
 	}
 
 	public void changePower(int value) {
@@ -503,6 +511,7 @@ public class Player extends Entity {
 		airSpeed = 0f;
 		state = IDLE;
 		currentHealth = maxHealth;
+		syncBattleHealthFromCurrent();
 		powerAttackActive = false;
 		powerAttackTick = 0;
 		powerValue = powerMaxValue;
@@ -537,12 +546,7 @@ public class Player extends Entity {
 	}
 
 	public void applyOutcome(BattleOutcome outcome) {
-		if (outcome.isLose())
-			hp = Math.max(1, hp / 2);
-		else
-			hp = outcome.hpRemaining;
-
-		this.currentHealth = hp;
+		setBattleHp(outcome.hpRemaining);
 	}
 
 	public void setFrozen(boolean frozen) {
@@ -554,7 +558,8 @@ public class Player extends Entity {
 	}
 
 	public com.platformer.core.BattleSnapshot createSnapshot() {
-		return new com.platformer.core.BattleSnapshot(hp, maxHp, attack);
+		syncBattleHealthFromCurrent();
+		return new com.platformer.core.BattleSnapshot(hp, maxHp, attack, powerValue, powerMaxValue);
 	}
 
 }

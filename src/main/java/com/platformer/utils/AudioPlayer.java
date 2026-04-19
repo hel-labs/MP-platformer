@@ -17,6 +17,7 @@ public class AudioPlayer {
 	public static int MENU_1 = 0;
 	public static int LEVEL_1 = 1;
 	public static int LEVEL_2 = 2;
+	public static int BATTLE = LEVEL_2;
 
 	public static int DIE = 0;
 	public static int JUMP = 1;
@@ -90,6 +91,10 @@ public class AudioPlayer {
 			playSong(LEVEL_1);
 		else
 			playSong(LEVEL_2);
+	}
+
+	public void setBattleSong() {
+		playSong(BATTLE);
 	}
 
 	public void lvlCompleted() {

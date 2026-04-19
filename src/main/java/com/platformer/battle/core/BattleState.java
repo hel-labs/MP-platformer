@@ -66,7 +66,13 @@ public class BattleState {
         dialogueBox.update(dt);
         if (ctx.getPlayer().getAnimator() != null) {
             ctx.getPlayer().getAnimator().update(dt);
+            if ("attack".equals(ctx.getPlayer().getAnimator().getCurrentKey())
+                    && ctx.getPlayer().getAnimator().currentFinished()
+                    && ctx.getPlayer().getAnimator().has("idle")) {
+                ctx.getPlayer().getAnimator().play("idle");
+            }
         }
+        ctx.getEnemy().updateAnimation(dt);
         if (phase == Phase.ENEMY_TURN_DELAY) {
             enemyTurnTimer += dt;
             if (enemyTurnTimer >= ENEMY_TURN_DELAY_SECS) {

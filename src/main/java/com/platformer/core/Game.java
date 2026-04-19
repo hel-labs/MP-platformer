@@ -137,11 +137,16 @@ public class Game implements Runnable {
 
     public void startBattle(BattleSnapshot snapshot, BattleEnemy enemy) {
         battleManager.init(snapshot, enemy, inputHandler, this::onBattleEnd);
+        audioPlayer.setBattleSong();
         Gamestate.state = Gamestate.BATTLE;
     }
 
     private void onBattleEnd(BattleOutcome outcome) {
         playing.applyBattleOutcome(outcome);
+
+        if (!playing.isGameOver())
+            audioPlayer.setLevelSong(playing.getLevelManager().getLevelIndex());
+
         Gamestate.state = Gamestate.PLAYING;
     }
 

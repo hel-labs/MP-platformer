@@ -12,7 +12,12 @@ public class TalkAction extends BattleAction {
     }
 
     public BattleResult resolveOption(TalkOption option, BattleContext ctx) {
-        ctx.applyHostilityDelta(option.getHostilityDelta());
+        int delta = option.getHostilityDelta();
+        if (delta < 0) {
+            int calmMultiplier = Math.min(3, 1 + ctx.getTalkCount());
+            delta *= calmMultiplier;
+        }
+        ctx.applyHostilityDelta(delta);
         ctx.incrementTalkCount();
         return BattleResult.talked(option.getResponse());
     }

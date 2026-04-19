@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="879c77fa-3cf6-4696-b2b9-537a3916d18d" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/battle/actions/FightAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/battle/actions/FightAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/battle/actions/TalkAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/battle/actions/TalkAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/battle/core/BattleManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/battle/core/BattleManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/battle/core/BattleState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/battle/core/BattleState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/battle/dialogue/DialogueBox.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/battle/dialogue/DialogueBox.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/battle/engine/BattleContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/battle/engine/BattleContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/battle/engine/BattleEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/battle/engine/BattleEngine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/battle/entities/BattleEnemy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/battle/entities/BattleEnemy.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/battle/entities/BattlePlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/battle/entities/BattlePlayer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/battle/entities/CrabbyBattleEnemy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/battle/entities/CrabbyBattleEnemy.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/battle/entities/PinkstarBattleEnemy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/battle/entities/PinkstarBattleEnemy.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/battle/entities/SharkBattleEnemy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/battle/entities/SharkBattleEnemy.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/battle/ui/BattleUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/battle/ui/BattleUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/core/BattleSnapshot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/core/BattleSnapshot.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/core/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/core/Game.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/entities/EnemyManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/entities/EnemyManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/entities/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/entities/Player.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/states/Playing.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/states/Playing.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/utils/Constants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/utils/Constants.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/utils/AudioPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/utils/AudioPlayer.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="MP-platformer" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="MP-platformer" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="MP-platformer" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="application" type="c8890929:TasksNode$1" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;samiarka&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/hel-labs/MP-platformer.git&quot;,
+    &quot;accountId&quot;: &quot;4ab0cc93-dc97-4125-8ff7-d4f51783776a&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1,
+  &quot;fromUser&quot;: false
+}</component>
+  <component name="ProjectId" id="3CZvaxw2Xec16RH0ersbIL0RHKE" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.MainClass.executor": "Run",
+    "Gradle.E:/Game/Java Projects/MP-Platformer_fix/MP-platformer.executor": "Run",
+    "Gradle.MP-platformer [:com.platformer.core.MainClass.main()].executor": "Run",
+    "Gradle.MP-platformer [run].executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "junie.onboarding.icon.badge.shown": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "E:/Game/Java Projects/MP-Platformer_fix/MP-platformer",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle",
+    "to.speed.mode.migration.done": "true",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager" selected="Gradle.MP-platformer [run]">
+    <configuration name="E:/Game/Java Projects/MP-Platformer_fix/MP-platformer" type="GradleRunConfiguration" factoryName="Gradle" nameIsGenerated="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list />
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <ExternalSystemDebugDisabled>false</ExternalSystemDebugDisabled>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <GradleProfilingDisabled>false</GradleProfilingDisabled>
+      <GradleCoverageDisabled>false</GradleCoverageDisabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="MP-platformer [run]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="run" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <ExternalSystemDebugDisabled>false</ExternalSystemDebugDisabled>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <GradleProfilingDisabled>false</GradleProfilingDisabled>
+      <GradleCoverageDisabled>false</GradleCoverageDisabled>
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <option name="filePath" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Gradle.MP-platformer [run]" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="879c77fa-3cf6-4696-b2b9-537a3916d18d" name="Changes" comment="" />
+      <created>1776605973439</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1776605973439</updated>
+      <workItem from="1776605974521" duration="3332000" />
+      <workItem from="1776619762558" duration="723000" />
+      <workItem from="1776620548283" duration="3733000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/MP_platformer$E__Game_Java_Projects_MP_Platformer_fix_MP_platformer.ic" NAME="$PROJECT_DIR$/../MP-platformer Coverage Results" MODIFIED="1776620204872" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
+  </component>
+</project>
