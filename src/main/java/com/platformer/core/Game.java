@@ -33,10 +33,10 @@ public class Game implements Runnable {
     private InputHandler inputHandler;
 
     public static final int TILES_DEFAULT_SIZE = 32;
-    public static final float SCALE = 2f;
+    public static final float SCALE = 1.5f;
     public static final int TILES_IN_WIDTH = 26;
     public static final int TILES_IN_HEIGHT = 14;
-    public static final int TILES_SIZE = (int)(TILES_DEFAULT_SIZE * SCALE);
+    public static final int TILES_SIZE = (int) (TILES_DEFAULT_SIZE * SCALE);
     public static final int GAME_WIDTH = TILES_SIZE * TILES_IN_WIDTH;
     public static final int GAME_HEIGHT = TILES_SIZE * TILES_IN_HEIGHT;
 
@@ -55,8 +55,8 @@ public class Game implements Runnable {
         inputHandler.install(gamePanel);
         MouseInputs mouseInputs = new MouseInputs(gamePanel);
 
-gamePanel.addMouseListener(mouseInputs);
-gamePanel.addMouseMotionListener(mouseInputs);
+        gamePanel.addMouseListener(mouseInputs);
+        gamePanel.addMouseMotionListener(mouseInputs);
 
         startGameLoop();
     }
@@ -88,14 +88,18 @@ gamePanel.addMouseMotionListener(mouseInputs);
 
         switch (Gamestate.state) {
 
-            case MENU -> pollMenuInput();
+            case MENU -> {
+                pollMenuInput();
+                inputHandler.tick();
+            }
             case PLAYING -> {
-                pollOverworldInput();
                 playing.update();
+                inputHandler.tick();
             }
             case BATTLE -> {
                 battleManager.handleInput();
                 battleManager.update(1f / UPS_SET);
+                inputHandler.tick();
             }
             case GAME_OVER -> pollGameOverInput();
             case CREDITS -> credits.update();
@@ -112,26 +116,8 @@ gamePanel.addMouseMotionListener(mouseInputs);
             Gamestate.state = Gamestate.PLAYING;
     }
 
-    private void pollOverworldInput() {
-
-        com.platformer.overworld.entities.Player p = playing.getPlayer();
-
-        boolean left = inputHandler.isHeld(InputHandler.LEFT_A) || inputHandler.isHeld(InputHandler.LEFT);
-        boolean right = inputHandler.isHeld(InputHandler.RIGHT_D) || inputHandler.isHeld(InputHandler.RIGHT);
-        p.setMoving(left, right);
-
-        if (inputHandler.isJustPressed(InputHandler.JUMP) || inputHandler.isJustPressed(InputHandler.UP_W)){
-            p.requestJump();
-        }
-            
-
-        if (inputHandler.isJustPressed(KeyEvent.VK_BACK_SPACE)) {
-            p.resetDirBooleans();
-            Gamestate.state = Gamestate.MENU;
-        }
+    private void pollGameOverInput() {
     }
-
-    private void pollGameOverInput() {}
 
     public void render(Graphics g) {
 
@@ -142,8 +128,10 @@ gamePanel.addMouseMotionListener(mouseInputs);
             case BATTLE -> battleManager.draw(g);
             case OPTIONS -> gameOptions.draw(g);
             case CREDITS -> credits.draw(g);
-            case GAME_OVER -> {}
-            case QUIT -> {}
+            case GAME_OVER -> {
+            }
+            case QUIT -> {
+            }
         }
     }
 
@@ -153,12 +141,8 @@ gamePanel.addMouseMotionListener(mouseInputs);
     }
 
     private void onBattleEnd(BattleOutcome outcome) {
-
         playing.applyBattleOutcome(outcome);
-
-        Gamestate.state = (outcome.isWin() || outcome.isFlee())
-                ? Gamestate.PLAYING
-                : Gamestate.GAME_OVER;
+        Gamestate.state = Gamestate.PLAYING;
     }
 
     @Override
@@ -212,11 +196,31 @@ gamePanel.addMouseMotionListener(mouseInputs);
             playing.getPlayer().resetDirBooleans();
     }
 
-    public InputHandler getInputHandler() { return inputHandler; }
-    public Menu getMenu() { return menu; }
-    public Playing getPlaying() { return playing; }
-    public Credits getCredits() { return credits; }
-    public GameOptions getGameOptions() { return gameOptions; }
-    public AudioOptions getAudioOptions() { return audioOptions; }
-    public AudioPlayer getAudioPlayer() { return audioPlayer; }
+    public InputHandler getInputHandler() {
+        return inputHandler;
+    }
+
+    public Menu getMenu() {
+        return menu;
+    }
+
+    public Playing getPlaying() {
+        return playing;
+    }
+
+    public Credits getCredits() {
+        return credits;
+    }
+
+    public GameOptions getGameOptions() {
+        return gameOptions;
+    }
+
+    public AudioOptions getAudioOptions() {
+        return audioOptions;
+    }
+
+    public AudioPlayer getAudioPlayer() {
+        return audioPlayer;
+    }
 }

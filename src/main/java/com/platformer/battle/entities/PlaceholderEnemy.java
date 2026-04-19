@@ -1,7 +1,5 @@
 package com.platformer.battle.entities;
 
-import com.platformer.battle.engine.BattleContext;
-import com.platformer.battle.entities.BattleEnemy;
 import com.platformer.battle.strategies.DamageStrategy;
 import com.platformer.battle.strategies.WeakSteadyDice;
 import com.platformer.battle.talk.TalkOption;

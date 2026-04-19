@@ -17,7 +17,7 @@ public class GameWindow {
 
         jframe.add(gamePanel);
 
-        jframe.pack();
+        jframe.setSize(Game.GAME_WIDTH, Game.GAME_HEIGHT);
         jframe.setLocationRelativeTo(null);
         jframe.setVisible(true);
 

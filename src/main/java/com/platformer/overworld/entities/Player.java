@@ -65,13 +65,13 @@ public class Player extends Entity {
 	private int powerGrowSpeed = 15;
 	private int powerGrowTick;
 
-	    // Battle stats
-    private int hp     = 80;
-    private int maxHp  = 80;
-    private int attack = 10;
- 
-    // Freeze flag — set true during battle so physics don't run
-    private boolean frozen = false;
+	// Battle stats
+	private int hp = 80;
+	private int maxHp = 80;
+	private int attack = 10;
+
+	// Freeze flag — set true during battle so physics don't run
+	private boolean frozen = false;
 
 	public Player(float x, float y, int width, int height, Playing playing) {
 		super(x, y, width, height);
@@ -229,9 +229,8 @@ public class Player extends Entity {
 	}
 
 	public void render(Graphics g, int lvlOffset) {
-		g.drawImage(animations[state][aniIndex], (int) (hitbox.x - xDrawOffset) - lvlOffset + flipX, (int) (hitbox.y - yDrawOffset + (int) (pushDrawOffset)), width * flipW, height, null);
-//		drawHitbox(g, lvlOffset);
-//		drawAttackBox(g, lvlOffset);
+		g.drawImage(animations[state][aniIndex], (int) (hitbox.x - xDrawOffset) - lvlOffset + flipX,
+				(int) (hitbox.y - yDrawOffset + (int) (pushDrawOffset)), width * flipW, height, null);
 		drawUI(g);
 	}
 
@@ -265,6 +264,31 @@ public class Player extends Entity {
 				}
 			}
 		}
+	}
+
+	public void setPosition(float x, float y) {
+		this.x = x;
+		this.y = y;
+		if (hitbox != null) {
+			hitbox.y = y;
+		}
+	}
+
+	public int getMaxHp() {
+		return maxHp;
+	}
+
+	public void setBattleHp(int hp) {
+		this.hp = Math.max(0, Math.min(hp, maxHp));
+		this.currentHealth = this.hp;
+	}
+
+	public void syncHealthFromBattle() {
+		setCurrentHealth(hp);
+	}
+
+	public void setCurrentHealth(int health) {
+		this.currentHealth = Math.max(0, Math.min(health, maxHealth));
 	}
 
 	private void setAnimation() {
@@ -312,9 +336,9 @@ public class Player extends Entity {
 	private void updatePos() {
 		moving = false;
 
-		if(jumpRequest){
+		if (jumpRequest) {
 			jump();
-			jumpRequest=false;
+			jumpRequest = false;
 		}
 
 		if (!inAir)
@@ -447,7 +471,7 @@ public class Player extends Entity {
 	public void resetDirBooleans() {
 		left = false;
 		right = false;
-		jumpRequest=false;
+		jumpRequest = false;
 	}
 
 	public void setAttacking(boolean attacking) {
@@ -458,19 +482,18 @@ public class Player extends Entity {
 		return left;
 	}
 
-
 	public boolean isRight() {
 		return right;
 	}
 
-	public void setMoving(boolean left, boolean right){
-		this.left=left;
-		this.right=right;
-	}
-	public void requestJump(){
-		this.jumpRequest=true;
+	public void setMoving(boolean left, boolean right) {
+		this.left = left;
+		this.right = right;
 	}
 
+	public void requestJump() {
+		this.jumpRequest = true;
+	}
 
 	public void resetAll() {
 		resetDirBooleans();
@@ -514,10 +537,24 @@ public class Player extends Entity {
 	}
 
 	public void applyOutcome(BattleOutcome outcome) {
-    if (outcome.isLose()) hp = Math.max(1, hp / 2);
-    else                  hp = outcome.hpRemaining;
-}
-public void setFrozen(boolean frozen) { this.frozen = frozen; }
-public boolean isFrozen()            { return frozen; }
+		if (outcome.isLose())
+			hp = Math.max(1, hp / 2);
+		else
+			hp = outcome.hpRemaining;
+
+		this.currentHealth = hp;
+	}
+
+	public void setFrozen(boolean frozen) {
+		this.frozen = frozen;
+	}
+
+	public boolean isFrozen() {
+		return frozen;
+	}
+
+	public com.platformer.core.BattleSnapshot createSnapshot() {
+		return new com.platformer.core.BattleSnapshot(hp, maxHp, attack);
+	}
 
 }

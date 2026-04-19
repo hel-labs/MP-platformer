@@ -118,12 +118,12 @@ public abstract class Enemy extends Entity {
 	protected boolean isPlayerCloseForAttack(Player player) {
 		int absValue = (int) Math.abs(player.hitbox.x - hitbox.x);
 		switch (enemyType) {
-		case CRABBY -> {
-			return absValue <= attackDistance;
-		}
-		case SHARK -> {
-			return absValue <= attackDistance * 2;
-		}
+			case CRABBY -> {
+				return absValue <= attackDistance;
+			}
+			case SHARK -> {
+				return absValue <= attackDistance * 2;
+			}
 		}
 		return false;
 	}
@@ -163,8 +163,8 @@ public abstract class Enemy extends Entity {
 					aniIndex = 0;
 
 					switch (state) {
-					case ATTACK, HIT -> state = IDLE;
-					case DEAD -> active = false;
+						case ATTACK, HIT -> state = IDLE;
+						case DEAD -> active = false;
 					}
 				} else if (enemyType == PINKSTAR) {
 					if (state == ATTACK)
@@ -218,6 +218,10 @@ public abstract class Enemy extends Entity {
 
 	public boolean isActive() {
 		return active;
+	}
+
+	public void setActive(boolean b) {
+		this.active = b;
 	}
 
 	public float getPushDrawOffset() {

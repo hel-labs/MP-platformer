@@ -1,26 +1,39 @@
 package com.platformer.overworld.states;
 
+import static com.platformer.overworld.utils.Constants.Dialogue.DIALOGUE_HEIGHT;
+import static com.platformer.overworld.utils.Constants.Dialogue.DIALOGUE_WIDTH;
+import static com.platformer.overworld.utils.Constants.Dialogue.EXCLAMATION;
+import static com.platformer.overworld.utils.Constants.Dialogue.QUESTION;
+import static com.platformer.overworld.utils.Constants.Environment.BIG_CLOUD_HEIGHT;
+import static com.platformer.overworld.utils.Constants.Environment.BIG_CLOUD_WIDTH;
+import static com.platformer.overworld.utils.Constants.Environment.SMALL_CLOUD_HEIGHT;
+import static com.platformer.overworld.utils.Constants.Environment.SMALL_CLOUD_WIDTH;
+
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.util.Random;
 import java.util.ArrayList;
+import java.util.Random;
 
-import com.platformer.gamestate.*;
-import com.platformer.overworld.entities.*;
-import com.platformer.overworld.levels.LevelManager;
 import com.platformer.battle.core.BattleOutcome;
 import com.platformer.core.Game;
+import com.platformer.gamestate.State;
+import com.platformer.gamestate.Statemethods;
+import com.platformer.input.InputHandler;
+import com.platformer.overworld.effects.DialogueEffect;
+import com.platformer.overworld.effects.Rain;
+import com.platformer.overworld.entities.EnemyManager;
+import com.platformer.overworld.entities.Player;
+import com.platformer.overworld.levels.LevelManager;
 import com.platformer.overworld.objects.ObjectManager;
-import com.platformer.overworld.ui.*;
+import com.platformer.overworld.ui.GameCompletedOverlay;
+import com.platformer.overworld.ui.GameOverOverlay;
+import com.platformer.overworld.ui.LevelCompletedOverlay;
+import com.platformer.overworld.ui.PauseOverlay;
 import com.platformer.overworld.utils.LoadSave;
-import com.platformer.overworld.effects.*;
-import com.platformer.input.*;
-
-import static com.platformer.overworld.utils.Constants.Environment.*;
-import static com.platformer.overworld.utils.Constants.Dialogue.*;
 
 public class Playing extends State implements Statemethods {
 
@@ -56,13 +69,16 @@ public class Playing extends State implements Statemethods {
 	private boolean playerDying;
 	private boolean drawRain;
 
+	private int deathCount = 0;
+	private static final int MAX_DEATHS = 3;
+
 	private boolean drawShip = true;
 	private int shipAni, shipTick, shipDir = 1;
 	private float shipHeightDelta, shipHeightChange = 0.05f * Game.SCALE;
 
 	public Playing(Game game, InputHandler inputHandler) {
 		super(game);
-		this.inputHandler=inputHandler;
+		this.inputHandler = inputHandler;
 		initClasses();
 
 		backgroundImg = LoadSave.GetSpriteAtlas(LoadSave.PLAYING_BG_IMG);
@@ -202,9 +218,11 @@ public class Playing extends State implements Statemethods {
 		for (DialogueEffect de : dialogEffects)
 			if (de.isActive()) {
 				if (de.getType() == QUESTION)
-					g.drawImage(questionImgs[de.getAniIndex()], de.getX() - xLvlOffset, de.getY(), DIALOGUE_WIDTH, DIALOGUE_HEIGHT, null);
+					g.drawImage(questionImgs[de.getAniIndex()], de.getX() - xLvlOffset, de.getY(), DIALOGUE_WIDTH,
+							DIALOGUE_HEIGHT, null);
 				else
-					g.drawImage(exclamationImgs[de.getAniIndex()], de.getX() - xLvlOffset, de.getY(), DIALOGUE_WIDTH, DIALOGUE_HEIGHT, null);
+					g.drawImage(exclamationImgs[de.getAniIndex()], de.getX() - xLvlOffset, de.getY(), DIALOGUE_WIDTH,
+							DIALOGUE_HEIGHT, null);
 			}
 	}
 
@@ -240,7 +258,9 @@ public class Playing extends State implements Statemethods {
 			rain.draw(g, xLvlOffset);
 
 		if (drawShip)
-			g.drawImage(shipImgs[shipAni], (int) (100 * Game.SCALE) - xLvlOffset, (int) ((288 * Game.SCALE) + shipHeightDelta), (int) (78 * Game.SCALE), (int) (72 * Game.SCALE), null);
+			g.drawImage(shipImgs[shipAni], (int) (100 * Game.SCALE) - xLvlOffset,
+					(int) ((288 * Game.SCALE) + shipHeightDelta), (int) (78 * Game.SCALE), (int) (72 * Game.SCALE),
+					null);
 
 		levelManager.draw(g, xLvlOffset);
 		objectManager.draw(g, xLvlOffset);
@@ -264,10 +284,12 @@ public class Playing extends State implements Statemethods {
 
 	private void drawClouds(Graphics g) {
 		for (int i = 0; i < 4; i++)
-			g.drawImage(bigCloud, i * BIG_CLOUD_WIDTH - (int) (xLvlOffset * 0.3), (int) (204 * Game.SCALE), BIG_CLOUD_WIDTH, BIG_CLOUD_HEIGHT, null);
+			g.drawImage(bigCloud, i * BIG_CLOUD_WIDTH - (int) (xLvlOffset * 0.3), (int) (204 * Game.SCALE),
+					BIG_CLOUD_WIDTH, BIG_CLOUD_HEIGHT, null);
 
 		for (int i = 0; i < smallCloudsPos.length; i++)
-			g.drawImage(smallCloud, SMALL_CLOUD_WIDTH * 4 * i - (int) (xLvlOffset * 0.7), smallCloudsPos[i], SMALL_CLOUD_WIDTH, SMALL_CLOUD_HEIGHT, null);
+			g.drawImage(smallCloud, SMALL_CLOUD_WIDTH * 4 * i - (int) (xLvlOffset * 0.7), smallCloudsPos[i],
+					SMALL_CLOUD_WIDTH, SMALL_CLOUD_HEIGHT, null);
 	}
 
 	public void setGameCompleted() {
@@ -291,6 +313,7 @@ public class Playing extends State implements Statemethods {
 		enemyManager.resetAllEnemies();
 		objectManager.resetAllObjects();
 		dialogEffects.clear();
+		deathCount = 0;
 	}
 
 	private void setDrawRainBoolean() {
@@ -328,7 +351,6 @@ public class Playing extends State implements Statemethods {
 				player.powerAttack();
 		}
 	}
-
 
 	public void mouseDragged(MouseEvent e) {
 		if (!gameOver && !gameCompleted && !lvlCompleted)
@@ -417,26 +439,54 @@ public class Playing extends State implements Statemethods {
 	public void setPlayerDying(boolean playerDying) {
 		this.playerDying = playerDying;
 	}
+
 	public void applyBattleOutcome(BattleOutcome outcome) {
-        player.applyOutcome(outcome);
-        player.setFrozen(false);
-        battleTriggered = false;
+		player.setFrozen(false);
+		battleTriggered = false;
+		enemyManager.onBattleEnd(outcome.isWin());
 
-        if (outcome.isLose()) {
-            player.getHitbox().x = 200;
-            player.getHitbox().y = 200;
-        }
-    }
+		if (outcome.isLose()) {
+			deathCount++;
+
+			if (deathCount >= MAX_DEATHS) {
+				gameOver = true;
+				getGame().getAudioPlayer().stopSong();
+				getGame().getAudioPlayer().playEffect(com.platformer.utils.AudioPlayer.GAMEOVER);
+				return;
+			}
+
+			Point spawn = levelManager.getCurrentLevel().getPlayerSpawn();
+			player.setPosition((float) spawn.x, (float) spawn.y);
+
+			player.resetAll();
+			int respawnHp = player.getMaxHp() / 2;
+			player.setBattleHp(respawnHp);
+
+		} else {
+			player.setBattleHp(outcome.hpRemaining);
+		}
+	}
+
 	private void handleInput() {
-    if (gameOver || lvlCompleted || gameCompleted || playerDying) return;
+		if (gameOver || lvlCompleted || gameCompleted || playerDying)
+			return;
 
-    boolean left  = inputHandler.isHeld(InputHandler.LEFT_A) || inputHandler.isHeld(InputHandler.LEFT);
-    boolean right = inputHandler.isHeld(InputHandler.RIGHT_D) || inputHandler.isHeld(InputHandler.RIGHT);
-    boolean jump  = inputHandler.isJustPressed(InputHandler.UP_W) || inputHandler.isJustPressed(InputHandler.JUMP);
+		boolean left = inputHandler.isHeld(InputHandler.LEFT_A) || inputHandler.isHeld(InputHandler.LEFT);
+		boolean right = inputHandler.isHeld(InputHandler.RIGHT_D) || inputHandler.isHeld(InputHandler.RIGHT);
+		boolean jump = inputHandler.isJustPressed(InputHandler.UP_W) || inputHandler.isJustPressed(InputHandler.JUMP);
 
-    player.setMoving(left, right);
-    if (jump) {
-        player.requestJump();
-    }
-}
+		player.setMoving(left, right);
+		if (jump) {
+			player.requestJump();
+		}
+	}
+
+	public boolean isBattleTriggered() {
+		return battleTriggered;
+	}
+
+	public void setBattleTriggered(boolean b) {
+		battleTriggered = b;
+	}
+
 }
