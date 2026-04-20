@@ -131,6 +131,7 @@ public class Playing extends State implements Statemethods {
 	public void loadNextLevel() {
 		levelManager.setLevelIndex(levelManager.getLevelIndex() + 1);
 		levelManager.loadNextLevel();
+		game.getAudioPlayer().setLevelSong(levelManager.getLevelIndex());
 		player.setSpawn(levelManager.getCurrentLevel().getPlayerSpawn());
 		resetAll();
 		drawShip = false;

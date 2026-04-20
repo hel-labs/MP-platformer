@@ -1,6 +1,11 @@
 package com.platformer.gamestate;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -50,11 +55,67 @@ public class Credits extends State implements Statemethods {
 
 	@Override
 	public void draw(Graphics g) {
-		g.drawImage(backgroundImg, 0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT, null);
-		g.drawImage(creditsImg, bgX, (int) (bgY + bgYFloat), bgW, bgH, null);
+		Graphics2D g2 = (Graphics2D) g;
+		int drawY = (int) (bgY + bgYFloat);
+
+		g2.drawImage(backgroundImg, 0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT, null);
+		g2.drawImage(creditsImg, bgX, drawY, bgW, bgH, null);
+		drawReplacementCreditsText(g2, drawY);
 
 		for (ShowEntity se : entitiesList)
-			se.draw(g);
+			se.draw(g2);
+	}
+
+	private void drawReplacementCreditsText(Graphics2D g2, int panelY) {
+		int margin = scaled(8);
+		int innerX = bgX + margin;
+		int innerY = panelY + margin;
+		int innerW = bgW - margin * 2;
+		int innerH = bgH - margin * 2;
+
+		// Cover the baked-in text while keeping the same animated panel and border.
+		g2.setColor(new Color(238, 189, 138));
+		g2.fillRect(innerX, innerY, innerW, innerH);
+
+		Object oldAA = g2.getRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING);
+		g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
+
+		Color textColor = new Color(53, 47, 72);
+		Color shadowColor = new Color(188, 84, 78);
+
+		Font headingFont = new Font("Monospaced", Font.BOLD, scaled(13));
+		Font bodyFont = new Font("Monospaced", Font.BOLD, scaled(9));
+
+		int centerX = bgX + bgW / 2;
+
+		drawCenteredStylizedText(g2, "contributors", headingFont, centerX, panelY + scaled(80), textColor, shadowColor);
+		drawCenteredStylizedText(g2, "Sami Sharif Arka", bodyFont, centerX, panelY + scaled(145), textColor, shadowColor);
+		drawCenteredStylizedText(g2, "Fahim Muntasir Galib", bodyFont, centerX, panelY + scaled(178), textColor, shadowColor);
+
+		drawCenteredStylizedText(g2, "Playtester", headingFont, centerX, panelY + scaled(340), textColor, shadowColor);
+		drawCenteredStylizedText(g2, "Nur e Samdani", bodyFont, centerX, panelY + scaled(405), textColor, shadowColor);
+
+		drawCenteredStylizedText(g2, "Thank you so much for", headingFont, centerX, panelY + scaled(690), textColor, shadowColor);
+		drawCenteredStylizedText(g2, "playing this game!", headingFont, centerX, panelY + scaled(735), textColor, shadowColor);
+
+		g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, oldAA);
+	}
+
+	private void drawCenteredStylizedText(Graphics2D g2, String text, Font font, int centerX, int topY, Color textColor, Color shadowColor) {
+		g2.setFont(font);
+		FontMetrics fm = g2.getFontMetrics();
+		int x = centerX - fm.stringWidth(text) / 2;
+		int baseline = topY + fm.getAscent();
+
+		g2.setColor(shadowColor);
+		g2.drawString(text, x + scaled(1), baseline + scaled(1));
+
+		g2.setColor(textColor);
+		g2.drawString(text, x, baseline);
+	}
+
+	private int scaled(int value) {
+		return Math.max(value, Math.round(value * Game.SCALE));
 	}
 
 
