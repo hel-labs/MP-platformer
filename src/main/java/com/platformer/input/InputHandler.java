@@ -7,11 +7,11 @@ public class InputHandler {
 
     private static final int KEY_COUNT = 256;
 
-    private final boolean[] held         = new boolean[KEY_COUNT];
-    private final boolean[] justPressed  = new boolean[KEY_COUNT];
+    private final boolean[] held = new boolean[KEY_COUNT];
+    private final boolean[] justPressed = new boolean[KEY_COUNT];
     private final boolean[] justReleased = new boolean[KEY_COUNT];
 
-    private final boolean[] pendingPressed  = new boolean[KEY_COUNT];
+    private final boolean[] pendingPressed = new boolean[KEY_COUNT];
     private final boolean[] pendingReleased = new boolean[KEY_COUNT];
 
     public void install(javax.swing.JComponent panel) {
@@ -24,7 +24,8 @@ public class InputHandler {
             KeyEvent.VK_W, KeyEvent.VK_S,
             KeyEvent.VK_SPACE,
             KeyEvent.VK_ESCAPE,
-            KeyEvent.VK_F11
+            KeyEvent.VK_F11,
+            KeyEvent.VK_ENTER
         };
 
         javax.swing.InputMap im = panel.getInputMap(javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW);
@@ -57,13 +58,19 @@ public class InputHandler {
     }
 
     private synchronized void onKeyDown(int code) {
-        if (code < 0 || code >= KEY_COUNT) return;
-        if (!held[code]) pendingPressed[code] = true;
+        if (code < 0 || code >= KEY_COUNT) {
+            return;
+        }
+        if (!held[code]) {
+            pendingPressed[code] = true;
+        }
         held[code] = true;
     }
 
     private synchronized void onKeyUp(int code) {
-        if (code < 0 || code >= KEY_COUNT) return;
+        if (code < 0 || code >= KEY_COUNT) {
+            return;
+        }
         held[code] = false;
         pendingReleased[code] = true;
     }
@@ -88,15 +95,16 @@ public class InputHandler {
     }
 
     public static final int CONFIRM = KeyEvent.VK_Z;
-    public static final int CANCEL  = KeyEvent.VK_X;
-    public static final int UP      = KeyEvent.VK_UP;
-    public static final int DOWN    = KeyEvent.VK_DOWN;
-    public static final int LEFT    = KeyEvent.VK_LEFT;
-    public static final int RIGHT   = KeyEvent.VK_RIGHT;
-    public static final int JUMP    = KeyEvent.VK_SPACE;
-    public static final int ESCAPE  = KeyEvent.VK_ESCAPE;
-    public static final int UP_W    = KeyEvent.VK_W;
-    public static final int DOWN_S  = KeyEvent.VK_S;
-    public static final int LEFT_A  = KeyEvent.VK_A;
+    public static final int CANCEL = KeyEvent.VK_X;
+    public static final int UP = KeyEvent.VK_UP;
+    public static final int DOWN = KeyEvent.VK_DOWN;
+    public static final int LEFT = KeyEvent.VK_LEFT;
+    public static final int RIGHT = KeyEvent.VK_RIGHT;
+    public static final int JUMP = KeyEvent.VK_SPACE;
+    public static final int ESCAPE = KeyEvent.VK_ESCAPE;
+    public static final int UP_W = KeyEvent.VK_W;
+    public static final int DOWN_S = KeyEvent.VK_S;
+    public static final int LEFT_A = KeyEvent.VK_A;
     public static final int RIGHT_D = KeyEvent.VK_D;
+    public static final int ENTER = KeyEvent.VK_ENTER;
 }

@@ -29,23 +29,24 @@ public class GameWindow {
             }
 
             @Override
-            public void windowGainedFocus(WindowEvent e) {}
+            public void windowGainedFocus(WindowEvent e) {
+            }
         });
     }
 
     public void setFullscreen(boolean fullscreen) {
 
-    jframe.dispose();
+        jframe.dispose();
 
-    if (fullscreen) {
-        jframe.setUndecorated(true);
-        jframe.setExtendedState(JFrame.MAXIMIZED_BOTH);
-    } else {
-        jframe.setUndecorated(false);
-        jframe.setSize(Game.GAME_WIDTH, Game.GAME_HEIGHT);
-        jframe.setLocationRelativeTo(null);
+        if (fullscreen) {
+            jframe.setUndecorated(true);
+            jframe.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        } else {
+            jframe.setUndecorated(false);
+            jframe.setSize(Game.GAME_WIDTH, Game.GAME_HEIGHT);
+            jframe.setLocationRelativeTo(null);
+        }
+
+        jframe.setVisible(true);
     }
-
-    jframe.setVisible(true);
-}
 }

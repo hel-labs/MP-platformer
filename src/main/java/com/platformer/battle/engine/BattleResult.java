@@ -1,7 +1,8 @@
 package com.platformer.battle.engine;
 
-public class BattleResult{
-    public enum Type{
+public class BattleResult {
+
+    public enum Type {
         PLAYER_ATTACKED,
         ENEMY_ATTACKED,
         PLAYER_FLED,
@@ -18,18 +19,20 @@ public class BattleResult{
     private final String message;
     private final int damageDealt;
 
-    private BattleResult(Type type, String message, int damageDealt){
-        this.type=type;
-        this.message=message;
-        this.damageDealt=damageDealt;
+    private BattleResult(Type type, String message, int damageDealt) {
+        this.type = type;
+        this.message = message;
+        this.damageDealt = damageDealt;
     }
 
-    public static BattleResult playerAttacked(int damage, String message){
+    public static BattleResult playerAttacked(int damage, String message) {
         return new BattleResult(Type.PLAYER_ATTACKED, message, damage);
     }
-    public static BattleResult enemyAttacked(int damage, String message){
+
+    public static BattleResult enemyAttacked(int damage, String message) {
         return new BattleResult(Type.ENEMY_ATTACKED, message, damage);
     }
+
     public static BattleResult fled() {
         return new BattleResult(Type.PLAYER_FLED,
                 "* You fled to safety!", 0);
@@ -62,9 +65,11 @@ public class BattleResult{
     public static BattleResult hint(String hintMessage) {
         return new BattleResult(Type.HINT, hintMessage, 0);
     }
+
     public static BattleResult talkInitiated() {
         return new BattleResult(Type.TALK_INITIATED, "", 0);
     }
+
     public Type getType() {
         return type;
     }
@@ -76,17 +81,18 @@ public class BattleResult{
     public int getDamageDealt() {
         return damageDealt;
     }
+
     public boolean isTerminal() {
         return type == Type.ENEMY_DEFEATED
-            || type == Type.PLAYER_DEFEATED
-            || type == Type.PLAYER_FLED
-            || type == Type.MERCY_GRANTED;
+                || type == Type.PLAYER_DEFEATED
+                || type == Type.PLAYER_FLED
+                || type == Type.MERCY_GRANTED;
     }
 
     @Override
     public String toString() {
         return "BattleResult{type=" + type
-             + ", damage=" + damageDealt
-             + ", msg='" + message + "'}";
+                + ", damage=" + damageDealt
+                + ", msg='" + message + "'}";
     }
 }

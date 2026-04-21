@@ -37,17 +37,20 @@ public class BattleManager {
     }
 
     public void update(float dt) {
-        if (battleState != null)
+        if (battleState != null) {
             battleState.update(dt);
+        }
     }
 
     public void draw(Graphics g) {
-        if (battleState != null)
+        if (battleState != null) {
             battleState.draw(g);
+        }
     }
 
     public void handleInput() {
-        if (battleState != null)
+        if (battleState != null) {
             battleState.handleInput();
+        }
     }
 }

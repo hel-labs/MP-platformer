@@ -6,57 +6,69 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 
-public class SpriteSheet{
+public class SpriteSheet {
+
     private final BufferedImage sheet;
     private final int frameWidth;
     private final int frameHeight;
 
-    public SpriteSheet(String resourcePath, int frameWidth, int frameHeight){
-        this.frameHeight=frameHeight;
-        this.frameWidth=frameWidth;
+    public SpriteSheet(String resourcePath, int frameWidth, int frameHeight) {
+        this.frameHeight = frameHeight;
+        this.frameWidth = frameWidth;
 
         BufferedImage loaded = null;
-        try{
+        try {
             InputStream inputStream = getClass().getResourceAsStream(resourcePath);
-            if (inputStream != null){
+            if (inputStream != null) {
                 loaded = ImageIO.read(inputStream);
-            }else{
+            } else {
                 loaded = makePlaceholderSheet(frameWidth, frameHeight);
             }
-        }catch(IOException e){
+        } catch (IOException e) {
             loaded = makePlaceholderSheet(frameWidth, frameHeight);
         }
-        this.sheet=loaded;
+        this.sheet = loaded;
     }
 
-    public BufferedImage getFrame(int col, int row){
+    public BufferedImage getFrame(int col, int row) {
         int x = col * frameWidth;
         int y = row * frameHeight;
 
-        if(x + frameWidth > sheet.getWidth() || y+frameHeight> sheet.getHeight()){
+        if (x + frameWidth > sheet.getWidth() || y + frameHeight > sheet.getHeight()) {
             return makePlaceholderSheet(frameWidth, frameHeight);
         }
         return sheet.getSubimage(x, y, frameWidth, frameHeight);
     }
 
-    public BufferedImage[] getRow(int row, int frameCount){
+    public BufferedImage[] getRow(int row, int frameCount) {
         BufferedImage[] frames = new BufferedImage[frameCount];
-        for(int i =0; i<frameCount;i++){
-            frames[i]=getFrame(i,row);
+        for (int i = 0; i < frameCount; i++) {
+            frames[i] = getFrame(i, row);
         }
         return frames;
     }
 
-    public int getFrameWidth()  { return frameWidth;  }
-    public int getFrameHeight() { return frameHeight; }
-    public int getSheetWidth()  { return sheet.getWidth();  }
-    public int getSheetHeight() { return sheet.getHeight(); }
+    public int getFrameWidth() {
+        return frameWidth;
+    }
+
+    public int getFrameHeight() {
+        return frameHeight;
+    }
+
+    public int getSheetWidth() {
+        return sheet.getWidth();
+    }
+
+    public int getSheetHeight() {
+        return sheet.getHeight();
+    }
 
     private BufferedImage makePlaceholderSheet(int fw, int fh) {
         int cols = 6;
         int rows = 6;
         BufferedImage img = new BufferedImage(fw * cols, fh * rows,
-                                              BufferedImage.TYPE_INT_ARGB);
+                BufferedImage.TYPE_INT_ARGB);
         java.awt.Graphics2D g = img.createGraphics();
         g.setColor(java.awt.Color.DARK_GRAY);
         g.fillRect(0, 0, img.getWidth(), img.getHeight());
@@ -68,9 +80,9 @@ public class SpriteSheet{
     }
 
     private BufferedImage makePlaceholderFrame(int fw, int fh,
-                                               java.awt.Color color) {
+            java.awt.Color color) {
         BufferedImage img = new BufferedImage(fw, fh,
-                                             BufferedImage.TYPE_INT_ARGB);
+                BufferedImage.TYPE_INT_ARGB);
         java.awt.Graphics2D g = img.createGraphics();
         g.setColor(color);
         g.fillRect(0, 0, fw, fh);

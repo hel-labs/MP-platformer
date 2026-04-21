@@ -12,18 +12,22 @@ import java.util.List;
 
 public abstract class BattleEnemy {
 
-    protected int     hp;
-    protected int     maxHp;
-    protected int     attack;
+    protected int hp;
+    protected int maxHp;
+    protected int attack;
     protected boolean fleeAllowed = true;
     protected AnimationController animator;
     protected BufferedImage battleSprite;
 
     public abstract String getName();
+
     public abstract String getEncounterDialogue();
-    public abstract int    getBaseHostility();
+
+    public abstract int getBaseHostility();
+
     public abstract List<TalkOption> getTalkOptions(int talkCount);
-    public abstract DamageStrategy  getDamageStrategy();
+
+    public abstract DamageStrategy getDamageStrategy();
 
     public boolean isMercyReady(BattleContext ctx) {
         return ctx.isMercyAvailable();
@@ -32,8 +36,9 @@ public abstract class BattleEnemy {
     public BufferedImage getBattleSprite() {
         if (animator != null) {
             BufferedImage frame = animator.getCurrentFrame();
-            if (frame != null)
+            if (frame != null) {
                 return frame;
+            }
         }
         return battleSprite;
     }
@@ -76,24 +81,41 @@ public abstract class BattleEnemy {
     }
 
     public void playAttackAnimation() {
-        if (animator != null && animator.has("attack"))
+        if (animator != null && animator.has("attack")) {
             animator.forceReplay("attack");
-    }
-    
-    public String getMercyHint(BattleContext ctx) {
-        return "* " + getName() + " is still hostile. ("
-             + ctx.getHostility() + " remaining)";
+        }
     }
 
-    public void onSpared() { hp = 0; }
+    public String getMercyHint(BattleContext ctx) {
+        return "* " + getName() + " is still hostile. ("
+                + ctx.getHostility() + " remaining)";
+    }
+
+    public void onSpared() {
+        hp = 0;
+    }
 
     public void takeDamage(int amount) {
         hp = Math.max(0, hp - amount);
     }
 
-    public boolean isDefeated()    { return hp <= 0;     }
-    public boolean isFleeAllowed() { return fleeAllowed; }
-    public int     getHp()         { return hp;          }
-    public int     getMaxHp()      { return maxHp;       }
-    public int     getAttack()     { return attack;      }
+    public boolean isDefeated() {
+        return hp <= 0;
+    }
+
+    public boolean isFleeAllowed() {
+        return fleeAllowed;
+    }
+
+    public int getHp() {
+        return hp;
+    }
+
+    public int getMaxHp() {
+        return maxHp;
+    }
+
+    public int getAttack() {
+        return attack;
+    }
 }
