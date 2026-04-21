@@ -14,6 +14,13 @@ public class SpareAction extends BattleAction {
         return BattleResult.hint(ctx.getEnemy().getMercyHint(ctx));
     }
 
-    @Override public String getLabel()       { return "SPARE";                       }
-    @Override public String getDescription() { return "Show mercy if time is right."; }
+    @Override
+    public String getLabel() {
+        return "SPARE";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Show mercy if time is right.";
+    }
 }

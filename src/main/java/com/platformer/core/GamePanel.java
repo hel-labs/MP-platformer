@@ -23,24 +23,26 @@ public class GamePanel extends JPanel {
     }
 
     @Override
-public void paintComponent(Graphics g) {
-    super.paintComponent(g);
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
 
-    Graphics2D g2d = (Graphics2D) g;
+        Graphics2D g2d = (Graphics2D) g;
 
-    float scale = Math.min(
-        (float) getWidth() / Game.GAME_WIDTH,
-        (float) getHeight() / Game.GAME_HEIGHT
-    );
+        float scale = Math.min(
+                (float) getWidth() / Game.GAME_WIDTH,
+                (float) getHeight() / Game.GAME_HEIGHT
+        );
 
-    int xOffset = (int) ((getWidth() - Game.GAME_WIDTH * scale) / 2);
-    int yOffset = (int) ((getHeight() - Game.GAME_HEIGHT * scale) / 2);
+        int xOffset = (int) ((getWidth() - Game.GAME_WIDTH * scale) / 2);
+        int yOffset = (int) ((getHeight() - Game.GAME_HEIGHT * scale) / 2);
 
-    g2d.translate(xOffset, yOffset);
-    g2d.scale(scale, scale);
+        g2d.translate(xOffset, yOffset);
+        g2d.scale(scale, scale);
 
-    game.render(g2d);
-}
+        game.render(g2d);
+    }
 
-    public Game getGame() { return game; }
+    public Game getGame() {
+        return game;
+    }
 }

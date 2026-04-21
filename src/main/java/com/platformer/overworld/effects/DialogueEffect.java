@@ -5,55 +5,55 @@ import static com.platformer.overworld.utils.Constants.Dialogue.*;
 
 public class DialogueEffect {
 
-	private int x, y, type;
-	private int aniIndex, aniTick;
-	private boolean active = true;
+    private int x, y, type;
+    private int aniIndex, aniTick;
+    private boolean active = true;
 
-	public DialogueEffect(int x, int y, int type) {
-		this.x = x;
-		this.y = y;
-		this.type = type;
-	}
+    public DialogueEffect(int x, int y, int type) {
+        this.x = x;
+        this.y = y;
+        this.type = type;
+    }
 
-	public void update() {
-		aniTick++;
-		if (aniTick >= ANI_SPEED) {
-			aniTick = 0;
-			aniIndex++;
-			if (aniIndex >= GetSpriteAmount(type)) {
-				active = false;
-				aniIndex = 0;
-			}
-		}
-	}
+    public void update() {
+        aniTick++;
+        if (aniTick >= ANI_SPEED) {
+            aniTick = 0;
+            aniIndex++;
+            if (aniIndex >= GetSpriteAmount(type)) {
+                active = false;
+                aniIndex = 0;
+            }
+        }
+    }
 
-	public void deactive() {
-		active = false;
-	}
+    public void deactive() {
+        active = false;
+    }
 
-	public void reset(int x, int y) {
-		this.x = x;
-		this.y = y;
-		active = true;
-	}
+    public void reset(int x, int y) {
+        this.x = x;
+        this.y = y;
+        active = true;
+    }
 
-	public int getAniIndex() {
-		return aniIndex;
-	}
+    public int getAniIndex() {
+        return aniIndex;
+    }
 
-	public int getX() {
-		return x;
-	}
+    public int getX() {
+        return x;
+    }
 
-	public int getY() {
-		return y;
-	}
+    public int getY() {
+        return y;
+    }
 
-	public int getType() {
-		return type;
-	}
+    public int getType() {
+        return type;
+    }
 
-	public boolean isActive() {
-		return active;
-	}
+    public boolean isActive() {
+        return active;
+    }
 }

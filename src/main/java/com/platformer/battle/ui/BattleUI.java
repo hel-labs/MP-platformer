@@ -23,7 +23,7 @@ public class BattleUI {
     public static final int PANEL_Y = (int) (SCREEN_H * 0.62f);
     public static final int PANEL_H = SCREEN_H - PANEL_Y;
     public static final int HP_BAR_W = ui(160);
-    public static final int HP_BAR_H = ui(8);
+    public static final int HP_BAR_H = ui(20);
 
     public static final Font FONT_LABEL = new Font("Monospaced", Font.BOLD, ui(12));
     public static final Font FONT_BODY = new Font("Monospaced", Font.PLAIN, ui(13));
@@ -102,9 +102,9 @@ public class BattleUI {
     }
 
     public void renderBackground(Graphics2D g) {
-        if (battleBg != null)
+        if (battleBg != null) {
             g.drawImage(battleBg, 0, 0, SCREEN_W, PANEL_Y, null);
-        else {
+        } else {
             GradientPaint grad = new GradientPaint(0, 0, COL_BG_TOP, 0, PANEL_Y, COL_BG_BOTTOM);
             g.setPaint(grad);
             g.fillRect(0, 0, SCREEN_W, PANEL_Y);
@@ -118,8 +118,9 @@ public class BattleUI {
             int bigW = (int) (bigCloud.getWidth() * Game.SCALE);
             int bigH = (int) (bigCloud.getHeight() * Game.SCALE);
             int y = (int) (SCREEN_H * 0.35f) - bigH;
-            for (int i = -1; i <= (SCREEN_W / Math.max(1, bigW)) + 1; i++)
+            for (int i = -1; i <= (SCREEN_W / Math.max(1, bigW)) + 1; i++) {
                 g.drawImage(bigCloud, i * bigW, y, bigW, bigH, null);
+            }
         }
 
         if (smallCloud != null) {
@@ -196,9 +197,9 @@ public class BattleUI {
     }
 
     private void renderPlayerStatusTopLeft(Graphics2D g, BattleContext ctx) {
-        if (statusBarImg != null)
+        if (statusBarImg != null) {
             g.drawImage(statusBarImg, statusBarX, statusBarY, statusBarWidth, statusBarHeight, null);
-        else {
+        } else {
             g.setColor(new Color(18, 18, 32, 230));
             g.fillRoundRect(statusBarX, statusBarY, statusBarWidth, statusBarHeight, ui(8), ui(8));
             g.setColor(COL_BORDER);
@@ -219,7 +220,7 @@ public class BattleUI {
         g.setColor(Color.YELLOW);
         g.fillRect(staminaBarXStart + statusBarX, staminaBarYStart + statusBarY, stFill, staminaBarHeight);
 
-        g.setColor(Color.WHITE);
+        g.setColor(Color.BLACK);
         g.setFont(FONT_SMALL);
         g.drawString(hp + "/" + maxHp, healthBarXStart + statusBarX + healthBarWidth + ui(8), healthBarYStart + statusBarY + ui(6));
         g.drawString("ST " + stamina + "/" + maxStamina, staminaBarXStart + statusBarX + staminaBarWidth + ui(8), staminaBarYStart + statusBarY + ui(5));
@@ -233,7 +234,7 @@ public class BattleUI {
 
     private void renderHPBar(Graphics2D g, String label,
             int hp, int maxHp, int x, int y) {
-        g.setColor(Color.WHITE);
+        g.setColor(Color.BLACK);
         g.setFont(FONT_LABEL);
         g.drawString(label, x, y);
 
@@ -250,7 +251,7 @@ public class BattleUI {
             g.setColor(fill);
             g.fillRoundRect(x, barY, fillW, HP_BAR_H, 4, 4);
         }
-        g.setColor(Color.WHITE);
+        g.setColor(Color.BLACK);
         g.setStroke(new BasicStroke(1f));
         g.drawRoundRect(x, barY, HP_BAR_W, HP_BAR_H, 4, 4);
         g.setFont(FONT_SMALL);
@@ -258,8 +259,8 @@ public class BattleUI {
     }
 
     private void renderHostilityBar(Graphics2D g, BattleContext ctx) {
-        int x = statusBarX;
-        int y = statusBarY + statusBarHeight + ui(12);
+        int x = statusBarX + 920;
+        int y = statusBarY + statusBarHeight - 10;
         int barW = statusBarWidth - ui(22);
         int barH = ui(10);
 
@@ -389,7 +390,7 @@ public class BattleUI {
 
             Color optColor = opt.isCalming() ? COL_TALK_CALM
                     : opt.isProvoking() ? COL_TALK_PROV
-                            : COL_TALK_NEUT;
+                    : COL_TALK_NEUT;
 
             if (sel) {
                 g.setColor(new Color(
@@ -416,8 +417,8 @@ public class BattleUI {
             String effectLabel = opt.isCalming()
                     ? "▼ calm  (" + opt.getHostilityDelta() + ")"
                     : opt.isProvoking()
-                            ? "▲ provoke (+" + opt.getHostilityDelta() + ")"
-                            : "— neutral";
+                    ? "▲ provoke (+" + opt.getHostilityDelta() + ")"
+                    : "— neutral";
 
             g.setFont(FONT_HINT);
             g.setColor(sel ? optColor : dimColor(optColor));
@@ -430,7 +431,7 @@ public class BattleUI {
         g.setFont(FONT_SMALL);
         g.setColor(new Color(80, 80, 110));
         g.drawString("[Z] confirm   [X] cancel",
-            panX + panW - ui(180), panY + panH - ui(8));
+                panX + panW - ui(180), panY + panH - ui(8));
     }
 
     private void renderTurnCounter(Graphics2D g, BattleContext ctx) {

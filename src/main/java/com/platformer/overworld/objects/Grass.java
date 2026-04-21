@@ -2,24 +2,24 @@ package com.platformer.overworld.objects;
 
 public class Grass {
 
-	private int x, y, type;
+    private int x, y, type;
 
-	public Grass(int x, int y, int type) {
-		this.x = x;
-		this.y = y;
-		this.type = type;
-	}
+    public Grass(int x, int y, int type) {
+        this.x = x;
+        this.y = y;
+        this.type = type;
+    }
 
-	public int getX() {
-		return x;
-	}
+    public int getX() {
+        return x;
+    }
 
-	public int getY() {
-		return y;
+    public int getY() {
+        return y;
 
-	}
+    }
 
-	public int getType() {
-		return type;
-	}
+    public int getType() {
+        return type;
+    }
 }

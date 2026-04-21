@@ -47,8 +47,9 @@ public class BattlePlayer {
     }
 
     public void playAttackAnimation() {
-        if (animator != null)
+        if (animator != null) {
             animator.forceReplay("attack");
+        }
     }
 
     public AnimationController getAnimator() {

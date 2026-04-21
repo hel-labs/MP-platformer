@@ -10,8 +10,8 @@ public class FightAction extends BattleAction {
 
     @Override
     public BattleResult execute(BattleContext ctx) {
-        BattlePlayer player   = ctx.getPlayer();
-        BattleEnemy  enemy    = ctx.getEnemy();
+        BattlePlayer player = ctx.getPlayer();
+        BattleEnemy enemy = ctx.getEnemy();
         player.playAttackAnimation();
         player.spendStamina(8);
         DamageStrategy strategy = player.getDamageStrategy();
@@ -20,14 +20,22 @@ public class FightAction extends BattleAction {
         enemy.takeDamage(damage);
 
         String msg = "* You attack! (" + strategy.describe()
-                   + ") — dealt " + damage + " damage!";
+                + ") — dealt " + damage + " damage!";
 
-        if (enemy.isDefeated())
+        if (enemy.isDefeated()) {
             return BattleResult.enemyDefeated(enemy.getName());
+        }
 
         return BattleResult.playerAttacked(damage, msg);
     }
 
-    @Override public String getLabel()       { return "FIGHT";              }
-    @Override public String getDescription() { return "Attack the enemy.";  }
+    @Override
+    public String getLabel() {
+        return "FIGHT";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Attack the enemy.";
+    }
 }

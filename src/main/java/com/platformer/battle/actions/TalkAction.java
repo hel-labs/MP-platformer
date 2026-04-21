@@ -22,6 +22,13 @@ public class TalkAction extends BattleAction {
         return BattleResult.talked(option.getResponse());
     }
 
-    @Override public String getLabel()       { return "TALK";                                    }
-    @Override public String getDescription() { return "Some words calm, others provoke."; }
+    @Override
+    public String getLabel() {
+        return "TALK";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Some words calm, others provoke.";
+    }
 }

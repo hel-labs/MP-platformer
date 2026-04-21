@@ -9,21 +9,36 @@ import java.util.List;
 public class PlaceholderEnemy extends BattleEnemy {
 
     public PlaceholderEnemy() {
-        this.hp     = 20;
-        this.maxHp  = 20;
+        this.hp = 20;
+        this.maxHp = 20;
         this.attack = 4;
     }
 
-    @Override public String getName()             { return "Test Slime";              }
-    @Override public String getEncounterDialogue(){ return "* A slime blocks the way!"; }
-    @Override public int    getBaseHostility()    { return 2;                          }
-    @Override public DamageStrategy getDamageStrategy() { return new WeakSteadyDice(); }
+    @Override
+    public String getName() {
+        return "Test Slime";
+    }
+
+    @Override
+    public String getEncounterDialogue() {
+        return "* A slime blocks the way!";
+    }
+
+    @Override
+    public int getBaseHostility() {
+        return 2;
+    }
+
+    @Override
+    public DamageStrategy getDamageStrategy() {
+        return new WeakSteadyDice();
+    }
 
     @Override
     public List<TalkOption> getTalkOptions(int talkCount) {
         return List.of(
-            new TalkOption("You seem harmless.", "* It wobbles happily.",  -1),
-            new TalkOption("Get out of my way!","* It tenses up angrily.", +1)
+                new TalkOption("You seem harmless.", "* It wobbles happily.", -1),
+                new TalkOption("Get out of my way!", "* It tenses up angrily.", +1)
         );
     }
 }

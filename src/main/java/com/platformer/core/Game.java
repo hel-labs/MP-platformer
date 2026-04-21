@@ -28,6 +28,8 @@ public class Game implements Runnable {
     private GameOptions gameOptions;
     private AudioOptions audioOptions;
     private AudioPlayer audioPlayer;
+    private TitleScreen title;
+    private Leaderboard leaderboard;
 
     private BattleManager battleManager;
     private InputHandler inputHandler;
@@ -70,6 +72,9 @@ public class Game implements Runnable {
         playing = new Playing(this, inputHandler);
         credits = new Credits(this);
         gameOptions = new GameOptions(this);
+        title = new TitleScreen(this);
+        leaderboard = new Leaderboard(this);
+
     }
 
     public void startGameLoop() {
@@ -101,19 +106,33 @@ public class Game implements Runnable {
                 battleManager.update(1f / UPS_SET);
                 inputHandler.tick();
             }
-            case GAME_OVER -> pollGameOverInput();
-            case CREDITS -> credits.update();
-            case OPTIONS -> gameOptions.update();
-            case QUIT -> System.exit(0);
+            case TITLE -> {
+                title.update();
+                inputHandler.tick();
+            }
+            case LEADERBOARD -> {
+                leaderboard.update();
+                inputHandler.tick();
+            }
+            case GAME_OVER ->
+                pollGameOverInput();
+            case CREDITS ->
+                credits.update();
+            case OPTIONS ->
+                gameOptions.update();
+            case QUIT ->
+                System.exit(0);
         }
 
-        if (Gamestate.state == Gamestate.MENU)
+        if (Gamestate.state == Gamestate.MENU) {
             menu.update();
+        }
     }
 
     private void pollMenuInput() {
-        if (inputHandler.isJustPressed(KeyEvent.VK_ENTER))
+        if (inputHandler.isJustPressed(KeyEvent.VK_ENTER)) {
             Gamestate.state = Gamestate.PLAYING;
+        }
     }
 
     private void pollGameOverInput() {
@@ -123,11 +142,20 @@ public class Game implements Runnable {
 
         switch (Gamestate.state) {
 
-            case MENU -> menu.draw(g);
-            case PLAYING -> playing.draw(g);
-            case BATTLE -> battleManager.draw(g);
-            case OPTIONS -> gameOptions.draw(g);
-            case CREDITS -> credits.draw(g);
+            case MENU ->
+                menu.draw(g);
+            case PLAYING ->
+                playing.draw(g);
+            case BATTLE ->
+                battleManager.draw(g);
+            case OPTIONS ->
+                gameOptions.draw(g);
+            case CREDITS ->
+                credits.draw(g);
+            case TITLE ->
+                title.draw(g);
+            case LEADERBOARD ->
+                leaderboard.draw(g);
             case GAME_OVER -> {
             }
             case QUIT -> {
@@ -144,8 +172,9 @@ public class Game implements Runnable {
     private void onBattleEnd(BattleOutcome outcome) {
         playing.applyBattleOutcome(outcome);
 
-        if (!playing.isGameOver())
+        if (!playing.isGameOver()) {
             audioPlayer.setLevelSong(playing.getLevelManager().getLevelIndex());
+        }
 
         Gamestate.state = Gamestate.PLAYING;
     }
@@ -197,8 +226,9 @@ public class Game implements Runnable {
     }
 
     public void windowFocusLost() {
-        if (Gamestate.state == Gamestate.PLAYING)
+        if (Gamestate.state == Gamestate.PLAYING) {
             playing.getPlayer().resetDirBooleans();
+        }
     }
 
     public InputHandler getInputHandler() {

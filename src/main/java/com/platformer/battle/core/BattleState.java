@@ -97,25 +97,31 @@ public class BattleState {
 
             case ENCOUNTER_DIALOGUE -> {
                 if (input.isJustPressed(InputHandler.CONFIRM)) {
-                    if (!dialogueBox.isFinished())
+                    if (!dialogueBox.isFinished()) {
                         dialogueBox.skipToEnd();
-                    else
+                    } else {
                         phase = Phase.PLAYER_TURN;
+                    }
                 }
             }
 
             case PLAYER_TURN -> {
                 int n = engine.getActionCount();
-                if (input.isJustPressed(InputHandler.UP))
+                if (input.isJustPressed(InputHandler.UP)) {
                     selectedAction = Math.floorMod(selectedAction - 2, n);
-                if (input.isJustPressed(InputHandler.DOWN))
+                }
+                if (input.isJustPressed(InputHandler.DOWN)) {
                     selectedAction = (selectedAction + 2) % n;
-                if (input.isJustPressed(InputHandler.LEFT))
+                }
+                if (input.isJustPressed(InputHandler.LEFT)) {
                     selectedAction = Math.floorMod(selectedAction - 1, n);
-                if (input.isJustPressed(InputHandler.RIGHT))
+                }
+                if (input.isJustPressed(InputHandler.RIGHT)) {
                     selectedAction = (selectedAction + 1) % n;
-                if (input.isJustPressed(InputHandler.CONFIRM))
+                }
+                if (input.isJustPressed(InputHandler.CONFIRM)) {
                     executePlayerAction(selectedAction);
+                }
             }
 
             case TALK_SELECTION -> {
@@ -124,14 +130,18 @@ public class BattleState {
                     return;
                 }
                 int n = talkOptions.size();
-                if (input.isJustPressed(InputHandler.UP))
+                if (input.isJustPressed(InputHandler.UP)) {
                     selectedTalkOpt = Math.floorMod(selectedTalkOpt - 1, n);
-                if (input.isJustPressed(InputHandler.DOWN))
+                }
+                if (input.isJustPressed(InputHandler.DOWN)) {
                     selectedTalkOpt = (selectedTalkOpt + 1) % n;
-                if (input.isJustPressed(InputHandler.CONFIRM))
+                }
+                if (input.isJustPressed(InputHandler.CONFIRM)) {
                     resolveTalkOption(talkOptions.get(selectedTalkOpt));
-                if (input.isJustPressed(InputHandler.CANCEL))
+                }
+                if (input.isJustPressed(InputHandler.CANCEL)) {
                     phase = Phase.PLAYER_TURN;
+                }
             }
 
             case PLAYER_RESULT -> {
@@ -163,10 +173,11 @@ public class BattleState {
 
             case TERMINAL -> {
                 if (input.isJustPressed(InputHandler.CONFIRM)) {
-                    if (!dialogueBox.isFinished())
+                    if (!dialogueBox.isFinished()) {
                         dialogueBox.skipToEnd();
-                    else
+                    } else {
                         exitBattle();
+                    }
                 }
             }
 
@@ -240,12 +251,15 @@ public class BattleState {
                     ctx.getPlayer().getHp());
         } else {
             outcome = switch (lastResult.getType()) {
-                case PLAYER_DEFEATED -> new BattleOutcome(
-                        BattleOutcome.Result.LOSE, ctx.getPlayer().getHp());
-                case PLAYER_FLED -> new BattleOutcome(
-                        BattleOutcome.Result.FLEE, ctx.getPlayer().getHp());
-                default -> new BattleOutcome(
-                        BattleOutcome.Result.WIN, ctx.getPlayer().getHp());
+                case PLAYER_DEFEATED ->
+                    new BattleOutcome(
+                    BattleOutcome.Result.LOSE, ctx.getPlayer().getHp());
+                case PLAYER_FLED ->
+                    new BattleOutcome(
+                    BattleOutcome.Result.FLEE, ctx.getPlayer().getHp());
+                default ->
+                    new BattleOutcome(
+                    BattleOutcome.Result.WIN, ctx.getPlayer().getHp());
             };
         }
         onDone.accept(outcome);
@@ -253,11 +267,16 @@ public class BattleState {
 
     private String buildTerminalMessage(BattleResult result) {
         return switch (result.getType()) {
-            case ENEMY_DEFEATED -> result.getMessage() + "\n* The path is clear.";
-            case MERCY_GRANTED -> result.getMessage() + "\n* They step aside.";
-            case PLAYER_FLED -> result.getMessage();
-            case PLAYER_DEFEATED -> result.getMessage() + "\n\n* Press Z to continue.";
-            default -> result.getMessage();
+            case ENEMY_DEFEATED ->
+                result.getMessage() + "\n* The path is clear.";
+            case MERCY_GRANTED ->
+                result.getMessage() + "\n* They step aside.";
+            case PLAYER_FLED ->
+                result.getMessage();
+            case PLAYER_DEFEATED ->
+                result.getMessage() + "\n\n* Press Z to continue.";
+            default ->
+                result.getMessage();
         };
     }
 }
