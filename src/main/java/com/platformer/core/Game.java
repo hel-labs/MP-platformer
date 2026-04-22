@@ -118,8 +118,10 @@ public class Game implements Runnable {
                 pollGameOverInput();
             case CREDITS ->
                 credits.update();
-            case OPTIONS ->
+            case OPTIONS ->{
                 gameOptions.update();
+                inputHandler.tick();
+            }
             case QUIT ->
                 System.exit(0);
         }

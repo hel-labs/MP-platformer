@@ -20,6 +20,7 @@ import java.util.Random;
 
 import com.platformer.battle.core.BattleOutcome;
 import com.platformer.core.Game;
+import com.platformer.gamestate.Gamestate;
 import com.platformer.gamestate.State;
 import com.platformer.gamestate.Statemethods;
 import com.platformer.input.InputHandler;
@@ -48,7 +49,7 @@ public class Playing extends State implements Statemethods {
     private Rain rain;
     private InputHandler inputHandler;
 
-    private boolean paused = false;
+    public boolean paused = false;
     private boolean battleTriggered = false;
     public double points = 0;
     private long runStartTime;
@@ -520,6 +521,11 @@ public class Playing extends State implements Statemethods {
         if (jump) {
             player.requestJump();
         }
+        if (!paused && (inputHandler.isJustPressed(InputHandler.ESCAPE))) {
+            paused = true;
+            update();
+        }
+        
     }
 
     public boolean isBattleTriggered() {

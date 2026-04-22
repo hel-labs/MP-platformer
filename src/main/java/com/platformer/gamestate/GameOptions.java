@@ -100,5 +100,4 @@ public class GameOptions extends State implements Statemethods {
     private boolean isIn(MouseEvent e, PauseButton b) {
         return b.getBounds().contains(e.getX(), e.getY());
     }
-
 }
