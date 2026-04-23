@@ -35,7 +35,7 @@ public class Game implements Runnable {
     private InputHandler inputHandler;
 
     public static final int TILES_DEFAULT_SIZE = 32;
-    public static final float SCALE = 2.0f;
+    public static final float SCALE = 1.5f;
     public static final int TILES_IN_WIDTH = 26;
     public static final int TILES_IN_HEIGHT = 14;
     public static final int TILES_SIZE = (int) (TILES_DEFAULT_SIZE * SCALE);
@@ -118,8 +118,10 @@ public class Game implements Runnable {
                 pollGameOverInput();
             case CREDITS ->
                 credits.update();
-            case OPTIONS ->
+            case OPTIONS ->{
                 gameOptions.update();
+                inputHandler.tick();
+            }
             case QUIT ->
                 System.exit(0);
         }

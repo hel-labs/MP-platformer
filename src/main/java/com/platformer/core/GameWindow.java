@@ -6,7 +6,7 @@ import javax.swing.JFrame;
 
 public class GameWindow {
 
-    private JFrame jframe;
+    private final JFrame jframe;
 
     public GameWindow(GamePanel gamePanel) {
 
@@ -15,10 +15,8 @@ public class GameWindow {
         jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jframe.setResizable(false);
 
-        jframe.add(gamePanel);
-
-        jframe.setSize(Game.GAME_WIDTH, Game.GAME_HEIGHT);
-        jframe.setLocationRelativeTo(null);
+        jframe.setContentPane(gamePanel);
+        applyWindowedSize();
         jframe.setVisible(true);
 
         jframe.addWindowFocusListener(new WindowFocusListener() {
@@ -43,10 +41,15 @@ public class GameWindow {
             jframe.setExtendedState(JFrame.MAXIMIZED_BOTH);
         } else {
             jframe.setUndecorated(false);
-            jframe.setSize(Game.GAME_WIDTH, Game.GAME_HEIGHT);
-            jframe.setLocationRelativeTo(null);
+            applyWindowedSize();
         }
 
         jframe.setVisible(true);
+    }
+
+    private void applyWindowedSize() {
+        jframe.setExtendedState(JFrame.NORMAL);
+        jframe.pack();
+        jframe.setLocationRelativeTo(null);
     }
 }
