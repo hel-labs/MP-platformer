@@ -5,26 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="879c77fa-3cf6-4696-b2b9-537a3916d18d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/battle/actions/FightAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/battle/actions/FightAction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/battle/actions/TalkAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/battle/actions/TalkAction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/battle/core/BattleManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/battle/core/BattleManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/battle/core/BattleState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/battle/core/BattleState.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/battle/dialogue/DialogueBox.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/battle/dialogue/DialogueBox.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/battle/engine/BattleContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/battle/engine/BattleContext.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/battle/engine/BattleEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/battle/engine/BattleEngine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/battle/entities/BattleEnemy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/battle/entities/BattleEnemy.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/battle/entities/BattlePlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/battle/entities/BattlePlayer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/battle/entities/CrabbyBattleEnemy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/battle/entities/CrabbyBattleEnemy.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/battle/entities/PinkstarBattleEnemy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/battle/entities/PinkstarBattleEnemy.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/battle/entities/SharkBattleEnemy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/battle/entities/SharkBattleEnemy.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/battle/ui/BattleUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/battle/ui/BattleUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/core/BattleSnapshot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/core/BattleSnapshot.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/core/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/core/Game.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/entities/EnemyManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/entities/EnemyManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/entities/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/entities/Player.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/states/Playing.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/states/Playing.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/utils/Constants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/utils/Constants.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/utils/AudioPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/utils/AudioPlayer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -91,34 +73,34 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.MainClass.executor": "Run",
-    "Gradle.E:/Game/Java Projects/MP-Platformer_fix/MP-platformer.executor": "Run",
-    "Gradle.MP-platformer [:com.platformer.core.MainClass.main()].executor": "Run",
-    "Gradle.MP-platformer [run].executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "codeWithMe.voiceChat.enabledByDefault": "false",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "main",
-    "ignore.virus.scanning.warn.message": "true",
-    "junie.onboarding.icon.badge.shown": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "E:/Game/Java Projects/MP-Platformer_fix/MP-platformer",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle",
-    "to.speed.mode.migration.done": "true",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.MainClass.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.E:/Game/Java Projects/MP-Platformer_fix/MP-platformer.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.MP-platformer [:com.platformer.core.MainClass.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.MP-platformer [run].executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;luco&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;E:/Game/Java Projects/MP-Platformer_fix/MP-platformer&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.project.gradle&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Gradle.MP-platformer [run]">
     <configuration name="E:/Game/Java Projects/MP-Platformer_fix/MP-platformer" type="GradleRunConfiguration" factoryName="Gradle" nameIsGenerated="true">
       <ExternalSystemSettings>
@@ -193,6 +175,10 @@
       <workItem from="1776605974521" duration="3332000" />
       <workItem from="1776619762558" duration="723000" />
       <workItem from="1776620548283" duration="3733000" />
+      <workItem from="1776708610794" duration="943000" />
+      <workItem from="1776838796594" duration="5030000" />
+      <workItem from="1776872046858" duration="5876000" />
+      <workItem from="1776920607961" duration="3160000" />
     </task>
     <servers />
   </component>
