@@ -43,18 +43,20 @@ public class Leaderboard extends State implements Statemethods {
 
         g.setColor(Color.LIGHT_GRAY);
         g.drawString("#", (int) (40 * Game.SCALE), y);
-        g.drawString("SCORE", (int) (100 * Game.SCALE), y);
-        g.drawString("TIME", (int) (280 * Game.SCALE), y);
-        g.drawString("DATE", (int) (400 * Game.SCALE), y);
+        g.drawString("PLAYER", (int) (80 * Game.SCALE), y);
+        g.drawString("BEST PTS", (int) (260 * Game.SCALE), y);
+        g.drawString("TIME PLAYED", (int) (390 * Game.SCALE), y);
+        g.drawString("LAST SEEN", (int) (560 * Game.SCALE), y);
         y += (int) (20 * Game.SCALE);
 
         g.setColor(Color.WHITE);
         for (int i = 0; i < Math.min(scores.size(), 15); i++) {
             ScoreEntry e = scores.get(i);
             g.drawString((i + 1) + ".", (int) (40 * Game.SCALE), y);
-            g.drawString(String.format("%.0f", e.score()), (int) (100 * Game.SCALE), y);
-            g.drawString(LeaderboardManager.formatDuration(e.durationSeconds()), (int) (280 * Game.SCALE), y);
-            g.drawString(e.date(), (int) (400 * Game.SCALE), y);
+            g.drawString(e.playerName(), (int) (80 * Game.SCALE), y);
+            g.drawString(String.format("%.0f", e.bestScore()), (int) (280 * Game.SCALE), y);
+            g.drawString(LeaderboardManager.formatDuration(e.totalDurationSeconds()), (int) (390 * Game.SCALE), y);
+            g.drawString(e.lastPlayed(), (int) (560 * Game.SCALE), y);
             y += (int) (22 * Game.SCALE);
         }
 

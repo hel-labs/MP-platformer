@@ -10,6 +10,7 @@ import com.platformer.battle.dialogue.DialogueBox;
 import com.platformer.exceptions.GameException;
 import com.platformer.input.InputHandler;
 import com.platformer.utils.GameLogger;
+import com.platformer.utils.AudioPlayer;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -27,6 +28,7 @@ public class BattleState {
     private final BattleUI ui;
     private final DialogueBox dialogueBox;
     private final InputHandler input;
+    private final AudioPlayer audioPlayer;
     private final Consumer<BattleOutcome> onDone;
 
     private Phase phase = Phase.ENCOUNTER_DIALOGUE;
@@ -40,9 +42,11 @@ public class BattleState {
 
     public BattleState(BattleContext ctx,
             InputHandler input,
+            AudioPlayer audioPlayer,
             Consumer<BattleOutcome> onDone) {
         this.ctx = ctx;
         this.input = input;
+        this.audioPlayer = audioPlayer;
         this.onDone = onDone;
         this.engine = new BattleEngine();
         this.ui = new BattleUI();
@@ -190,6 +194,11 @@ public class BattleState {
         try {
             lastResult = engine.executePlayerAction(index, ctx);
             ctx.setLastResult(lastResult);
+
+            if (lastResult.getType() == BattleResult.Type.PLAYER_ATTACKED
+                    || lastResult.getType() == BattleResult.Type.ENEMY_DEFEATED) {
+                audioPlayer.playAttackSound();
+            }
 
             if (lastResult.isTerminal()) {
                 phase = Phase.PLAYER_RESULT;

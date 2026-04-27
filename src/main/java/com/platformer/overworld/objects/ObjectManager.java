@@ -75,6 +75,7 @@ public class ObjectManager {
                 if (gc.getObjType() == BARREL && gc.getHitbox().intersects(attackbox)) {
                     gc.setAnimation(true);
                     potions.add(new Potion((int) (gc.getHitbox().x + gc.getHitbox().width / 2), (int) (gc.getHitbox().y - gc.getHitbox().height / 2), RED_POTION));
+                    playing.addPoints(1);
                     return;
                 }
             }

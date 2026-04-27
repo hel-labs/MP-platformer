@@ -103,8 +103,6 @@ public class EnemyManager {
 
     private void triggerBattle(Player player, BattleEnemy battleEnemy) {
         player.setFrozen(true);
-        // Battles are their own encounter; don't carry immediate overworld chip damage in.
-        player.setBattleHp(player.getMaxHp());
         BattleSnapshot snapshot = player.createSnapshot();
         playing.setBattleTriggered(true);
         playing.getGame().startBattle(snapshot, battleEnemy);

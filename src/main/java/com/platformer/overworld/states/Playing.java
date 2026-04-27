@@ -544,11 +544,16 @@ public class Playing extends State implements Statemethods {
         battleTriggered = b;
     }
 
+    public void addPoints(double value) {
+        points += value;
+    }
+
     public void saveRunAndReset() {
         long runEndTime = System.currentTimeMillis();
         long durationSeconds = (runEndTime - runStartTime) / 1000;
 
-        com.platformer.utils.LeaderboardManager.saveScore(points, durationSeconds);
+        String playerName = com.platformer.utils.PlayerProfileManager.getCurrentPlayerName();
+        com.platformer.utils.LeaderboardManager.savePlayerProgress(playerName, points, durationSeconds);
 
         points = 0;
         runStartTime = System.currentTimeMillis();

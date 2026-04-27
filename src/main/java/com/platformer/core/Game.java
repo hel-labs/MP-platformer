@@ -10,6 +10,7 @@ import com.platformer.overworld.ui.AudioOptions;
 import com.platformer.utils.AudioPlayer;
 
 import java.awt.Graphics;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class Game implements Runnable {
@@ -29,6 +30,7 @@ public class Game implements Runnable {
     private AudioOptions audioOptions;
     private AudioPlayer audioPlayer;
     private TitleScreen title;
+    private PlayerNameEntryScreen nameEntry;
     private Leaderboard leaderboard;
 
     private BattleManager battleManager;
@@ -59,6 +61,21 @@ public class Game implements Runnable {
 
         gamePanel.addMouseListener(mouseInputs);
         gamePanel.addMouseMotionListener(mouseInputs);
+        gamePanel.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                if (Gamestate.state == Gamestate.NAME_ENTRY) {
+                    nameEntry.handleKeyTyped(e.getKeyChar());
+                }
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (Gamestate.state == Gamestate.NAME_ENTRY) {
+                    nameEntry.handleKeyPressed(e.getKeyCode());
+                }
+            }
+        });
 
         startGameLoop();
     }
@@ -73,6 +90,7 @@ public class Game implements Runnable {
         credits = new Credits(this);
         gameOptions = new GameOptions(this);
         title = new TitleScreen(this);
+        nameEntry = new PlayerNameEntryScreen(this);
         leaderboard = new Leaderboard(this);
 
     }
@@ -108,6 +126,10 @@ public class Game implements Runnable {
             }
             case TITLE -> {
                 title.update();
+                inputHandler.tick();
+            }
+            case NAME_ENTRY -> {
+                nameEntry.update();
                 inputHandler.tick();
             }
             case LEADERBOARD -> {
@@ -156,6 +178,8 @@ public class Game implements Runnable {
                 credits.draw(g);
             case TITLE ->
                 title.draw(g);
+            case NAME_ENTRY ->
+                nameEntry.draw(g);
             case LEADERBOARD ->
                 leaderboard.draw(g);
             case GAME_OVER -> {
@@ -166,7 +190,7 @@ public class Game implements Runnable {
     }
 
     public void startBattle(BattleSnapshot snapshot, BattleEnemy enemy) {
-        battleManager.init(snapshot, enemy, inputHandler, this::onBattleEnd);
+        battleManager.init(snapshot, enemy, inputHandler, audioPlayer, this::onBattleEnd);
         audioPlayer.setBattleSong();
         Gamestate.state = Gamestate.BATTLE;
     }
