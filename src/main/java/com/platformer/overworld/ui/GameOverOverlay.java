@@ -1,6 +1,6 @@
 package com.platformer.overworld.ui;
 
-import static com.platformer.overworld.utils.Constants.UI.URMButtons.URM_SIZE;
+import static com.platformer.utils.Constants.UI.URMButtons.URM_SIZE;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -8,9 +8,9 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
 import com.platformer.gamestate.Gamestate;
-import com.platformer.overworld.states.Playing;
+import com.platformer.gamestate.Playing;
+import com.platformer.utils.LoadSave;
 import com.platformer.core.Game;
-import com.platformer.overworld.utils.LoadSave;
 
 public class GameOverOverlay {
 

@@ -6,7 +6,7 @@ import com.platformer.battle.actions.BattleAction;
 import com.platformer.battle.animation.AnimationController;
 import com.platformer.battle.dialogue.DialogueBox;
 import com.platformer.core.Game;
-import com.platformer.overworld.utils.LoadSave;
+import com.platformer.utils.LoadSave;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

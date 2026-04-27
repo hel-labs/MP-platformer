@@ -1,5 +1,8 @@
 package com.platformer.overworld.levels;
 
+import static com.platformer.utils.Constants.EnemyConstants.*;
+import static com.platformer.utils.Constants.ObjectConstants.*;
+
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
@@ -8,9 +11,6 @@ import java.util.ArrayList;
 import com.platformer.overworld.entities.*;
 import com.platformer.overworld.objects.*;
 import com.platformer.core.Game;
-
-import static com.platformer.overworld.utils.Constants.EnemyConstants.*;
-import static com.platformer.overworld.utils.Constants.ObjectConstants.*;
 
 public class Level {
 

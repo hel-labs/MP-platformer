@@ -1,15 +1,16 @@
 package com.platformer.overworld.entities;
 
+import static com.platformer.utils.Constants.EnemyConstants.*;
+
 import java.awt.Graphics;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
 import com.platformer.battle.entities.*;
 import com.platformer.core.BattleSnapshot;
+import com.platformer.gamestate.Playing;
 import com.platformer.overworld.levels.Level;
-import com.platformer.overworld.states.Playing;
-import com.platformer.overworld.utils.LoadSave;
-import static com.platformer.overworld.utils.Constants.EnemyConstants.*;
+import com.platformer.utils.LoadSave;
 
 public class EnemyManager {
 

@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import com.platformer.core.Game;
-import com.platformer.overworld.utils.LoadSave;
+import com.platformer.utils.LoadSave;
 
 public class Credits extends State implements Statemethods {
 

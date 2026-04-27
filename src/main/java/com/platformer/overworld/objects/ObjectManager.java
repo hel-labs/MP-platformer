@@ -1,19 +1,20 @@
 package com.platformer.overworld.objects;
 
+import static com.platformer.utils.Constants.ObjectConstants.*;
+import static com.platformer.utils.Constants.Projectiles.*;
+import static com.platformer.utils.HelpMethods.CanCannonSeePlayer;
+import static com.platformer.utils.HelpMethods.IsProjectileHittingLevel;
+
 import java.awt.Graphics;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import com.platformer.overworld.entities.*;
-import com.platformer.overworld.states.Playing;
 import com.platformer.overworld.levels.Level;
+import com.platformer.utils.LoadSave;
 import com.platformer.core.Game;
-import com.platformer.overworld.utils.LoadSave;
-import static com.platformer.overworld.utils.Constants.ObjectConstants.*;
-import static com.platformer.overworld.utils.HelpMethods.CanCannonSeePlayer;
-import static com.platformer.overworld.utils.HelpMethods.IsProjectileHittingLevel;
-import static com.platformer.overworld.utils.Constants.Projectiles.*;
+import com.platformer.gamestate.Playing;
 
 public class ObjectManager {
 

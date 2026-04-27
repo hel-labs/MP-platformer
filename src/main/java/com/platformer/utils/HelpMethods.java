@@ -1,4 +1,4 @@
-package com.platformer.overworld.utils;
+package com.platformer.utils;
 
 import java.awt.geom.Rectangle2D;
 

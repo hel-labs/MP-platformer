@@ -1,8 +1,8 @@
 package com.platformer.overworld.ui;
 
-import static com.platformer.overworld.utils.Constants.UI.PauseButtons.SOUND_SIZE;
-import static com.platformer.overworld.utils.Constants.UI.VolumeButtons.SLIDER_WIDTH;
-import static com.platformer.overworld.utils.Constants.UI.VolumeButtons.VOLUME_HEIGHT;
+import static com.platformer.utils.Constants.UI.PauseButtons.SOUND_SIZE;
+import static com.platformer.utils.Constants.UI.VolumeButtons.SLIDER_WIDTH;
+import static com.platformer.utils.Constants.UI.VolumeButtons.VOLUME_HEIGHT;
 
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;

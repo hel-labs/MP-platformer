@@ -1,10 +1,11 @@
 package com.platformer.overworld.ui;
 
+import static com.platformer.utils.Constants.UI.PauseButtons.*;
+
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
-import com.platformer.overworld.utils.LoadSave;
-import static com.platformer.overworld.utils.Constants.UI.PauseButtons.*;
+import com.platformer.utils.LoadSave;
 
 public class SoundButton extends PauseButton {
 

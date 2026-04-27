@@ -1,13 +1,13 @@
-package com.platformer.overworld.states;
+package com.platformer.gamestate;
 
-import static com.platformer.overworld.utils.Constants.Dialogue.DIALOGUE_HEIGHT;
-import static com.platformer.overworld.utils.Constants.Dialogue.DIALOGUE_WIDTH;
-import static com.platformer.overworld.utils.Constants.Dialogue.EXCLAMATION;
-import static com.platformer.overworld.utils.Constants.Dialogue.QUESTION;
-import static com.platformer.overworld.utils.Constants.Environment.BIG_CLOUD_HEIGHT;
-import static com.platformer.overworld.utils.Constants.Environment.BIG_CLOUD_WIDTH;
-import static com.platformer.overworld.utils.Constants.Environment.SMALL_CLOUD_HEIGHT;
-import static com.platformer.overworld.utils.Constants.Environment.SMALL_CLOUD_WIDTH;
+import static com.platformer.utils.Constants.Dialogue.DIALOGUE_HEIGHT;
+import static com.platformer.utils.Constants.Dialogue.DIALOGUE_WIDTH;
+import static com.platformer.utils.Constants.Dialogue.EXCLAMATION;
+import static com.platformer.utils.Constants.Dialogue.QUESTION;
+import static com.platformer.utils.Constants.Environment.BIG_CLOUD_HEIGHT;
+import static com.platformer.utils.Constants.Environment.BIG_CLOUD_WIDTH;
+import static com.platformer.utils.Constants.Environment.SMALL_CLOUD_HEIGHT;
+import static com.platformer.utils.Constants.Environment.SMALL_CLOUD_WIDTH;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -20,9 +20,6 @@ import java.util.Random;
 
 import com.platformer.battle.core.BattleOutcome;
 import com.platformer.core.Game;
-import com.platformer.gamestate.Gamestate;
-import com.platformer.gamestate.State;
-import com.platformer.gamestate.Statemethods;
 import com.platformer.input.InputHandler;
 import com.platformer.overworld.effects.DialogueEffect;
 import com.platformer.overworld.effects.Rain;
@@ -34,7 +31,7 @@ import com.platformer.overworld.ui.GameCompletedOverlay;
 import com.platformer.overworld.ui.GameOverOverlay;
 import com.platformer.overworld.ui.LevelCompletedOverlay;
 import com.platformer.overworld.ui.PauseOverlay;
-import com.platformer.overworld.utils.LoadSave;
+import com.platformer.utils.LoadSave;
 
 public class Playing extends State implements Statemethods {
 

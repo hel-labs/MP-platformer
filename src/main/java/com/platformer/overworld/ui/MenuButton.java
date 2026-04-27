@@ -1,12 +1,13 @@
 package com.platformer.overworld.ui;
 
+import static com.platformer.utils.Constants.UI.Buttons.*;
+
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 import com.platformer.gamestate.Gamestate;
-import com.platformer.overworld.utils.LoadSave;
-import static com.platformer.overworld.utils.Constants.UI.Buttons.*;
+import com.platformer.utils.LoadSave;
 
 public class MenuButton {
 

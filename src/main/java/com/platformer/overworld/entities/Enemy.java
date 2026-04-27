@@ -1,16 +1,14 @@
 package com.platformer.overworld.entities;
 
-import static com.platformer.overworld.utils.Constants.EnemyConstants.*;
-import static com.platformer.overworld.utils.HelpMethods.*;
+import static com.platformer.utils.Constants.*;
+import static com.platformer.utils.Constants.Directions.*;
+import static com.platformer.utils.Constants.EnemyConstants.*;
+import static com.platformer.utils.HelpMethods.*;
 
 import java.awt.geom.Rectangle2D;
 
-import com.platformer.overworld.states.Playing;
-
-import static com.platformer.overworld.utils.Constants.Directions.*;
-import static com.platformer.overworld.utils.Constants.*;
-
 import com.platformer.core.Game;
+import com.platformer.gamestate.Playing;
 
 public abstract class Enemy extends Entity {
 

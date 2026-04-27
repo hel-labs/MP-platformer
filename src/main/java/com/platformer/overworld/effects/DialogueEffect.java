@@ -1,7 +1,7 @@
 package com.platformer.overworld.effects;
 
-import static com.platformer.overworld.utils.Constants.ANI_SPEED;
-import static com.platformer.overworld.utils.Constants.Dialogue.*;
+import static com.platformer.utils.Constants.ANI_SPEED;
+import static com.platformer.utils.Constants.Dialogue.*;
 
 public class DialogueEffect {
 

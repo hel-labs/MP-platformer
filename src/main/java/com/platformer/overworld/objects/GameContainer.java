@@ -1,6 +1,6 @@
 package com.platformer.overworld.objects;
 
-import static com.platformer.overworld.utils.Constants.ObjectConstants.*;
+import static com.platformer.utils.Constants.ObjectConstants.*;
 
 import com.platformer.core.Game;
 

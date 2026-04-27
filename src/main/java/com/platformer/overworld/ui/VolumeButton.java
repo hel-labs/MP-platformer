@@ -1,10 +1,11 @@
 package com.platformer.overworld.ui;
 
+import static com.platformer.utils.Constants.UI.VolumeButtons.*;
+
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
-import com.platformer.overworld.utils.LoadSave;
-import static com.platformer.overworld.utils.Constants.UI.VolumeButtons.*;
+import com.platformer.utils.LoadSave;
 
 public class VolumeButton extends PauseButton {
 

@@ -1,10 +1,10 @@
 package com.platformer.overworld.entities;
 
-import static com.platformer.overworld.utils.Constants.EnemyConstants.*;
-import static com.platformer.overworld.utils.HelpMethods.IsFloor;
-import static com.platformer.overworld.utils.Constants.Dialogue.*;
+import static com.platformer.utils.Constants.Dialogue.*;
+import static com.platformer.utils.Constants.EnemyConstants.*;
+import static com.platformer.utils.HelpMethods.IsFloor;
 
-import com.platformer.overworld.states.Playing;
+import com.platformer.gamestate.Playing;
 
 public class Crabby extends Enemy {
 

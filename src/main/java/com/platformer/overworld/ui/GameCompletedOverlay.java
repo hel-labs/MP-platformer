@@ -5,10 +5,10 @@ import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
-import com.platformer.overworld.states.Playing;
 import com.platformer.gamestate.Gamestate;
+import com.platformer.gamestate.Playing;
+import com.platformer.utils.LoadSave;
 import com.platformer.core.Game;
-import com.platformer.overworld.utils.LoadSave;
 
 public class GameCompletedOverlay {
 

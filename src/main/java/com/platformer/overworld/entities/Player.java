@@ -1,10 +1,11 @@
 //unused overworld methods to be removed
 package com.platformer.overworld.entities;
 
-import static com.platformer.overworld.utils.Constants.PlayerConstants.*;
-import static com.platformer.overworld.utils.HelpMethods.*;
-import static com.platformer.overworld.utils.Constants.*;
-import static com.platformer.overworld.utils.Constants.Directions.*;
+import static com.platformer.utils.Constants.*;
+import static com.platformer.utils.Constants.Directions.*;
+import static com.platformer.utils.Constants.PlayerConstants.*;
+import static com.platformer.utils.HelpMethods.*;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -12,10 +13,10 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
 import com.platformer.utils.AudioPlayer;
-import com.platformer.overworld.states.Playing;
+import com.platformer.utils.LoadSave;
 import com.platformer.battle.core.BattleOutcome;
 import com.platformer.core.Game;
-import com.platformer.overworld.utils.LoadSave;
+import com.platformer.gamestate.Playing;
 
 public class Player extends Entity {
 

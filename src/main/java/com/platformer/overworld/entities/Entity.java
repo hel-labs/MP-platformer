@@ -1,9 +1,9 @@
 package com.platformer.overworld.entities;
 
-import static com.platformer.overworld.utils.Constants.Directions.DOWN;
-import static com.platformer.overworld.utils.Constants.Directions.LEFT;
-import static com.platformer.overworld.utils.Constants.Directions.UP;
-import static com.platformer.overworld.utils.HelpMethods.CanMoveHere;
+import static com.platformer.utils.Constants.Directions.DOWN;
+import static com.platformer.utils.Constants.Directions.LEFT;
+import static com.platformer.utils.Constants.Directions.UP;
+import static com.platformer.utils.HelpMethods.CanMoveHere;
 
 import java.awt.Color;
 import java.awt.Graphics;

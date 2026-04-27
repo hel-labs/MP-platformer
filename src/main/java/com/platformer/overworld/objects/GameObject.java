@@ -1,7 +1,7 @@
 package com.platformer.overworld.objects;
 
-import static com.platformer.overworld.utils.Constants.ANI_SPEED;
-import static com.platformer.overworld.utils.Constants.ObjectConstants.*;
+import static com.platformer.utils.Constants.ANI_SPEED;
+import static com.platformer.utils.Constants.ObjectConstants.*;
 
 import java.awt.Color;
 import java.awt.Graphics;

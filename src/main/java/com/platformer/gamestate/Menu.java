@@ -1,4 +1,4 @@
-package com.platformer.overworld.states;
+package com.platformer.gamestate;
 
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
@@ -6,9 +6,7 @@ import java.awt.image.BufferedImage;
 
 import com.platformer.core.Game;
 import com.platformer.overworld.ui.MenuButton;
-import com.platformer.overworld.utils.LoadSave;
-
-import com.platformer.gamestate.*;
+import com.platformer.utils.LoadSave;
 
 public class Menu extends State implements Statemethods {
 

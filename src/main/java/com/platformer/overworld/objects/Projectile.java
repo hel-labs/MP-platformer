@@ -1,10 +1,10 @@
 package com.platformer.overworld.objects;
 
+import static com.platformer.utils.Constants.Projectiles.*;
+
 import java.awt.geom.Rectangle2D;
 
 import com.platformer.core.Game;
-
-import static com.platformer.overworld.utils.Constants.Projectiles.*;
 
 public class Projectile {
 

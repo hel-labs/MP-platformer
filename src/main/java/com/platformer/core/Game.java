@@ -4,8 +4,6 @@ import com.platformer.battle.entities.BattleEnemy;
 import com.platformer.battle.core.*;
 import com.platformer.gamestate.*;
 import com.platformer.input.*;
-import com.platformer.overworld.states.Menu;
-import com.platformer.overworld.states.Playing;
 import com.platformer.overworld.ui.AudioOptions;
 import com.platformer.utils.AudioPlayer;
 
