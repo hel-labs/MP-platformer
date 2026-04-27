@@ -48,7 +48,7 @@ public class Playing extends State implements Statemethods {
 
     public boolean paused = false;
     private boolean battleTriggered = false;
-    public double points = 0;
+    public static double points = 0;
     private long runStartTime;
 
     private int xLvlOffset;
@@ -172,6 +172,7 @@ public class Playing extends State implements Statemethods {
     @Override
     public void update() {
         handleInput();
+
         if (paused) {
             pauseOverlay.update();
         } else if (lvlCompleted) {
@@ -317,6 +318,7 @@ public class Playing extends State implements Statemethods {
 
     public void setGameCompleted() {
         saveRunAndReset();
+        points = 0;
         gameCompleted = true;
     }
 
@@ -337,7 +339,6 @@ public class Playing extends State implements Statemethods {
         enemyManager.resetAllEnemies();
         objectManager.resetAllObjects();
         dialogEffects.clear();
-        deathCount = 0;
     }
 
     private void setDrawRainBoolean() {
@@ -349,6 +350,7 @@ public class Playing extends State implements Statemethods {
 
     public void setGameOver(boolean gameOver) {
         saveRunAndReset();
+        points = 0;
         this.gameOver = gameOver;
     }
 
@@ -482,8 +484,8 @@ public class Playing extends State implements Statemethods {
 
             if (deathCount >= MAX_DEATHS) {
                 player.kill();
-                gameOver = true;
                 playerDying = false;
+                gameOver = true;
                 getGame().getAudioPlayer().stopSong();
                 getGame().getAudioPlayer().playEffect(com.platformer.utils.AudioPlayer.GAMEOVER);
                 return;
@@ -498,6 +500,7 @@ public class Playing extends State implements Statemethods {
         } else {
             int syncedHp = Math.max(0, Math.min(outcome.hpRemaining, player.getMaxHp()));
             player.setBattleHp(syncedHp);
+            points += 5;
         }
     }
 
@@ -522,7 +525,7 @@ public class Playing extends State implements Statemethods {
             paused = true;
             update();
         }
-        
+
     }
 
     public boolean isBattleTriggered() {
@@ -541,6 +544,19 @@ public class Playing extends State implements Statemethods {
 
         points = 0;
         runStartTime = System.currentTimeMillis();
+        deathCount = 0;
+        resetAll();
+    }
+
+    public void restartFromBeginning() {
+        deathCount = 0;
+        levelManager.setLevelIndex(0);
+        levelManager.loadNextLevel();
+        player.setSpawn(levelManager.getCurrentLevel().getPlayerSpawn());
+        enemyManager.loadEnemies(levelManager.getCurrentLevel());
+        objectManager.loadObjects(levelManager.getCurrentLevel());
+        calcLvlOffset();
+        drawShip = true;
         resetAll();
     }
 
