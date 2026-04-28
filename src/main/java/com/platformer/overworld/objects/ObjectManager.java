@@ -1,20 +1,19 @@
 package com.platformer.overworld.objects;
 
-import static com.platformer.utils.Constants.ObjectConstants.*;
-import static com.platformer.utils.Constants.Projectiles.*;
-import static com.platformer.utils.HelpMethods.CanCannonSeePlayer;
-import static com.platformer.utils.HelpMethods.IsProjectileHittingLevel;
-
 import java.awt.Graphics;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import com.platformer.overworld.entities.*;
-import com.platformer.overworld.levels.Level;
-import com.platformer.utils.LoadSave;
-import com.platformer.core.Game;
 import com.platformer.gamestate.Playing;
+import com.platformer.overworld.levels.Level;
+import com.platformer.core.Game;
+import com.platformer.utils.LoadSave;
+import static com.platformer.utils.Constants.ObjectConstants.*;
+import static com.platformer.utils.HelpMethods.CanCannonSeePlayer;
+import static com.platformer.utils.HelpMethods.IsProjectileHittingLevel;
+import static com.platformer.utils.Constants.Projectiles.*;
 
 public class ObjectManager {
 
@@ -75,8 +74,8 @@ public class ObjectManager {
             if (gc.isActive() && !gc.doAnimation) {
                 if (gc.getObjType() == BARREL && gc.getHitbox().intersects(attackbox)) {
                     gc.setAnimation(true);
-                    int type = 1;
-                    potions.add(new Potion((int) (gc.getHitbox().x + gc.getHitbox().width / 2), (int) (gc.getHitbox().y - gc.getHitbox().height / 2), type));
+                    potions.add(new Potion((int) (gc.getHitbox().x + gc.getHitbox().width / 2), (int) (gc.getHitbox().y - gc.getHitbox().height / 2), RED_POTION));
+                    playing.addPoints(1);
                     return;
                 }
             }

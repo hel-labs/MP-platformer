@@ -6,6 +6,7 @@ import com.platformer.battle.entities.BattlePlayer;
 import com.platformer.core.BattleSnapshot;
 import com.platformer.input.InputHandler;
 import com.platformer.battle.animation.SpriteSheet;
+import com.platformer.utils.AudioPlayer;
 
 import java.awt.Graphics;
 import java.util.function.Consumer;
@@ -18,6 +19,7 @@ public class BattleManager {
     public void init(BattleSnapshot snapshot,
             BattleEnemy enemy,
             InputHandler input,
+            AudioPlayer audioPlayer,
             Consumer<BattleOutcome> onDone) {
 
         this.onDone = onDone;
@@ -27,7 +29,7 @@ public class BattleManager {
         battlePlayer.initAnimations(playerSheet);
         BattleContext ctx = new BattleContext(battlePlayer, enemy);
 
-        battleState = new BattleState(ctx, input, this::onBattleEnd);
+        battleState = new BattleState(ctx, input, audioPlayer, this::onBattleEnd);
         battleState.onEnter();
     }
 

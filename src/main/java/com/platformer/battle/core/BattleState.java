@@ -10,6 +10,7 @@ import com.platformer.battle.dialogue.DialogueBox;
 import com.platformer.exceptions.GameException;
 import com.platformer.input.InputHandler;
 import com.platformer.utils.GameLogger;
+import com.platformer.utils.AudioPlayer;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -27,6 +28,7 @@ public class BattleState {
     private final BattleUI ui;
     private final DialogueBox dialogueBox;
     private final InputHandler input;
+    private final AudioPlayer audioPlayer;
     private final Consumer<BattleOutcome> onDone;
 
     private Phase phase = Phase.ENCOUNTER_DIALOGUE;
@@ -40,9 +42,11 @@ public class BattleState {
 
     public BattleState(BattleContext ctx,
             InputHandler input,
+            AudioPlayer audioPlayer,
             Consumer<BattleOutcome> onDone) {
         this.ctx = ctx;
         this.input = input;
+        this.audioPlayer = audioPlayer;
         this.onDone = onDone;
         this.engine = new BattleEngine();
         this.ui = new BattleUI();
@@ -96,7 +100,7 @@ public class BattleState {
         switch (phase) {
 
             case ENCOUNTER_DIALOGUE -> {
-                if (input.isJustPressed(InputHandler.CONFIRM)) {
+                if (input.isJustPressed(InputHandler.CONFIRM)||input.isJustPressed(InputHandler.ENTER)) {
                     if (!dialogueBox.isFinished()) {
                         dialogueBox.skipToEnd();
                     } else {
@@ -119,7 +123,7 @@ public class BattleState {
                 if (input.isJustPressed(InputHandler.RIGHT)) {
                     selectedAction = (selectedAction + 1) % n;
                 }
-                if (input.isJustPressed(InputHandler.CONFIRM)) {
+                if (input.isJustPressed(InputHandler.CONFIRM)||input.isJustPressed(InputHandler.ENTER)) {
                     executePlayerAction(selectedAction);
                 }
             }
@@ -136,10 +140,10 @@ public class BattleState {
                 if (input.isJustPressed(InputHandler.DOWN)) {
                     selectedTalkOpt = (selectedTalkOpt + 1) % n;
                 }
-                if (input.isJustPressed(InputHandler.CONFIRM)) {
+                if (input.isJustPressed(InputHandler.CONFIRM)||input.isJustPressed(InputHandler.ENTER)) {
                     resolveTalkOption(talkOptions.get(selectedTalkOpt));
                 }
-                if (input.isJustPressed(InputHandler.CANCEL)) {
+                if (input.isJustPressed(InputHandler.CANCEL)||input.isJustPressed(InputHandler.BACK)) {
                     phase = Phase.PLAYER_TURN;
                 }
             }
@@ -159,7 +163,7 @@ public class BattleState {
             }
 
             case ENEMY_RESULT -> {
-                if (input.isJustPressed(InputHandler.CONFIRM)) {
+                if (input.isJustPressed(InputHandler.CONFIRM)||input.isJustPressed(InputHandler.ENTER)) {
                     if (!dialogueBox.isFinished()) {
                         dialogueBox.skipToEnd();
                     } else if (lastResult != null && lastResult.isTerminal()) {
@@ -172,7 +176,7 @@ public class BattleState {
             }
 
             case TERMINAL -> {
-                if (input.isJustPressed(InputHandler.CONFIRM)) {
+                if (input.isJustPressed(InputHandler.CONFIRM)||input.isJustPressed(InputHandler.ENTER)) {
                     if (!dialogueBox.isFinished()) {
                         dialogueBox.skipToEnd();
                     } else {
@@ -190,6 +194,11 @@ public class BattleState {
         try {
             lastResult = engine.executePlayerAction(index, ctx);
             ctx.setLastResult(lastResult);
+
+            if (lastResult.getType() == BattleResult.Type.PLAYER_ATTACKED
+                    || lastResult.getType() == BattleResult.Type.ENEMY_DEFEATED) {
+                audioPlayer.playAttackSound();
+            }
 
             if (lastResult.isTerminal()) {
                 phase = Phase.PLAYER_RESULT;

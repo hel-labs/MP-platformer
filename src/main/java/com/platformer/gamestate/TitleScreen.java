@@ -37,7 +37,7 @@ public class TitleScreen extends State implements Statemethods {
     public void update() {
         InputHandler input = game.getInputHandler();
         if (input.isJustPressed(InputHandler.ENTER)) {
-            Gamestate.state = Gamestate.MENU;
+            Gamestate.state = Gamestate.NAME_ENTRY;
         }
     }
 

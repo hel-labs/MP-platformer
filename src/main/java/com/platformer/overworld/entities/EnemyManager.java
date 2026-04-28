@@ -1,16 +1,15 @@
 package com.platformer.overworld.entities;
 
-import static com.platformer.utils.Constants.EnemyConstants.*;
-
 import java.awt.Graphics;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
 import com.platformer.battle.entities.*;
 import com.platformer.core.BattleSnapshot;
-import com.platformer.gamestate.Playing;
 import com.platformer.overworld.levels.Level;
+import com.platformer.gamestate.Playing;
 import com.platformer.utils.LoadSave;
+import static com.platformer.utils.Constants.EnemyConstants.*;
 
 public class EnemyManager {
 
@@ -104,8 +103,6 @@ public class EnemyManager {
 
     private void triggerBattle(Player player, BattleEnemy battleEnemy) {
         player.setFrozen(true);
-        // Battles are their own encounter; don't carry immediate overworld chip damage in.
-        player.setBattleHp(player.getMaxHp());
         BattleSnapshot snapshot = player.createSnapshot();
         playing.setBattleTriggered(true);
         playing.getGame().startBattle(snapshot, battleEnemy);

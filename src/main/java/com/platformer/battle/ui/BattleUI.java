@@ -10,7 +10,13 @@ import com.platformer.utils.LoadSave;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.imageio.ImageIO;
 
 public class BattleUI {
 
@@ -53,10 +59,15 @@ public class BattleUI {
     public static final Color COL_HOST_FILL = new Color(200, 60, 60);
     public static final Color COL_HOST_ZERO = new Color(80, 200, 80);
 
+    private static final int SPACE_WIDTH = 6;
+    private static final int GLYPH_SPACING = 1;
+
     private final BufferedImage battleBg;
     private final BufferedImage bigCloud;
     private final BufferedImage smallCloud;
     private final BufferedImage statusBarImg;
+    private final BufferedImage hostilityPanelImg;
+    private final Map<Character, BufferedImage> bigTextGlyphs;
 
     private final int statusBarWidth = (int) (192 * Game.SCALE);
     private final int statusBarHeight = (int) (58 * Game.SCALE);
@@ -78,6 +89,8 @@ public class BattleUI {
         bigCloud = LoadSave.GetSpriteAtlas(LoadSave.BIG_CLOUDS);
         smallCloud = LoadSave.GetSpriteAtlas(LoadSave.SMALL_CLOUDS);
         statusBarImg = LoadSave.GetSpriteAtlas(LoadSave.STATUS_BAR);
+        hostilityPanelImg = LoadSave.GetSpriteAtlas(LoadSave.OPTIONS_MENU);
+        bigTextGlyphs = loadBigTextGlyphs();
     }
 
     public void render(Graphics2D g, BattleContext ctx, int selectedAction, List<BattleAction> actions,
@@ -219,67 +232,70 @@ public class BattleUI {
 
         g.setColor(Color.YELLOW);
         g.fillRect(staminaBarXStart + statusBarX, staminaBarYStart + statusBarY, stFill, staminaBarHeight);
-
-        g.setColor(Color.BLACK);
-        g.setFont(FONT_SMALL);
-        g.drawString(hp + "/" + maxHp, healthBarXStart + statusBarX + healthBarWidth + ui(8), healthBarYStart + statusBarY + ui(6));
-        g.drawString("ST " + stamina + "/" + maxStamina, staminaBarXStart + statusBarX + staminaBarWidth + ui(8), staminaBarYStart + statusBarY + ui(5));
     }
 
     private void renderEnemyStatusTopRight(Graphics2D g, BattleContext ctx) {
-        int x = SCREEN_W - HP_BAR_W - ui(48);
-        int y = ui(20);
-        renderHPBar(g, ctx.getEnemy().getName(), ctx.getEnemy().getHp(), ctx.getEnemy().getMaxHp(), x, y);
+        int x = SCREEN_W - statusBarWidth - ui(16);
+        int y = statusBarY;
+
+        if (statusBarImg != null) {
+            g.drawImage(statusBarImg, x, y, statusBarWidth, statusBarHeight, null);
+        } else {
+            g.setColor(new Color(18, 18, 32, 230));
+            g.fillRoundRect(x, y, statusBarWidth, statusBarHeight, ui(8), ui(8));
+            g.setColor(COL_BORDER);
+            g.drawRoundRect(x, y, statusBarWidth, statusBarHeight, ui(8), ui(8));
+        }
+
+        drawSpriteTextCentered(g, ctx.getEnemy().getName(), x + statusBarWidth / 2, y + ui(2), Math.max(1, Math.round(Game.SCALE)));
+        renderHPBar(g, ctx.getEnemy().getHp(), ctx.getEnemy().getMaxHp(), x + healthBarXStart, y + healthBarYStart, healthBarWidth, healthBarHeight);
     }
 
-    private void renderHPBar(Graphics2D g, String label,
-            int hp, int maxHp, int x, int y) {
-        g.setColor(Color.BLACK);
-        g.setFont(FONT_LABEL);
-        g.drawString(label, x, y);
-
-        int barY = y + 4;
+    private void renderHPBar(Graphics2D g,
+            int hp, int maxHp, int x, int y, int width, int height) {
         float ratio = maxHp > 0 ? (float) hp / maxHp : 0f;
-        int fillW = (int) (HP_BAR_W * ratio);
+        int fillW = (int) (width * ratio);
         Color fill = ratio > 0.5f ? COL_HP_HIGH
                 : ratio > 0.25f ? COL_HP_MED
                         : COL_HP_LOW;
 
         g.setColor(COL_HP_BG);
-        g.fillRoundRect(x, barY, HP_BAR_W, HP_BAR_H, 4, 4);
+        g.fillRoundRect(x, y, width, height, 4, 4);
         if (fillW > 0) {
             g.setColor(fill);
-            g.fillRoundRect(x, barY, fillW, HP_BAR_H, 4, 4);
+            g.fillRoundRect(x, y, fillW, height, 4, 4);
         }
         g.setColor(Color.BLACK);
         g.setStroke(new BasicStroke(1f));
-        g.drawRoundRect(x, barY, HP_BAR_W, HP_BAR_H, 4, 4);
-        g.setFont(FONT_SMALL);
-        g.drawString(hp + "/" + maxHp, x + HP_BAR_W + 6, barY + HP_BAR_H);
+        g.drawRoundRect(x, y, width, height, 4, 4);
     }
 
     private void renderHostilityBar(Graphics2D g, BattleContext ctx) {
-        int x = statusBarX + 920;
-        int y = statusBarY + statusBarHeight - 10;
-        int barW = statusBarWidth - ui(22);
-        int barH = ui(10);
+        int panelW = statusBarWidth;
+        int panelH = ui(30);
+        int x = SCREEN_W - panelW - ui(16);
+        int y = statusBarY + statusBarHeight + ui(8);
+        int barW = panelW - ui(20);
+        int barH = ui(9);
 
         int hostility = ctx.getHostility();
         float ratio = Math.max(0f, Math.min(1f, (float) hostility / BattleContext.MAX_HOSTILITY));
         int fillW = (int) (barW * ratio);
 
-        g.setColor(new Color(16, 16, 28, 220));
-        g.fillRoundRect(x, y, statusBarWidth, ui(26), ui(6), ui(6));
-        g.setColor(COL_BORDER);
-        g.drawRoundRect(x, y, statusBarWidth, ui(26), ui(6), ui(6));
+        if (hostilityPanelImg != null) {
+            g.drawImage(hostilityPanelImg, x, y, panelW, panelH, null);
+            g.setColor(new Color(0, 0, 0, 90));
+            g.fillRoundRect(x, y, panelW, panelH, ui(6), ui(6));
+        } else {
+            g.setColor(new Color(12, 20, 32, 220));
+            g.fillRoundRect(x, y, panelW, panelH, ui(6), ui(6));
+            g.setColor(COL_BORDER);
+            g.drawRoundRect(x, y, panelW, panelH, ui(6), ui(6));
+        }
 
         g.setFont(FONT_HINT);
-        g.setColor(new Color(176, 130, 130));
+        g.setColor(new Color(180, 200, 230));
         g.drawString("HOSTILITY", x + ui(8), y + ui(10));
-
-        String meterText = hostility + "/" + BattleContext.MAX_HOSTILITY;
-        FontMetrics fm = g.getFontMetrics();
-        g.drawString(meterText, x + statusBarWidth - fm.stringWidth(meterText) - ui(8), y + ui(10));
 
         int barX = x + ui(8);
         int barY = y + ui(13);
@@ -293,7 +309,7 @@ public class BattleUI {
             g.fillRoundRect(barX, barY, fillW, barH, ui(3), ui(3));
         }
 
-        g.setColor(new Color(100, 60, 60));
+        g.setColor(new Color(120, 120, 150));
         g.drawRoundRect(barX, barY, barW, barH, ui(3), ui(3));
 
         if (ctx.isMercyAvailable()) {
@@ -445,6 +461,88 @@ public class BattleUI {
     public static void drawCentered(Graphics2D g, String text, int y) {
         FontMetrics fm = g.getFontMetrics();
         g.drawString(text, (SCREEN_W - fm.stringWidth(text)) / 2, y);
+    }
+
+    private void drawSpriteTextCentered(Graphics2D g, String text, int centerX, int y, int scale) {
+        if (text == null || text.isBlank() || bigTextGlyphs.isEmpty()) {
+            g.setColor(Color.BLACK);
+            g.setFont(FONT_LABEL);
+            FontMetrics fm = g.getFontMetrics();
+            g.drawString(text == null ? "" : text, centerX - fm.stringWidth(text == null ? "" : text) / 2, y + ui(10));
+            return;
+        }
+
+        String normalized = text.toUpperCase();
+        int textWidth = getSpriteTextWidth(normalized, scale);
+        int x = centerX - textWidth / 2;
+
+        for (int i = 0; i < normalized.length(); i++) {
+            char ch = normalized.charAt(i);
+            if (ch == ' ') {
+                x += SPACE_WIDTH * scale;
+                continue;
+            }
+
+            BufferedImage glyph = bigTextGlyphs.get(ch);
+            if (glyph == null) {
+                x += SPACE_WIDTH * scale;
+                continue;
+            }
+
+            int drawW = glyph.getWidth() * scale;
+            int drawH = glyph.getHeight() * scale;
+            g.drawImage(glyph, x, y, drawW, drawH, null);
+            x += (glyph.getWidth() + GLYPH_SPACING) * scale;
+        }
+    }
+
+    private int getSpriteTextWidth(String text, int scale) {
+        int width = 0;
+        for (int i = 0; i < text.length(); i++) {
+            char ch = text.charAt(i);
+            if (ch == ' ') {
+                width += SPACE_WIDTH * scale;
+                continue;
+            }
+
+            BufferedImage glyph = bigTextGlyphs.get(ch);
+            width += (glyph != null ? (glyph.getWidth() + GLYPH_SPACING) : SPACE_WIDTH) * scale;
+        }
+        return width;
+    }
+
+    private Map<Character, BufferedImage> loadBigTextGlyphs() {
+        Map<Character, BufferedImage> glyphs = new HashMap<>();
+
+        for (int i = 0; i < 26; i++) {
+            char letter = (char) ('A' + i);
+            BufferedImage img = loadImage("/res/big_text/" + (i + 1) + ".png");
+            if (img != null) {
+                glyphs.put(letter, img);
+            }
+        }
+
+        for (int i = 0; i < 10; i++) {
+            int fileIndex = 27 + i;
+            char digit = (i < 9) ? (char) ('1' + i) : '0';
+            BufferedImage img = loadImage("/res/big_text/" + fileIndex + ".png");
+            if (img != null) {
+                glyphs.put(digit, img);
+            }
+        }
+
+        return glyphs;
+    }
+
+    private BufferedImage loadImage(String resourcePath) {
+        try (InputStream is = BattleUI.class.getResourceAsStream(resourcePath)) {
+            if (is == null) {
+                return null;
+            }
+            return ImageIO.read(is);
+        } catch (IOException e) {
+            return null;
+        }
     }
 
     private Color dimColor(Color c) {

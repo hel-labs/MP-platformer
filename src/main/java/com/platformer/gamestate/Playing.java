@@ -20,6 +20,8 @@ import java.util.Random;
 
 import com.platformer.battle.core.BattleOutcome;
 import com.platformer.core.Game;
+import com.platformer.gamestate.State;
+import com.platformer.gamestate.Statemethods;
 import com.platformer.input.InputHandler;
 import com.platformer.overworld.effects.DialogueEffect;
 import com.platformer.overworld.effects.Rain;
@@ -46,9 +48,9 @@ public class Playing extends State implements Statemethods {
     private Rain rain;
     private InputHandler inputHandler;
 
-    public boolean paused = false;
+    private boolean paused = false;
     private boolean battleTriggered = false;
-    public static double points = 0;
+    public double points = 0;
     private long runStartTime;
 
     private int xLvlOffset;
@@ -138,6 +140,8 @@ public class Playing extends State implements Statemethods {
     public void loadNextLevel() {
         levelManager.setLevelIndex(levelManager.getLevelIndex() + 1);
         levelManager.loadNextLevel();
+        // Always restore overworld music when transitioning into a new level.
+        game.getAudioPlayer().setLevelSong(levelManager.getLevelIndex());
         player.setSpawn(levelManager.getCurrentLevel().getPlayerSpawn());
         resetAll();
         drawShip = false;
@@ -172,7 +176,6 @@ public class Playing extends State implements Statemethods {
     @Override
     public void update() {
         handleInput();
-
         if (paused) {
             pauseOverlay.update();
         } else if (lvlCompleted) {
@@ -318,7 +321,6 @@ public class Playing extends State implements Statemethods {
 
     public void setGameCompleted() {
         saveRunAndReset();
-        points = 0;
         gameCompleted = true;
     }
 
@@ -339,6 +341,7 @@ public class Playing extends State implements Statemethods {
         enemyManager.resetAllEnemies();
         objectManager.resetAllObjects();
         dialogEffects.clear();
+        deathCount = 0;
     }
 
     private void setDrawRainBoolean() {
@@ -350,7 +353,6 @@ public class Playing extends State implements Statemethods {
 
     public void setGameOver(boolean gameOver) {
         saveRunAndReset();
-        points = 0;
         this.gameOver = gameOver;
     }
 
@@ -484,8 +486,8 @@ public class Playing extends State implements Statemethods {
 
             if (deathCount >= MAX_DEATHS) {
                 player.kill();
-                playerDying = false;
                 gameOver = true;
+                playerDying = false;
                 getGame().getAudioPlayer().stopSong();
                 getGame().getAudioPlayer().playEffect(com.platformer.utils.AudioPlayer.GAMEOVER);
                 return;
@@ -500,7 +502,6 @@ public class Playing extends State implements Statemethods {
         } else {
             int syncedHp = Math.max(0, Math.min(outcome.hpRemaining, player.getMaxHp()));
             player.setBattleHp(syncedHp);
-            points += 5;
         }
     }
 
@@ -509,6 +510,18 @@ public class Playing extends State implements Statemethods {
     }
 
     private void handleInput() {
+        if (inputHandler.isJustPressed(InputHandler.ESCAPE)
+                && !gameOver
+                && !lvlCompleted
+                && !gameCompleted
+                && !playerDying) {
+            paused = !paused;
+        }
+
+        if (paused) {
+            return;
+        }
+
         if (gameOver || lvlCompleted || gameCompleted || playerDying) {
             return;
         }
@@ -521,11 +534,6 @@ public class Playing extends State implements Statemethods {
         if (jump) {
             player.requestJump();
         }
-        if (!paused && (inputHandler.isJustPressed(InputHandler.ESCAPE))) {
-            paused = true;
-            update();
-        }
-
     }
 
     public boolean isBattleTriggered() {
@@ -536,18 +544,21 @@ public class Playing extends State implements Statemethods {
         battleTriggered = b;
     }
 
+    public void addPoints(double value) {
+        points += value;
+    }
+
     public void saveRunAndReset() {
         long runEndTime = System.currentTimeMillis();
         long durationSeconds = (runEndTime - runStartTime) / 1000;
 
-        com.platformer.utils.LeaderboardManager.saveScore(points, durationSeconds);
+        String playerName = com.platformer.utils.PlayerProfileManager.getCurrentPlayerName();
+        com.platformer.utils.LeaderboardManager.savePlayerProgress(playerName, points, durationSeconds);
 
         points = 0;
         runStartTime = System.currentTimeMillis();
-        deathCount = 0;
         resetAll();
     }
-
     public void restartFromBeginning() {
         deathCount = 0;
         levelManager.setLevelIndex(0);

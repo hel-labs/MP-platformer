@@ -96,6 +96,7 @@ public class InputHandler {
 
     public static final int CONFIRM = KeyEvent.VK_Z;
     public static final int CANCEL = KeyEvent.VK_X;
+    public static final int BACK = KeyEvent.VK_BACK_SPACE;
     public static final int UP = KeyEvent.VK_UP;
     public static final int DOWN = KeyEvent.VK_DOWN;
     public static final int LEFT = KeyEvent.VK_LEFT;
