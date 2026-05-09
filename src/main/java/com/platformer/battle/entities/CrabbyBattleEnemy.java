@@ -56,4 +56,7 @@ public class CrabbyBattleEnemy extends BattleEnemy {
                 );
         };
     }
+
+    @Override
+    public int getPointValue(){return 5;}
 }

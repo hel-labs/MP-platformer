@@ -9,11 +9,13 @@ public class BattleOutcome {
 
     public final Result result;
     public final int hpRemaining;
+    public final int pointsEarned;
 
     // Creates the result of the battle; used by Game.java
-    public BattleOutcome(Result result, int hpRemaining) {
+    public BattleOutcome(Result result, int hpRemaining, int pointsEarned) {
         this.result = result;
         this.hpRemaining = hpRemaining;
+        this.pointsEarned = pointsEarned;
     }
 
     // Accessors

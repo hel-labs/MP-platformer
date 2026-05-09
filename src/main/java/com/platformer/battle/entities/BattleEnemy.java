@@ -76,7 +76,8 @@ public abstract class BattleEnemy {
         SpriteSheet sheet = new SpriteSheet(resourcePath, frameWidth, frameHeight);
         animator = new AnimationController();
         animator.addAnimation("idle", new Animation(sheet.getRow(idleRow, idleFrames), idleFrameDuration, true));
-        animator.addAnimation("attack", new Animation(sheet.getRow(attackRow, attackFrames), attackFrameDuration, false));
+        animator.addAnimation("attack",
+                new Animation(sheet.getRow(attackRow, attackFrames), attackFrameDuration, false));
         animator.play("idle");
     }
 
@@ -118,4 +119,6 @@ public abstract class BattleEnemy {
     public int getAttack() {
         return attack;
     }
+
+    public abstract int getPointValue();
 }

@@ -41,4 +41,8 @@ public class PlaceholderEnemy extends BattleEnemy {
                 new TalkOption("Get out of my way!", "* It tenses up angrily.", +1)
         );
     }
+
+
+    @Override
+    public int getPointValue(){return 0;}
 }

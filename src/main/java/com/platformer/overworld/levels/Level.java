@@ -31,19 +31,23 @@ public class Level {
     private int maxTilesOffset;
     private int maxLvlOffsetX;
     private Point playerSpawn;
+    private Point npcSpawnPoint;
 
     public Level(BufferedImage img) {
         this.img = img;
         lvlData = new int[img.getHeight()][img.getWidth()];
         loadLevel();
         calcLvlOffsets();
+        hardcodeNpcSpawn();
+    }
+
+    private void hardcodeNpcSpawn() {
+        int tileX = img.getWidth() - 3;
+        int tileY = img.getHeight() - 2;
+        npcSpawnPoint = new Point(tileX * Game.TILES_SIZE, tileY * Game.TILES_SIZE);
     }
 
     private void loadLevel() {
-
-        // Looping through the image colors just once. Instead of one per
-        // object/enemy/etc..
-        // Removed many methods in HelpMethods class.
         for (int y = 0; y < img.getHeight(); y++) {
             for (int x = 0; x < img.getWidth(); x++) {
                 Color c = new Color(img.getRGB(x, y));
@@ -124,6 +128,10 @@ public class Level {
         return playerSpawn;
     }
 
+    public Point getNpcSpawnPoint() {
+        return npcSpawnPoint;
+    }
+
     public ArrayList<Crabby> getCrabs() {
         return crabs;
     }
@@ -159,5 +167,4 @@ public class Level {
     public ArrayList<Grass> getGrass() {
         return grass;
     }
-
 }

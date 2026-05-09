@@ -56,4 +56,7 @@ public class PinkstarBattleEnemy extends BattleEnemy {
                 );
         };
     }
+
+    @Override
+    public int getPointValue(){return 15;}
 }

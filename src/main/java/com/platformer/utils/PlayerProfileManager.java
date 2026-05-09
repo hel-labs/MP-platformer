@@ -1,13 +1,12 @@
 package com.platformer.utils;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 public final class PlayerProfileManager {
 
-    private static final String FILE_PATH = "player_profile.txt";
+    private static final String FILE_PATH = "player_profile.dat";
     private static String currentPlayerName;
 
     private PlayerProfileManager() {
@@ -23,24 +22,22 @@ public final class PlayerProfileManager {
     public static synchronized void setCurrentPlayerName(String name) {
         String sanitized = sanitizeName(name);
         currentPlayerName = sanitized;
-        try {
-            Files.writeString(Path.of(FILE_PATH), sanitized, StandardCharsets.UTF_8);
+        try (DataOutputStream dos = new DataOutputStream(
+                new java.io.FileOutputStream(FILE_PATH))) {
+            dos.writeUTF(sanitized);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public static synchronized boolean hasSavedProfile() {
-        return Files.exists(Path.of(FILE_PATH));
+        return new java.io.File(FILE_PATH).exists();
     }
 
     private static String readSavedName() {
-        try {
-            if (!Files.exists(Path.of(FILE_PATH))) {
-                return "PLAYER";
-            }
-            String saved = Files.readString(Path.of(FILE_PATH), StandardCharsets.UTF_8);
-            return sanitizeName(saved);
+        try (DataInputStream dis = new DataInputStream(
+                new java.io.FileInputStream(FILE_PATH))) {
+            return sanitizeName(dis.readUTF());
         } catch (IOException e) {
             return "PLAYER";
         }

@@ -270,18 +270,18 @@ public class BattleState {
         BattleOutcome outcome;
         if (lastResult == null) {
             outcome = new BattleOutcome(BattleOutcome.Result.WIN,
-                    ctx.getPlayer().getHp());
+                    ctx.getPlayer().getHp(), ctx.getEnemy().getPointValue());
         } else {
             outcome = switch (lastResult.getType()) {
                 case PLAYER_DEFEATED ->
                     new BattleOutcome(
-                    BattleOutcome.Result.LOSE, ctx.getPlayer().getHp());
+                    BattleOutcome.Result.LOSE, ctx.getPlayer().getHp(), -10);
                 case PLAYER_FLED ->
                     new BattleOutcome(
-                    BattleOutcome.Result.FLEE, ctx.getPlayer().getHp());
+                    BattleOutcome.Result.FLEE, ctx.getPlayer().getHp(), 1);
                 default ->
                     new BattleOutcome(
-                    BattleOutcome.Result.WIN, ctx.getPlayer().getHp());
+                    BattleOutcome.Result.WIN, ctx.getPlayer().getHp(), ctx.getEnemy().getPointValue());
             };
         }
         onDone.accept(outcome);

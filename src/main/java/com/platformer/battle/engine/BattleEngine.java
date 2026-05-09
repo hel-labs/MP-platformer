@@ -18,8 +18,7 @@ public class BattleEngine {
                 new FightAction(),
                 new TalkAction(),
                 new SpareAction(),
-                new FleeAction()
-        );
+                new FleeAction());
     }
 
     // Execute the selected action
@@ -43,6 +42,19 @@ public class BattleEngine {
         }
 
         BattlePlayer player = ctx.getPlayer();
+
+        if (enemy instanceof com.platformer.battle.entities.BossEnemy boss) {
+            if (!boss.isAttackTurn()) {
+                String taunt = boss.getNextTaunt();
+                boss.advanceTurn();
+                ctx.incrementTurnCount();
+                ctx.setPlayerTurn(true);
+                ctx.setLastResult(null);
+                return BattleResult.enemyAttacked(0, "* " + boss.getName() + ": \"" + taunt + "\"");
+            }
+            boss.advanceTurn();
+        }
+
         enemy.playAttackAnimation();
 
         DamageStrategy strategy = enemy.getDamageStrategy();

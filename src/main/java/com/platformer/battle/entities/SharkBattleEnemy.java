@@ -59,4 +59,7 @@ public class SharkBattleEnemy extends BattleEnemy {
                 );
         };
     }
+
+    @Override
+    public int getPointValue(){return 20;}
 }

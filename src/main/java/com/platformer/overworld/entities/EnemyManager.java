@@ -1,6 +1,7 @@
 package com.platformer.overworld.entities;
 
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
@@ -15,26 +16,27 @@ public class EnemyManager {
 
     private Playing playing;
     private BufferedImage[][] crabbyArr, pinkstarArr, sharkArr;
+    private BufferedImage[] npcFrames;
     private Level currentLevel;
+    private NPC npc;
 
-    // Tracks which overworld enemy triggered the current battle.
-    // Deactivated when battle is won, stays active if fled.
     private Enemy pendingBattleEnemy = null;
 
     public EnemyManager(Playing playing) {
         this.playing = playing;
         loadEnemyImgs();
+        loadNpcImgs();
     }
 
     public void loadEnemies(Level level) {
         this.currentLevel = level;
+        Point spawn = level.getNpcSpawnPoint();
+        npc = new NPC(spawn.x, spawn.y, npcFrames);
     }
 
     public void update(int[][] lvlData) {
         Player player = playing.getPlayer();
 
-        // Check contact BEFORE updating enemy AI.
-        // If contact triggers battle, skip all AI updates this tick.
         if (checkBattleContact(player)) {
             return;
         }
@@ -63,8 +65,29 @@ public class EnemyManager {
         }
 
         if (!isAnyActive) {
-            playing.setLevelCompleted(true);
+            npc.setActive(true);
         }
+
+        if (npc.isActive()) {
+            npc.update();
+        }
+    }
+
+    public boolean areAllEnemiesDead() {
+        for (Crabby c : currentLevel.getCrabs()) {
+            if (c.isActive()) return false;
+        }
+        for (Pinkstar p : currentLevel.getPinkstars()) {
+            if (p.isActive()) return false;
+        }
+        for (Shark s : currentLevel.getSharks()) {
+            if (s.isActive()) return false;
+        }
+        return true;
+    }
+
+    public NPC getNpc() {
+        return npc;
     }
 
     private boolean checkBattleContact(Player player) {
@@ -119,6 +142,9 @@ public class EnemyManager {
         drawCrabs(g, xLvlOffset);
         drawPinkstars(g, xLvlOffset);
         drawSharks(g, xLvlOffset);
+        if (npc != null) {
+            npc.draw(g, xLvlOffset);
+        }
     }
 
     private void drawCrabs(Graphics g, int xLvlOffset) {
@@ -197,6 +223,14 @@ public class EnemyManager {
                 SHARK_HEIGHT_DEFAULT);
     }
 
+    private void loadNpcImgs() {
+        BufferedImage sheet = LoadSave.GetSpriteAtlas(LoadSave.NPC_SPRITE);
+        npcFrames = new BufferedImage[5];
+        for (int i = 0; i < 5; i++) {
+            npcFrames[i] = sheet.getSubimage(i * 32, 0, 32, 32);
+        }
+    }
+
     private BufferedImage[][] getImgArr(BufferedImage atlas, int xSize, int ySize, int spriteW, int spriteH) {
         BufferedImage[][] tempArr = new BufferedImage[ySize][xSize];
         for (int j = 0; j < tempArr.length; j++) {
@@ -218,5 +252,8 @@ public class EnemyManager {
             s.resetEnemy();
         }
         pendingBattleEnemy = null;
+        if (npc != null) {
+            npc.setActive(false);
+        }
     }
 }

@@ -1,10 +1,8 @@
 package com.platformer.utils;
 
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -12,7 +10,7 @@ import java.util.List;
 
 public class LeaderboardManager {
 
-    private static final String FILE_PATH = "leaderboard.txt";
+    private static final String FILE_PATH = "leaderboard.dat";
     private static final int MAX_ENTRIES = 50;
     private static final List<ScoreEntry> entries = new ArrayList<>();
     private static boolean loaded = false;
@@ -70,31 +68,15 @@ public class LeaderboardManager {
         loaded = true;
         entries.clear();
 
-        try {
-            List<String> lines = Files.readAllLines(Path.of(FILE_PATH));
-            int legacyIndex = 1;
-
-            for (String line : lines) {
-                if (line.trim().isEmpty()) {
-                    continue;
-                }
-
-                String[] parts = line.split("\\|");
-
-                if (parts.length == 4) {
-                    entries.add(new ScoreEntry(
-                            sanitizeName(parts[0]),
-                            Double.parseDouble(parts[1]),
-                            Long.parseLong(parts[2]),
-                            parts[3]));
-                } else if (parts.length == 3) {
-                    // Backward compatibility with old score-only format.
-                    entries.add(new ScoreEntry(
-                            "LEGACY-" + legacyIndex++,
-                            Double.parseDouble(parts[0]),
-                            Long.parseLong(parts[1]),
-                            parts[2]));
-                }
+        try (DataInputStream dis = new DataInputStream(
+                new java.io.FileInputStream(FILE_PATH))) {
+            int count = dis.readInt();
+            for (int i = 0; i < count; i++) {
+                String name = dis.readUTF();
+                double score = dis.readDouble();
+                long duration = dis.readLong();
+                String date = dis.readUTF();
+                entries.add(new ScoreEntry(sanitizeName(name), score, duration, date));
             }
 
             entries.sort(null);
@@ -111,11 +93,16 @@ public class LeaderboardManager {
             entries.subList(MAX_ENTRIES, entries.size()).clear();
         }
 
-        try (PrintWriter writer = new PrintWriter(FILE_PATH, "UTF-8")) {
+        try (DataOutputStream dos = new DataOutputStream(
+                new java.io.FileOutputStream(FILE_PATH))) {
+            dos.writeInt(entries.size());
             for (ScoreEntry e : entries) {
-                writer.printf("%s|%.2f|%d|%s%n", e.playerName(), e.bestScore(), e.totalDurationSeconds(), e.lastPlayed());
+                dos.writeUTF(e.playerName());
+                dos.writeDouble(e.bestScore());
+                dos.writeLong(e.totalDurationSeconds());
+                dos.writeUTF(e.lastPlayed());
             }
-        } catch (FileNotFoundException | UnsupportedEncodingException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
