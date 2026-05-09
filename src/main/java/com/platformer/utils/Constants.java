@@ -77,7 +77,7 @@ public class Constants {
         public static final int COIN_HEIGHT_DEFAULT = 15;
         public static final int COIN_WIDTH = (int) (COIN_WIDTH_DEFAULT * Game.SCALE);
         public static final int COIN_HEIGHT = (int) (COIN_HEIGHT_DEFAULT * Game.SCALE);
-        public static final int COIN_ANI_FRAMES = 1; 
+        public static final int COIN_ANI_FRAMES = 5; 
 
         public static int GetSpriteAmount(int object_type) {
             switch (object_type) {
@@ -87,6 +87,8 @@ public class Constants {
                     return 8;
                 case CANNON_LEFT, CANNON_RIGHT:
                     return 7;
+                case COIN:
+                    return COIN_ANI_FRAMES;
             }
             return 1;
         }

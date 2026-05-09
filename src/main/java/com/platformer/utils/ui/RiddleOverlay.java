@@ -117,7 +117,7 @@ public class RiddleOverlay {
         if (falseBtn.contains(e.getPoint())) falsePressed = true;
     }
 
-    public void mouseReleased(MouseEvent e) {
+    /*public void mouseReleased(MouseEvent e) {
         if (!showingRiddle || answered) return;
         if (trueBtn.contains(e.getPoint()) && truePressed) {
             answered = true;
@@ -128,7 +128,7 @@ public class RiddleOverlay {
         }
         truePressed = false;
         falsePressed = false;
-    }
+    }*/
 
     public void mouseMoved(MouseEvent e) {
         trueHovered = trueBtn.contains(e.getPoint());

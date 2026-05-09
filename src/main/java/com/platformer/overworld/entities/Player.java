@@ -116,9 +116,7 @@ public class Player extends Entity {
                     airSpeed = 0;
                 }
             } else if (aniIndex == GetSpriteAmount(DEAD) - 1 && aniTick >= ANI_SPEED - 1) {
-                playing.setGameOver(true);
-                playing.getGame().getAudioPlayer().stopSong();
-                playing.getGame().getAudioPlayer().playEffect(AudioPlayer.GAMEOVER);
+                playing.handlePlayerDeath();
             } else {
                 updateAnimationTick();
 

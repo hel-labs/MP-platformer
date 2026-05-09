@@ -19,15 +19,13 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import com.platformer.battle.core.BattleOutcome;
-import com.platformer.battle.entities.BossEnemy;
 import com.platformer.core.Game;
 import com.platformer.input.InputHandler;
 import com.platformer.overworld.entities.EnemyManager;
 import com.platformer.overworld.entities.Player;
-import com.platformer.overworld.entities.NPC;
 import com.platformer.overworld.levels.LevelManager;
-import com.platformer.overworld.levels.RiddleData;
 import com.platformer.overworld.objects.ObjectManager;
+import com.platformer.utils.AudioPlayer;
 import com.platformer.utils.LoadSave;
 import com.platformer.utils.effects.DialogueEffect;
 import com.platformer.utils.effects.Rain;
@@ -35,7 +33,6 @@ import com.platformer.utils.ui.GameCompletedOverlay;
 import com.platformer.utils.ui.GameOverOverlay;
 import com.platformer.utils.ui.LevelCompletedOverlay;
 import com.platformer.utils.ui.PauseOverlay;
-import com.platformer.utils.ui.RiddleOverlay;
 
 public class Playing extends State implements Statemethods {
 
@@ -47,15 +44,11 @@ public class Playing extends State implements Statemethods {
     private GameOverOverlay gameOverOverlay;
     private GameCompletedOverlay gameCompletedOverlay;
     private LevelCompletedOverlay levelCompletedOverlay;
-    private RiddleOverlay riddleOverlay;
     private Rain rain;
     private InputHandler inputHandler;
 
     private boolean paused = false;
     private boolean battleTriggered = false;
-    private boolean npcDialogueActive = false;
-    private boolean riddleActive = false;
-    private boolean bossBattlePending = false;
     public double points = 0;
     private long runStartTime;
 
@@ -112,12 +105,18 @@ public class Playing extends State implements Statemethods {
 
     private void loadDialogue() {
         loadDialogueImgs();
+
+        // Load dialogue array with premade objects, that gets activated when needed.
+        // This is a simple
+        // way of avoiding ConcurrentModificationException error. (Adding to a list that
+        // is being looped through.
         for (int i = 0; i < 10; i++) {
             dialogEffects.add(new DialogueEffect(0, 0, EXCLAMATION));
         }
         for (int i = 0; i < 10; i++) {
             dialogEffects.add(new DialogueEffect(0, 0, QUESTION));
         }
+
         for (DialogueEffect de : dialogEffects) {
             de.deactive();
         }
@@ -140,6 +139,7 @@ public class Playing extends State implements Statemethods {
     public void loadNextLevel() {
         levelManager.setLevelIndex(levelManager.getLevelIndex() + 1);
         levelManager.loadNextLevel();
+        // Always restore overworld music when transitioning into a new level.
         game.getAudioPlayer().setLevelSong(levelManager.getLevelIndex());
         player.setSpawn(levelManager.getCurrentLevel().getPlayerSpawn());
         resetAll();
@@ -168,7 +168,6 @@ public class Playing extends State implements Statemethods {
         gameOverOverlay = new GameOverOverlay(this);
         levelCompletedOverlay = new LevelCompletedOverlay(this);
         gameCompletedOverlay = new GameCompletedOverlay(this);
-        riddleOverlay = new RiddleOverlay(this);
 
         rain = new Rain();
     }
@@ -178,8 +177,6 @@ public class Playing extends State implements Statemethods {
         handleInput();
         if (paused) {
             pauseOverlay.update();
-        } else if (riddleActive) {
-            riddleOverlay.update(1f / 60f);
         } else if (lvlCompleted) {
             levelCompletedOverlay.update();
         } else if (gameCompleted) {
@@ -197,7 +194,6 @@ public class Playing extends State implements Statemethods {
             objectManager.update(levelManager.getCurrentLevel().getLevelData(), player);
             player.update();
             enemyManager.update(levelManager.getCurrentLevel().getLevelData());
-            checkNpcProximity();
             checkCloseToBorder();
             if (drawShip) {
                 updateShipAni();
@@ -205,58 +201,25 @@ public class Playing extends State implements Statemethods {
         }
     }
 
-    private void checkNpcProximity() {
-        if (!enemyManager.areAllEnemiesDead())
-            return;
-        NPC npc = enemyManager.getNpc();
-        if (npc == null || !npc.isActive())
-            return;
-        if (npcDialogueActive || riddleActive)
-            return;
-
-        if (npc.isPlayerNear(player.getHitbox())) {
-            npcDialogueActive = true;
-            RiddleData data = RiddleData.forLevel(levelManager.getLevelIndex());
-            riddleOverlay.load(data);
-        }
-    }
-
-    public void onRiddleAnswered(boolean playerAnswer) {
-        riddleActive = false;
-        npcDialogueActive = false;
-        RiddleData data = RiddleData.forLevel(levelManager.getLevelIndex());
-
-        if (playerAnswer == data.answer) {
-            setLevelCompleted(true);
-        } else {
-            player.setCurrentHealth(player.getMaxHp());
-            Point spawn = levelManager.getCurrentLevel().getPlayerSpawn();
-            player.setPosition((float) spawn.x, (float) spawn.y);
-            triggerBossBattle();
-        }
-    }
-
-    private void triggerBossBattle() {
-        player.setFrozen(true);
-        com.platformer.core.BattleSnapshot snapshot = player.createSnapshot();
-        setBattleTriggered(true);
-        game.startBattle(snapshot, new BossEnemy());
-    }
-
     private void updateShipAni() {
         shipTick++;
         if (shipTick >= 35) {
             shipTick = 0;
             shipAni++;
-            if (shipAni >= 4)
+            if (shipAni >= 4) {
                 shipAni = 0;
+            }
         }
+
         shipHeightDelta += shipHeightChange * shipDir;
         shipHeightDelta = Math.max(Math.min(10 * Game.SCALE, shipHeightDelta), 0);
-        if (shipHeightDelta == 0)
+
+        if (shipHeightDelta == 0) {
             shipDir = 1;
-        else if (shipHeightDelta == 10 * Game.SCALE)
+        } else if (shipHeightDelta == 10 * Game.SCALE) {
             shipDir = -1;
+        }
+
     }
 
     private void updateDialogue() {
@@ -282,6 +245,7 @@ public class Playing extends State implements Statemethods {
     }
 
     public void addDialogue(int x, int y, int type) {
+        // Not adding a new one, we are recycling. #ThinkGreen lol
         dialogEffects.add(new DialogueEffect(x, y - (int) (Game.SCALE * 15), type));
         for (DialogueEffect de : dialogEffects) {
             if (!de.isActive()) {
@@ -296,19 +260,24 @@ public class Playing extends State implements Statemethods {
     private void checkCloseToBorder() {
         int playerX = (int) player.getHitbox().x;
         int diff = playerX - xLvlOffset;
-        if (diff > rightBorder)
+
+        if (diff > rightBorder) {
             xLvlOffset += diff - rightBorder;
-        else if (diff < leftBorder)
+        } else if (diff < leftBorder) {
             xLvlOffset += diff - leftBorder;
+        }
+
         xLvlOffset = Math.max(Math.min(xLvlOffset, maxLvlOffsetX), 0);
     }
 
     @Override
     public void draw(Graphics g) {
         g.drawImage(backgroundImg, 0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT, null);
+
         drawClouds(g);
-        if (drawRain)
+        if (drawRain) {
             rain.draw(g, xLvlOffset);
+        }
 
         if (drawShip) {
             g.drawImage(shipImgs[shipAni], (int) (100 * Game.SCALE) - xLvlOffset,
@@ -327,8 +296,6 @@ public class Playing extends State implements Statemethods {
             g.setColor(new Color(0, 0, 0, 150));
             g.fillRect(0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT);
             pauseOverlay.draw(g);
-        } else if (riddleActive || npcDialogueActive) {
-            riddleOverlay.draw(g);
         } else if (gameOver) {
             gameOverOverlay.draw(g);
         } else if (lvlCompleted) {
@@ -336,6 +303,7 @@ public class Playing extends State implements Statemethods {
         } else if (gameCompleted) {
             gameCompletedOverlay.draw(g);
         }
+
     }
 
     private void drawClouds(Graphics g) {
@@ -343,6 +311,7 @@ public class Playing extends State implements Statemethods {
             g.drawImage(bigCloud, i * BIG_CLOUD_WIDTH - (int) (xLvlOffset * 0.3), (int) (204 * Game.SCALE),
                     BIG_CLOUD_WIDTH, BIG_CLOUD_HEIGHT, null);
         }
+
         for (int i = 0; i < smallCloudsPos.length; i++) {
             g.drawImage(smallCloud, SMALL_CLOUD_WIDTH * 4 * i - (int) (xLvlOffset * 0.7), smallCloudsPos[i],
                     SMALL_CLOUD_WIDTH, SMALL_CLOUD_HEIGHT, null);
@@ -364,9 +333,6 @@ public class Playing extends State implements Statemethods {
         lvlCompleted = false;
         playerDying = false;
         drawRain = false;
-        npcDialogueActive = false;
-        riddleActive = false;
-        bossBattlePending = false;
 
         setDrawRainBoolean();
 
@@ -374,16 +340,24 @@ public class Playing extends State implements Statemethods {
         enemyManager.resetAllEnemies();
         objectManager.resetAllObjects();
         dialogEffects.clear();
-        deathCount = 0;
     }
 
     private void setDrawRainBoolean() {
-        if (rnd.nextFloat() >= 0.8f)
+        // This method makes it rain 20% of the time you load a level.
+        if (rnd.nextFloat() >= 0.8f) {
             drawRain = true;
+        }
     }
 
     public void setGameOver(boolean gameOver) {
-        saveRunAndReset();
+        if (gameOver) {
+            long runEndTime = System.currentTimeMillis();
+            long durationSeconds = (runEndTime - runStartTime) / 1000;
+            String playerName = com.platformer.utils.PlayerProfileManager.getCurrentPlayerName();
+            com.platformer.utils.LeaderboardManager.savePlayerProgress(playerName, points, durationSeconds);
+            points = 0;
+            runStartTime = System.currentTimeMillis();
+        }
         this.gameOver = gameOver;
     }
 
@@ -405,66 +379,67 @@ public class Playing extends State implements Statemethods {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (!gameOver && !npcDialogueActive && !riddleActive) {
-            if (e.getButton() == MouseEvent.BUTTON1)
+        if (!gameOver) {
+            if (e.getButton() == MouseEvent.BUTTON1) {
                 player.setAttacking(true);
-            else if (e.getButton() == MouseEvent.BUTTON3)
+            } else if (e.getButton() == MouseEvent.BUTTON3) {
                 player.powerAttack();
+            }
         }
     }
 
     public void mouseDragged(MouseEvent e) {
         if (!gameOver && !gameCompleted && !lvlCompleted) {
-            if (paused)
+            if (paused) {
                 pauseOverlay.mouseDragged(e);
+            }
         }
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if (gameOver)
+        if (gameOver) {
             gameOverOverlay.mousePressed(e);
-        else if (riddleActive)
-            riddleOverlay.mousePressed(e);
-        else if (paused)
+        } else if (paused) {
             pauseOverlay.mousePressed(e);
-        else if (lvlCompleted)
+        } else if (lvlCompleted) {
             levelCompletedOverlay.mousePressed(e);
-        else if (gameCompleted)
+        } else if (gameCompleted) {
             gameCompletedOverlay.mousePressed(e);
+        }
+
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        if (gameOver)
+        if (gameOver) {
             gameOverOverlay.mouseReleased(e);
-        else if (riddleActive)
-            riddleOverlay.mouseReleased(e);
-        else if (paused)
+        } else if (paused) {
             pauseOverlay.mouseReleased(e);
-        else if (lvlCompleted)
+        } else if (lvlCompleted) {
             levelCompletedOverlay.mouseReleased(e);
-        else if (gameCompleted)
+        } else if (gameCompleted) {
             gameCompletedOverlay.mouseReleased(e);
+        }
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        if (gameOver)
+        if (gameOver) {
             gameOverOverlay.mouseMoved(e);
-        else if (riddleActive)
-            riddleOverlay.mouseMoved(e);
-        else if (paused)
+        } else if (paused) {
             pauseOverlay.mouseMoved(e);
-        else if (lvlCompleted)
+        } else if (lvlCompleted) {
             levelCompletedOverlay.mouseMoved(e);
-        else if (gameCompleted)
+        } else if (gameCompleted) {
             gameCompletedOverlay.mouseMoved(e);
+        }
     }
 
     public void setLevelCompleted(boolean levelCompleted) {
         game.getAudioPlayer().lvlCompleted();
         if (levelManager.getLevelIndex() + 1 >= levelManager.getAmountOfLevels()) {
+            // No more levels
             gameCompleted = true;
             levelManager.setLevelIndex(0);
             levelManager.loadNextLevel();
@@ -509,33 +484,31 @@ public class Playing extends State implements Statemethods {
     public void applyBattleOutcome(BattleOutcome outcome) {
         player.setFrozen(false);
         battleTriggered = false;
+        enemyManager.onBattleEnd(outcome.isWin());
 
         if (outcome.isLose()) {
-            deathCount++;
-            if (deathCount >= MAX_DEATHS) {
-                player.kill();
-                gameOver = true;
-                playerDying = false;
-                getGame().getAudioPlayer().stopSong();
-                getGame().getAudioPlayer().playEffect(com.platformer.utils.AudioPlayer.GAMEOVER);
-                return;
-            }
-            Point spawn = levelManager.getCurrentLevel().getPlayerSpawn();
-            player.setPosition((float) spawn.x, (float) spawn.y);
-            player.resetAll();
-            int respawnHp = Math.max(1, player.getMaxHp() / 2);
-            player.setBattleHp(respawnHp);
+            handlePlayerDeath();
         } else {
-            enemyManager.onBattleEnd(outcome.isWin());
-            if (bossBattlePending) {
-                bossBattlePending = false;
-                setLevelCompleted(true);
-                return;
-            }
-            addPoints(outcome.pointsEarned);
             int syncedHp = Math.max(0, Math.min(outcome.hpRemaining, player.getMaxHp()));
             player.setBattleHp(syncedHp);
         }
+    }
+
+    public void handlePlayerDeath() {
+        deathCount++;
+        if (deathCount >= MAX_DEATHS) {
+            // save points, show game over
+            setGameOver(true);
+            getGame().getAudioPlayer().stopSong();
+            getGame().getAudioPlayer().playEffect(AudioPlayer.GAMEOVER);
+            return;
+        }
+        Point spawn = levelManager.getCurrentLevel().getPlayerSpawn();
+        player.resetAll();
+        player.setSpawn(spawn);
+        int respawnHp = Math.max(1, player.getMaxHp() / 2);
+        player.setBattleHp(respawnHp);
+        playerDying = false;
     }
 
     public boolean isGameOver() {
@@ -543,37 +516,33 @@ public class Playing extends State implements Statemethods {
     }
 
     private void handleInput() {
-        if (npcDialogueActive && !riddleActive) {
-            if (inputHandler.isJustPressed(InputHandler.CONFIRM)) {
-                riddleOverlay.onConfirmPressed();
-                if (riddleOverlay.isAnswered()) {
-                    npcDialogueActive = false;
-                } else {
-                    riddleActive = riddleOverlay.isShowingRiddle();
-                }
-            }
-            return;
-        }
-
         if (inputHandler.isJustPressed(InputHandler.ESCAPE)
-                && !gameOver && !lvlCompleted && !gameCompleted && !playerDying && !riddleActive) {
+                && !gameOver
+                && !lvlCompleted
+                && !gameCompleted
+                && !playerDying) {
             paused = !paused;
         }
 
-        if (paused || riddleActive)
+        if (paused) {
             return;
-        if (gameOver || lvlCompleted || gameCompleted || playerDying)
+        }
+
+        if (gameOver || lvlCompleted || gameCompleted || playerDying) {
             return;
+        }
 
         boolean left = inputHandler.isHeld(InputHandler.LEFT_A) || inputHandler.isHeld(InputHandler.LEFT);
         boolean right = inputHandler.isHeld(InputHandler.RIGHT_D) || inputHandler.isHeld(InputHandler.RIGHT);
         boolean jump = inputHandler.isJustPressed(InputHandler.UP_W) || inputHandler.isJustPressed(InputHandler.JUMP);
 
         player.setMoving(left, right);
-        if (jump)
+        if (jump) {
             player.requestJump();
-        if (inputHandler.isJustPressed(InputHandler.CONFIRM))
+        }
+        if (inputHandler.isJustPressed(InputHandler.CONFIRM)) {
             player.setAttacking(true);
+        }
     }
 
     public boolean isBattleTriggered() {
@@ -591,11 +560,11 @@ public class Playing extends State implements Statemethods {
     public void saveRunAndReset() {
         long runEndTime = System.currentTimeMillis();
         long durationSeconds = (runEndTime - runStartTime) / 1000;
+
         String playerName = com.platformer.utils.PlayerProfileManager.getCurrentPlayerName();
         com.platformer.utils.LeaderboardManager.savePlayerProgress(playerName, points, durationSeconds);
-        points = 0;
+
         runStartTime = System.currentTimeMillis();
-        resetAll();
     }
 
     public void restartFromBeginning() {
@@ -608,5 +577,10 @@ public class Playing extends State implements Statemethods {
         calcLvlOffset();
         drawShip = true;
         resetAll();
+        player.setSpawn(levelManager.getCurrentLevel().getPlayerSpawn());
+    }
+
+    public void resetDeathCount() {
+        deathCount = 0;
     }
 }

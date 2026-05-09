@@ -46,7 +46,7 @@ public class LoadSave {
     public static final String WATER_TOP = "water_atlas_animation.png";
     public static final String WATER_BOTTOM = "water.png";
     public static final String SHIP = "ship.png";
-    public static final String COIN_ATLAS = "ball.png";
+    public static final String COIN_ATLAS = "coin_sprites.png";
     public static final String NPC_SPRITE = "npc_sprite.png";
 
     public static BufferedImage GetSpriteAtlas(String fileName) {

@@ -73,6 +73,8 @@ public class LevelCompletedOverlay {
     public void mouseReleased(MouseEvent e) {
         if (isIn(menu, e)) {
             if (menu.isMousePressed()) {
+                playing.saveRunAndReset();
+                playing.resetDeathCount();
                 playing.resetAll();
                 playing.setGamestate(Gamestate.MENU);
             }
