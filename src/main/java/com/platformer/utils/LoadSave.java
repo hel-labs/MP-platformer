@@ -46,7 +46,8 @@ public class LoadSave {
     public static final String WATER_TOP = "water_atlas_animation.png";
     public static final String WATER_BOTTOM = "water.png";
     public static final String SHIP = "ship.png";
-    public static final String COIN_ATLAS = "coin_sprites.png"; // match your filename
+    public static final String COIN_ATLAS = "coin_sprites.png";
+    public static final String NPC_ATLAS = "npc_sprite.png";
 
     public static BufferedImage GetSpriteAtlas(String fileName) {
         BufferedImage img = null;
@@ -91,11 +92,11 @@ public class LoadSave {
         BufferedImage[] imgs = new BufferedImage[filesSorted.length];
 
         for (int i = 0; i < imgs.length; i++)
-			try {
-            imgs[i] = ImageIO.read(filesSorted[i]);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            try {
+                imgs[i] = ImageIO.read(filesSorted[i]);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
         return imgs;
     }

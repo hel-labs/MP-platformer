@@ -1,0 +1,21 @@
+* [33mc73c551[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mnewbranch[m[33m, [m[1;31morigin/luco[m[33m, [m[1;32mluco[m[33m)[m Restore docs and update changelog
+* [33ma795e5c[m Sync from MP-platformer-origin-galib
+* [33m59c681a[m[33m ([m[1;31morigin/origin/galib[m[33m)[m menu input fix, credits update
+* [33maaf63e7[m max lvl set to 3
+* [33me9646e1[m Potion System, leaderboard glyph system, merge between luco and galib
+* [33m03f5e6a[m Coin system, restructuring, title fix
+* [33m2e2ebf3[m Prelim merge with luco branch
+* [33mfa88109[m Basic tweaks
+* [33ma0bfd30[m Title and leaderboard background added
+* [33mda25430[m Codebase refactoring
+[32m|[m * [33m8692fd3[m[33m ([m[1;31morigin/battle-rework[m[33m)[m Polish
+[32m|[m[32m/[m[34m|[m 
+* [34m|[m [33mf936610[m Polish
+[34m|[m [34m|[m *   [33md2b3d5f[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Merge pull request #2 from hel-labs/battle-rework
+[34m|[m [34m|[m [35m|[m[34m\[m  
+[34m|[m [34m|[m [35m|[m[34m/[m  
+[34m|[m [34m|[m[34m/[m[35m|[m   
+[34m|[m * [35m|[m [33m8202f13[m Merge branch 'main' into battle-rework
+[34m|[m[34m/[m[35m|[m [35m|[m 
+[34m|[m [35m|[m[35m/[m  
+[34m|[m * [33m2205b0c[m Refine battle flow, audio, and credits text overlay
