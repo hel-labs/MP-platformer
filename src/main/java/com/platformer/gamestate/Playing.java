@@ -20,8 +20,6 @@ import java.util.Random;
 
 import com.platformer.battle.core.BattleOutcome;
 import com.platformer.core.Game;
-import com.platformer.gamestate.State;
-import com.platformer.gamestate.Statemethods;
 import com.platformer.input.InputHandler;
 import com.platformer.overworld.entities.EnemyManager;
 import com.platformer.overworld.entities.Player;

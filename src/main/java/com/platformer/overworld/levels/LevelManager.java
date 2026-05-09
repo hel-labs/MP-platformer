@@ -15,6 +15,8 @@ public class LevelManager {
     private ArrayList<Level> levels;
     private int lvlIndex = 0, aniTick, aniIndex;
 
+    private static final int MAX_LEVELS = 3;
+
     public LevelManager(Game game) {
         this.game = game;
         importOutsideSprites();
@@ -41,11 +43,11 @@ public class LevelManager {
     }
 
     private void buildAllLevels() {
-        BufferedImage[] allLevels = LoadSave.GetAllLevels();
-        for (BufferedImage img : allLevels) {
-            levels.add(new Level(img));
-        }
-    }
+    BufferedImage[] allLevels = LoadSave.GetAllLevels();
+    int count = Math.min(MAX_LEVELS, allLevels.length);
+    for (int i = 0; i < count; i++)
+        levels.add(new Level(allLevels[i]));
+}
 
     private void importOutsideSprites() {
         BufferedImage img = LoadSave.GetSpriteAtlas(LoadSave.LEVEL_ATLAS);
