@@ -43,16 +43,12 @@ public class BattleEngine {
 
         BattlePlayer player = ctx.getPlayer();
 
-        if (enemy instanceof com.platformer.battle.entities.BossEnemy boss) {
-            if (!boss.isAttackTurn()) {
-                String taunt = boss.getNextTaunt();
-                boss.advanceTurn();
-                ctx.incrementTurnCount();
-                ctx.setPlayerTurn(true);
-                ctx.setLastResult(null);
-                return BattleResult.enemyAttacked(0, "* " + boss.getName() + ": \"" + taunt + "\"");
-            }
-            boss.advanceTurn();
+        String taunt = enemy.getPreTurnDialogue(ctx);
+        if (taunt != null) {
+            ctx.incrementTurnCount();
+            ctx.setPlayerTurn(true);
+            ctx.setLastResult(null);
+            return BattleResult.enemyTaunted(taunt);
         }
 
         enemy.playAttackAnimation();

@@ -4,16 +4,7 @@ public class BattleResult {
 
     // Self explanatory methods
     public enum Type {
-        PLAYER_ATTACKED,
-        ENEMY_ATTACKED,
-        PLAYER_FLED,
-        FLEE_FAILED,
-        ENEMY_DEFEATED,
-        PLAYER_DEFEATED,
-        MERCY_GRANTED,
-        TALK_INITIATED,
-        TALKED,
-        HINT
+        PLAYER_ATTACKED, ENEMY_ATTACKED, PLAYER_FLED, ENEMY_TAUNTED, FLEE_FAILED, ENEMY_DEFEATED, PLAYER_DEFEATED, MERCY_GRANTED, TALK_INITIATED, TALKED, HINT
     }
 
     private final Type type;
@@ -32,6 +23,10 @@ public class BattleResult {
 
     public static BattleResult enemyAttacked(int damage, String message) {
         return new BattleResult(Type.ENEMY_ATTACKED, message, damage);
+    }
+
+    public static BattleResult enemyTaunted(String message) {
+        return new BattleResult(Type.ENEMY_TAUNTED, message, 0);
     }
 
     public static BattleResult fled() {

@@ -65,7 +65,7 @@ public class EnemyManager {
         }
 
         if (!isAnyActive) {
-            npc.setActive(true);
+            playing.activateLevelNPC();
         }
 
         if (npc.isActive()) {
@@ -75,13 +75,16 @@ public class EnemyManager {
 
     public boolean areAllEnemiesDead() {
         for (Crabby c : currentLevel.getCrabs()) {
-            if (c.isActive()) return false;
+            if (c.isActive())
+                return false;
         }
         for (Pinkstar p : currentLevel.getPinkstars()) {
-            if (p.isActive()) return false;
+            if (p.isActive())
+                return false;
         }
         for (Shark s : currentLevel.getSharks()) {
-            if (s.isActive()) return false;
+            if (s.isActive())
+                return false;
         }
         return true;
     }

@@ -112,6 +112,10 @@ public abstract class BattleEnemy {
         return hp;
     }
 
+    public String getPreTurnDialogue(BattleContext ctx) {
+        return null;
+    }
+
     public int getMaxHp() {
         return maxHp;
     }

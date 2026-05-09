@@ -38,13 +38,26 @@ public class Level {
         lvlData = new int[img.getHeight()][img.getWidth()];
         loadLevel();
         calcLvlOffsets();
-        hardcodeNpcSpawn();
+        calcNpcSpawn();
     }
 
-    private void hardcodeNpcSpawn() {
-        int tileX = img.getWidth() - 3;
-        int tileY = img.getHeight() - 2;
-        npcSpawnPoint = new Point(tileX * Game.TILES_SIZE, tileY * Game.TILES_SIZE);
+    private void calcNpcSpawn() {
+        int rows = lvlData.length;
+        int cols = lvlData[0].length;
+
+        // scan right to left, find rightmost walkable tile (11)
+        // with a solid tile directly below it
+        for (int col = cols - 1; col >= 0; col--) {
+            for (int row = rows - 2; row >= 0; row--) {
+                if (lvlData[row][col] == 11 && lvlData[row + 1][col] != 11) {
+                    npcSpawnPoint = new Point(
+                            col * Game.TILES_SIZE,
+                            row * Game.TILES_SIZE);
+                    return;
+                }
+            }
+        }
+        npcSpawnPoint = playerSpawn;
     }
 
     private void loadLevel() {
@@ -70,7 +83,8 @@ public class Level {
         }
         switch (redValue) {
             case 0, 1, 2, 3, 30, 31, 33, 34, 35, 36, 37, 38, 39 ->
-                grass.add(new Grass((int) (x * Game.TILES_SIZE), (int) (y * Game.TILES_SIZE) - Game.TILES_SIZE, getRndGrassType(x)));
+                grass.add(new Grass((int) (x * Game.TILES_SIZE), (int) (y * Game.TILES_SIZE) - Game.TILES_SIZE,
+                        getRndGrassType(x)));
         }
     }
 

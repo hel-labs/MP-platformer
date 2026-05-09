@@ -10,15 +10,15 @@ import java.util.Random;
 public class BossEnemy extends BattleEnemy {
 
     private static final String[] TAUNTS = {
-        "Is that all you've got? Pathetic.",
-        "You call that fighting? My grandmother hits harder.",
-        "I've beaten better heroes before breakfast.",
-        "You're making this too easy for me.",
-        "Give up now and I'll make it quick."
+            "Is that all you've got? Pathetic.",
+            "You call that fighting? My grandmother hits harder.",
+            "I've beaten better heroes before breakfast.",
+            "You're making this too easy for me.",
+            "Give up now and I'll make it quick."
     };
 
-    private boolean isAttackTurn = true;
     private final Random rng = new Random();
+    private boolean nextTurnTaunts = false;
 
     public BossEnemy() {
         this.hp = 120;
@@ -26,10 +26,9 @@ public class BossEnemy extends BattleEnemy {
         this.attack = 18;
         this.fleeAllowed = false;
         initBattleAnimation(
-            "npc_sprite.png",
-            32, 32,
-            0, 5, 0.15f
-        );
+                "npc_sprite.png",
+                32, 32,
+                0, 5, 0.15f);
     }
 
     @Override
@@ -44,7 +43,7 @@ public class BossEnemy extends BattleEnemy {
 
     @Override
     public int getBaseHostility() {
-        return 10;
+        return 5;
     }
 
     @Override
@@ -71,11 +70,13 @@ public class BossEnemy extends BattleEnemy {
         return TAUNTS[rng.nextInt(TAUNTS.length)];
     }
 
-    public boolean isAttackTurn() {
-        return isAttackTurn;
-    }
-
-    public void advanceTurn() {
-        isAttackTurn = !isAttackTurn;
+    @Override
+    public String getPreTurnDialogue(BattleContext ctx) {
+        if (nextTurnTaunts) {
+            nextTurnTaunts = false;
+            return "* " + getName() + ": \"" + getNextTaunt() + "\"";
+        }
+        nextTurnTaunts = true;
+        return null; 
     }
 }

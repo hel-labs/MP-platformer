@@ -112,23 +112,27 @@ public class RiddleOverlay {
     }
 
     public void mousePressed(MouseEvent e) {
-        if (!showingRiddle || answered) return;
-        if (trueBtn.contains(e.getPoint())) truePressed = true;
-        if (falseBtn.contains(e.getPoint())) falsePressed = true;
+        if (!showingRiddle || answered)
+            return;
+        if (trueBtn.contains(e.getPoint()))
+            truePressed = true;
+        if (falseBtn.contains(e.getPoint()))
+            falsePressed = true;
     }
 
-    /*public void mouseReleased(MouseEvent e) {
-        if (!showingRiddle || answered) return;
+    public void mouseReleased(MouseEvent e) {
+        if (!showingRiddle || answered)
+            return;
         if (trueBtn.contains(e.getPoint()) && truePressed) {
             answered = true;
-            playing.onRiddleAnswered(true);
+            playing.handleNPCAnswer(true);
         } else if (falseBtn.contains(e.getPoint()) && falsePressed) {
             answered = true;
-            playing.onRiddleAnswered(false);
+            playing.handleNPCAnswer(false);
         }
         truePressed = false;
         falsePressed = false;
-    }*/
+    }
 
     public void mouseMoved(MouseEvent e) {
         trueHovered = trueBtn.contains(e.getPoint());
@@ -138,7 +142,8 @@ public class RiddleOverlay {
     public boolean isAnswered() {
         return answered;
     }
+
     public boolean isShowingRiddle() {
-    return showingRiddle;
-}
+        return showingRiddle;
+    }
 }

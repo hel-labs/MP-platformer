@@ -19,11 +19,14 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import com.platformer.battle.core.BattleOutcome;
+import com.platformer.battle.entities.BossEnemy;
 import com.platformer.core.Game;
 import com.platformer.input.InputHandler;
 import com.platformer.overworld.entities.EnemyManager;
+import com.platformer.overworld.entities.NPC;
 import com.platformer.overworld.entities.Player;
 import com.platformer.overworld.levels.LevelManager;
+import com.platformer.overworld.levels.RiddleData;
 import com.platformer.overworld.objects.ObjectManager;
 import com.platformer.utils.AudioPlayer;
 import com.platformer.utils.LoadSave;
@@ -33,6 +36,7 @@ import com.platformer.utils.ui.GameCompletedOverlay;
 import com.platformer.utils.ui.GameOverOverlay;
 import com.platformer.utils.ui.LevelCompletedOverlay;
 import com.platformer.utils.ui.PauseOverlay;
+import com.platformer.utils.ui.RiddleOverlay;
 
 public class Playing extends State implements Statemethods {
 
@@ -46,6 +50,11 @@ public class Playing extends State implements Statemethods {
     private LevelCompletedOverlay levelCompletedOverlay;
     private Rain rain;
     private InputHandler inputHandler;
+
+    private NPC levelNPC;
+    private boolean npcDialogueActive = false;
+    private RiddleData currentRiddle;
+    private RiddleOverlay riddleOverlay;
 
     private boolean paused = false;
     private boolean battleTriggered = false;
@@ -142,6 +151,14 @@ public class Playing extends State implements Statemethods {
         // Always restore overworld music when transitioning into a new level.
         game.getAudioPlayer().setLevelSong(levelManager.getLevelIndex());
         player.setSpawn(levelManager.getCurrentLevel().getPlayerSpawn());
+        currentRiddle = RiddleData.forLevel(levelManager.getLevelIndex());
+        Point npcPos = levelManager.getCurrentLevel().getNpcSpawnPoint();
+        if (npcPos != null) {
+            levelNPC = new NPC(npcPos.x, npcPos.y, loadNpcFrames());
+            levelNPC.setActive(false);
+        }
+        riddleOverlay = new RiddleOverlay(this);
+        npcDialogueActive = false;
         resetAll();
         drawShip = false;
     }
@@ -149,6 +166,23 @@ public class Playing extends State implements Statemethods {
     private void loadStartLevel() {
         enemyManager.loadEnemies(levelManager.getCurrentLevel());
         objectManager.loadObjects(levelManager.getCurrentLevel());
+
+        currentRiddle = RiddleData.forLevel(levelManager.getLevelIndex());
+        Point npcPos = levelManager.getCurrentLevel().getNpcSpawnPoint();
+        if (npcPos != null) {
+            BufferedImage[] npcFrames = loadNpcFrames();
+            levelNPC = new NPC(npcPos.x, npcPos.y, npcFrames);
+            levelNPC.setActive(false);
+        }
+        riddleOverlay = new RiddleOverlay(this);
+    }
+
+    private BufferedImage[] loadNpcFrames() {
+        BufferedImage sheet = LoadSave.GetSpriteAtlas("npc_sprite.png");
+        BufferedImage[] frames = new BufferedImage[5];
+        for (int i = 0; i < frames.length; i++)
+            frames[i] = sheet.getSubimage(i * 32, 0, 32, 32);
+        return frames;
     }
 
     private void calcLvlOffset() {
@@ -194,6 +228,14 @@ public class Playing extends State implements Statemethods {
             objectManager.update(levelManager.getCurrentLevel().getLevelData(), player);
             player.update();
             enemyManager.update(levelManager.getCurrentLevel().getLevelData());
+            if (levelNPC != null && levelNPC.isActive()) {
+                levelNPC.update();
+                if (!npcDialogueActive && levelNPC.isPlayerNear(player.getHitbox())) {
+                    player.setFrozen(true);
+                    npcDialogueActive = true;
+                    riddleOverlay.load(currentRiddle);
+                }
+            }
             checkCloseToBorder();
             if (drawShip) {
                 updateShipAni();
@@ -289,6 +331,11 @@ public class Playing extends State implements Statemethods {
         objectManager.draw(g, xLvlOffset);
         enemyManager.draw(g, xLvlOffset);
         player.render(g, xLvlOffset);
+        if (levelNPC != null && levelNPC.isActive())
+            levelNPC.draw(g, xLvlOffset);
+
+        if (npcDialogueActive)
+            riddleOverlay.draw(g);
         objectManager.drawBackgroundTrees(g, xLvlOffset);
         drawDialogue(g, xLvlOffset);
 
@@ -340,6 +387,9 @@ public class Playing extends State implements Statemethods {
         enemyManager.resetAllEnemies();
         objectManager.resetAllObjects();
         dialogEffects.clear();
+        npcDialogueActive = false;
+        if (levelNPC != null)
+            levelNPC.setActive(false);
     }
 
     private void setDrawRainBoolean() {
@@ -398,6 +448,10 @@ public class Playing extends State implements Statemethods {
 
     @Override
     public void mousePressed(MouseEvent e) {
+        if (npcDialogueActive) {
+            riddleOverlay.mousePressed(e);
+            return;
+        }
         if (gameOver) {
             gameOverOverlay.mousePressed(e);
         } else if (paused) {
@@ -412,6 +466,10 @@ public class Playing extends State implements Statemethods {
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        if (npcDialogueActive) {
+            riddleOverlay.mouseReleased(e);
+            return;
+        }
         if (gameOver) {
             gameOverOverlay.mouseReleased(e);
         } else if (paused) {
@@ -425,6 +483,10 @@ public class Playing extends State implements Statemethods {
 
     @Override
     public void mouseMoved(MouseEvent e) {
+        if (npcDialogueActive) {
+            riddleOverlay.mouseMoved(e);
+            return;
+        }
         if (gameOver) {
             gameOverOverlay.mouseMoved(e);
         } else if (paused) {
@@ -515,7 +577,41 @@ public class Playing extends State implements Statemethods {
         return gameOver;
     }
 
+    private void handleNPCInput() {
+        if (inputHandler.isJustPressed(InputHandler.CONFIRM)
+                || inputHandler.isJustPressed(InputHandler.ENTER)) {
+            riddleOverlay.onConfirmPressed();
+        }
+    }
+
+    public void handleNPCAnswer(boolean answer) {
+        if (currentRiddle.answer == answer) {
+            npcDialogueActive = false;
+            player.setFrozen(false);
+            setLevelCompleted(true);
+        } else {
+            npcDialogueActive = false;
+            player.resetAll();
+            player.setSpawn(levelManager.getCurrentLevel().getPlayerSpawn());
+            player.setBattleHp(player.getMaxHp());
+            com.platformer.core.BattleSnapshot snapshot = player.createSnapshot();
+            player.setFrozen(true);
+            setBattleTriggered(true);
+            game.startBattle(snapshot, new BossEnemy());
+        }
+    }
+
+    public void activateLevelNPC() {
+        if (levelNPC != null && !levelNPC.isActive()) {
+            levelNPC.setActive(true);
+        }
+    }
+
     private void handleInput() {
+        if (npcDialogueActive) {
+            handleNPCInput();
+            return;
+        }
         if (inputHandler.isJustPressed(InputHandler.ESCAPE)
                 && !gameOver
                 && !lvlCompleted
