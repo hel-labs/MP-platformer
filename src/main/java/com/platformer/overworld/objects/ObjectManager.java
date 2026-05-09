@@ -15,6 +15,9 @@ import static com.platformer.overworld.utils.HelpMethods.CanCannonSeePlayer;
 import static com.platformer.overworld.utils.HelpMethods.IsProjectileHittingLevel;
 import static com.platformer.overworld.utils.Constants.Projectiles.*;
 
+/**
+ * Manages overworld objects (potions, containers, spikes, cannons, projectiles).
+ */
 public class ObjectManager {
 
     private Playing playing;
@@ -28,12 +31,20 @@ public class ObjectManager {
 
     private Level currentLevel;
 
+    /**
+     * @param playing active playing state
+     */
     public ObjectManager(Playing playing) {
         this.playing = playing;
         currentLevel = playing.getLevelManager().getCurrentLevel();
         loadImgs();
     }
 
+    /**
+     * Applies spike damage to a player.
+     *
+     * @param p player instance
+     */
     public void checkSpikesTouched(Player p) {
         for (Spike s : currentLevel.getSpikes()) {
             if (s.getHitbox().intersects(p.getHitbox())) {
@@ -42,6 +53,11 @@ public class ObjectManager {
         }
     }
 
+    /**
+     * Applies spike damage to an enemy.
+     *
+     * @param e enemy instance
+     */
     public void checkSpikesTouched(Enemy e) {
         for (Spike s : currentLevel.getSpikes()) {
             if (s.getHitbox().intersects(e.getHitbox())) {
@@ -50,6 +66,11 @@ public class ObjectManager {
         }
     }
 
+    /**
+     * Checks for potion pickups using the given hitbox.
+     *
+     * @param hitbox player hitbox
+     */
     public void checkObjectTouched(Rectangle2D.Float hitbox) {
         for (Potion p : potions) {
             if (p.isActive()) {
@@ -61,6 +82,11 @@ public class ObjectManager {
         }
     }
 
+    /**
+     * Applies potion effects to the player.
+     *
+     * @param p potion instance
+     */
     public void applyEffectToPlayer(Potion p) {
         if (p.getObjType() == RED_POTION) {
             playing.getPlayer().changeHealth(RED_POTION_VALUE);
@@ -69,6 +95,11 @@ public class ObjectManager {
         }
     }
 
+    /**
+     * Checks breakable objects against an attack box.
+     *
+     * @param attackbox attack hitbox
+     */
     public void checkObjectHit(Rectangle2D.Float attackbox) {
         for (GameContainer gc : containers) {
             if (gc.isActive() && !gc.doAnimation) {
@@ -82,6 +113,11 @@ public class ObjectManager {
         }
     }
 
+    /**
+     * Loads objects for the given level.
+     *
+     * @param newLevel level to load
+     */
     public void loadObjects(Level newLevel) {
         currentLevel = newLevel;
         potions = new ArrayList<>(newLevel.getPotions());
@@ -136,6 +172,12 @@ public class ObjectManager {
         }
     }
 
+    /**
+     * Updates object animations and projectiles.
+     *
+     * @param lvlData level collision grid
+     * @param player player instance
+     */
     public void update(int[][] lvlData, Player player) {
         updateBackgroundTrees();
         for (Potion p : potions) {
@@ -222,6 +264,12 @@ public class ObjectManager {
         projectiles.add(new Projectile((int) c.getHitbox().x, (int) c.getHitbox().y, dir));
     }
 
+    /**
+     * Draws interactive objects and projectiles.
+     *
+     * @param g graphics context
+     * @param xLvlOffset camera offset
+     */
     public void draw(Graphics g, int xLvlOffset) {
         drawPotions(g, xLvlOffset);
         drawContainers(g, xLvlOffset);
@@ -237,6 +285,12 @@ public class ObjectManager {
         }
     }
 
+    /**
+     * Draws background trees for the current level.
+     *
+     * @param g graphics context
+     * @param xLvlOffset camera offset
+     */
     public void drawBackgroundTrees(Graphics g, int xLvlOffset) {
         for (BackgroundTree bt : currentLevel.getTrees()) {
 
@@ -303,6 +357,9 @@ public class ObjectManager {
         }
     }
 
+    /**
+     * Resets all objects to their initial state.
+     */
     public void resetAllObjects() {
         loadObjects(playing.getLevelManager().getCurrentLevel());
         for (Potion p : potions) {

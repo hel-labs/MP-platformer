@@ -7,14 +7,21 @@ import com.platformer.utils.LeaderboardManager.ScoreEntry;
 import java.awt.*;
 import java.util.List;
 
+/**
+ * Leaderboard screen that renders saved run results.
+ */
 public class Leaderboard extends State implements Statemethods {
 
     private static final String BACK_TEXT = "Press ESC to go back";
 
+    /**
+     * @param game owning game instance
+     */
     public Leaderboard(Game game) {
         super(game);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void update() {
         InputHandler input = game.getInputHandler();
@@ -23,6 +30,7 @@ public class Leaderboard extends State implements Statemethods {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void draw(Graphics g) {
         g.setColor(new Color(30, 30, 40));
@@ -70,24 +78,28 @@ public class Leaderboard extends State implements Statemethods {
                 Game.GAME_HEIGHT - (int) (30 * Game.SCALE));
     }
 
+    /** {@inheritDoc} */
     @Override
     public void mouseClicked(java.awt.event.MouseEvent e) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'mouseClicked'");
     }
 
+    /** {@inheritDoc} */
     @Override
     public void mousePressed(java.awt.event.MouseEvent e) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'mousePressed'");
     }
 
+    /** {@inheritDoc} */
     @Override
     public void mouseReleased(java.awt.event.MouseEvent e) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'mouseReleased'");
     }
 
+    /** {@inheritDoc} */
     @Override
     public void mouseMoved(java.awt.event.MouseEvent e) {
         // TODO Auto-generated method stub

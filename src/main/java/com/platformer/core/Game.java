@@ -13,6 +13,10 @@ import java.awt.Graphics;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
+/**
+ * Central game controller that owns the game loop, state transitions, and
+ * core subsystems.
+ */
 public class Game implements Runnable {
 
     private GameWindow gameWindow;
@@ -36,14 +40,24 @@ public class Game implements Runnable {
     private BattleManager battleManager;
     private InputHandler inputHandler;
 
+    /** Base tile size before scaling. */
     public static final int TILES_DEFAULT_SIZE = 32;
+    /** Global render scale applied to tiles and sprites. */
     public static final float SCALE = 1.5f;
+    /** Tile columns per screen. */
     public static final int TILES_IN_WIDTH = 26;
+    /** Tile rows per screen. */
     public static final int TILES_IN_HEIGHT = 14;
+    /** Scaled tile size in pixels. */
     public static final int TILES_SIZE = (int) (TILES_DEFAULT_SIZE * SCALE);
+    /** Screen width in pixels. */
     public static final int GAME_WIDTH = TILES_SIZE * TILES_IN_WIDTH;
+    /** Screen height in pixels. */
     public static final int GAME_HEIGHT = TILES_SIZE * TILES_IN_HEIGHT;
 
+    /**
+     * Builds the game window, input handlers, and starts the loop.
+     */
     public Game() {
 
         inputHandler = new InputHandler();
@@ -95,11 +109,17 @@ public class Game implements Runnable {
 
     }
 
+    /**
+     * Starts the game loop thread.
+     */
     public void startGameLoop() {
         gameThread = new Thread(this);
         gameThread.start();
     }
 
+    /**
+     * Updates the active game state and input.
+     */
     public void update() {
 
         inputHandler.tick();
@@ -162,6 +182,11 @@ public class Game implements Runnable {
     private void pollGameOverInput() {
     }
 
+    /**
+     * Draws the active game state.
+     *
+     * @param g target graphics context
+     */
     public void render(Graphics g) {
 
         switch (Gamestate.state) {
@@ -189,6 +214,12 @@ public class Game implements Runnable {
         }
     }
 
+    /**
+     * Enters battle mode with a snapshot of current player stats.
+     *
+     * @param snapshot snapshot of player stats
+     * @param enemy battle enemy instance
+     */
     public void startBattle(BattleSnapshot snapshot, BattleEnemy enemy) {
         battleManager.init(snapshot, enemy, inputHandler, audioPlayer, this::onBattleEnd);
         audioPlayer.setBattleSong();
@@ -206,6 +237,9 @@ public class Game implements Runnable {
     }
 
     @Override
+    /**
+     * Main game loop implementation.
+     */
     public void run() {
 
         double timePerFrame = 1_000_000_000.0 / FPS_SET;
@@ -251,36 +285,60 @@ public class Game implements Runnable {
         }
     }
 
+    /**
+     * Resets directional input when the window loses focus.
+     */
     public void windowFocusLost() {
         if (Gamestate.state == Gamestate.PLAYING) {
             playing.getPlayer().resetDirBooleans();
         }
     }
 
+    /**
+     * @return input handler for the game window
+     */
     public InputHandler getInputHandler() {
         return inputHandler;
     }
 
+    /**
+     * @return main menu state
+     */
     public Menu getMenu() {
         return menu;
     }
 
+    /**
+     * @return playing state (overworld)
+     */
     public Playing getPlaying() {
         return playing;
     }
 
+    /**
+     * @return credits state
+     */
     public Credits getCredits() {
         return credits;
     }
 
+    /**
+     * @return options state
+     */
     public GameOptions getGameOptions() {
         return gameOptions;
     }
 
+    /**
+     * @return shared audio options UI
+     */
     public AudioOptions getAudioOptions() {
         return audioOptions;
     }
 
+    /**
+     * @return audio playback controller
+     */
     public AudioPlayer getAudioPlayer() {
         return audioPlayer;
     }

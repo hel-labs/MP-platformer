@@ -11,6 +11,9 @@ import com.platformer.core.Game;
 import com.platformer.overworld.utils.LoadSave;
 import static com.platformer.overworld.utils.Constants.UI.URMButtons.*;
 
+/**
+ * Overlay shown when a level is completed.
+ */
 public class LevelCompletedOverlay {
 
     private Playing playing;
@@ -18,6 +21,9 @@ public class LevelCompletedOverlay {
     private BufferedImage img;
     private int bgX, bgY, bgW, bgH;
 
+    /**
+     * @param playing active playing state
+     */
     public LevelCompletedOverlay(Playing playing) {
         this.playing = playing;
         initImg();
@@ -40,6 +46,11 @@ public class LevelCompletedOverlay {
         bgY = (int) (75 * Game.SCALE);
     }
 
+    /**
+     * Draws the overlay.
+     *
+     * @param g graphics context
+     */
     public void draw(Graphics g) {
         g.setColor(new Color(0, 0, 0, 200));
         g.fillRect(0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT);
@@ -49,6 +60,9 @@ public class LevelCompletedOverlay {
         menu.draw(g);
     }
 
+    /**
+     * Updates button states.
+     */
     public void update() {
         next.update();
         menu.update();
@@ -58,6 +72,11 @@ public class LevelCompletedOverlay {
         return b.getBounds().contains(e.getX(), e.getY());
     }
 
+    /**
+     * Updates hover state based on mouse movement.
+     *
+     * @param e mouse event
+     */
     public void mouseMoved(MouseEvent e) {
         next.setMouseOver(false);
         menu.setMouseOver(false);
@@ -69,6 +88,11 @@ public class LevelCompletedOverlay {
         }
     }
 
+    /**
+     * Handles mouse release actions.
+     *
+     * @param e mouse event
+     */
     public void mouseReleased(MouseEvent e) {
         if (isIn(menu, e)) {
             if (menu.isMousePressed()) {
@@ -86,6 +110,11 @@ public class LevelCompletedOverlay {
         next.resetBools();
     }
 
+    /**
+     * Handles mouse press actions.
+     *
+     * @param e mouse event
+     */
     public void mousePressed(MouseEvent e) {
         if (isIn(menu, e)) {
             menu.setMousePressed(true);

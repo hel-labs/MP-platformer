@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import com.platformer.core.Game;
 import com.platformer.overworld.utils.LoadSave;
 
+/**
+ * Loads, renders, and advances between levels.
+ */
 public class LevelManager {
 
     private Game game;
@@ -15,6 +18,9 @@ public class LevelManager {
     private ArrayList<Level> levels;
     private int lvlIndex = 0, aniTick, aniIndex;
 
+    /**
+     * @param game owning game instance
+     */
     public LevelManager(Game game) {
         this.game = game;
         importOutsideSprites();
@@ -32,6 +38,9 @@ public class LevelManager {
         waterSprite[4] = LoadSave.GetSpriteAtlas(LoadSave.WATER_BOTTOM);
     }
 
+    /**
+     * Loads the current level's data into managers.
+     */
     public void loadNextLevel() {
         Level newLevel = levels.get(lvlIndex);
         game.getPlaying().getEnemyManager().loadEnemies(newLevel);
@@ -58,6 +67,12 @@ public class LevelManager {
         }
     }
 
+    /**
+     * Draws the level tiles.
+     *
+     * @param g graphics context
+     * @param lvlOffset level x offset
+     */
     public void draw(Graphics g, int lvlOffset) {
         for (int j = 0; j < Game.TILES_IN_HEIGHT; j++) {
             for (int i = 0; i < levels.get(lvlIndex).getLevelData()[0].length; i++) {
@@ -75,6 +90,9 @@ public class LevelManager {
         }
     }
 
+    /**
+     * Updates animated tiles.
+     */
     public void update() {
         updateWaterAnimation();
     }
@@ -91,18 +109,26 @@ public class LevelManager {
         }
     }
 
+    /** @return current level instance */
     public Level getCurrentLevel() {
         return levels.get(lvlIndex);
     }
 
+    /** @return total number of levels */
     public int getAmountOfLevels() {
         return levels.size();
     }
 
+    /** @return current level index */
     public int getLevelIndex() {
         return lvlIndex;
     }
 
+    /**
+     * Sets the current level index.
+     *
+     * @param lvlIndex new index
+     */
     public void setLevelIndex(int lvlIndex) {
         this.lvlIndex = lvlIndex;
     }

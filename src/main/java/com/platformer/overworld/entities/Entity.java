@@ -11,6 +11,9 @@ import java.awt.geom.Rectangle2D;
 
 import com.platformer.core.Game;
 
+/**
+ * Base class for overworld entities with shared physics and animation helpers.
+ */
 public abstract class Entity {
 
     protected float x, y;
@@ -29,6 +32,12 @@ public abstract class Entity {
     protected float pushDrawOffset;
     protected int pushBackOffsetDir = UP;
 
+    /**
+     * @param x world x
+     * @param y world y
+     * @param width sprite width
+     * @param height sprite height
+     */
     public Entity(float x, float y, int width, int height) {
         this.x = x;
         this.y = y;
@@ -36,6 +45,9 @@ public abstract class Entity {
         this.height = height;
     }
 
+    /**
+     * Updates the knockback draw offset animation.
+     */
     protected void updatePushBackDrawOffset() {
         float speed = 0.95f;
         float limit = -30f;
@@ -53,6 +65,13 @@ public abstract class Entity {
         }
     }
 
+    /**
+     * Applies horizontal knockback if space is clear.
+     *
+     * @param pushBackDir direction to push
+     * @param lvlData level collision data
+     * @param speedMulti speed multiplier
+     */
     protected void pushBack(int pushBackDir, int[][] lvlData, float speedMulti) {
         float xSpeed = 0;
         if (pushBackDir == LEFT) {
@@ -66,32 +85,58 @@ public abstract class Entity {
         }
     }
 
+    /**
+     * Debug draw for the attack box.
+     *
+     * @param g graphics context
+     * @param xLvlOffset level x offset
+     */
     protected void drawAttackBox(Graphics g, int xLvlOffset) {
         g.setColor(Color.red);
         g.drawRect((int) (attackBox.x - xLvlOffset), (int) attackBox.y, (int) attackBox.width, (int) attackBox.height);
     }
 
+    /**
+     * Debug draw for the hitbox.
+     *
+     * @param g graphics context
+     * @param xLvlOffset level x offset
+     */
     protected void drawHitbox(Graphics g, int xLvlOffset) {
         g.setColor(Color.PINK);
         g.drawRect((int) hitbox.x - xLvlOffset, (int) hitbox.y, (int) hitbox.width, (int) hitbox.height);
     }
 
+    /**
+     * Initializes the entity hitbox.
+     *
+     * @param width hitbox width
+     * @param height hitbox height
+     */
     protected void initHitbox(int width, int height) {
         hitbox = new Rectangle2D.Float(x, y, (int) (width * Game.SCALE), (int) (height * Game.SCALE));
     }
 
+    /** @return entity hitbox */
     public Rectangle2D.Float getHitbox() {
         return hitbox;
     }
 
+    /** @return current animation/state id */
     public int getState() {
         return state;
     }
 
+    /** @return current animation frame index */
     public int getAniIndex() {
         return aniIndex;
     }
 
+    /**
+     * Switches to a new state and resets animation counters.
+     *
+     * @param state new state id
+     */
     protected void newState(int state) {
         this.state = state;
         aniTick = 0;

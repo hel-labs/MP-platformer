@@ -17,6 +17,9 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
+/**
+ * Title screen that prompts the player to start the game.
+ */
 public class TitleScreen extends State implements Statemethods {
 
     private static final String TITLE_TEXT = "MY PLATFORMER";
@@ -27,12 +30,16 @@ public class TitleScreen extends State implements Statemethods {
     private final BufferedImage backgroundImage;
     private final Map<Character, BufferedImage> bigTextGlyphs;
 
+    /**
+     * @param game owning game instance
+     */
     public TitleScreen(Game game) {
         super(game);
         backgroundImage = loadImageFromCandidates("/res/background_menu.png", "/background_menu.png");
         bigTextGlyphs = loadBigTextGlyphs();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void update() {
         InputHandler input = game.getInputHandler();
@@ -41,6 +48,7 @@ public class TitleScreen extends State implements Statemethods {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void draw(Graphics g) {
         Graphics2D g2 = (Graphics2D) g.create();
@@ -176,24 +184,28 @@ public class TitleScreen extends State implements Statemethods {
         g.drawString(text, x, y);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void mouseClicked(java.awt.event.MouseEvent e) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'mouseClicked'");
     }
 
+    /** {@inheritDoc} */
     @Override
     public void mousePressed(java.awt.event.MouseEvent e) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'mousePressed'");
     }
 
+    /** {@inheritDoc} */
     @Override
     public void mouseReleased(java.awt.event.MouseEvent e) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'mouseReleased'");
     }
 
+    /** {@inheritDoc} */
     @Override
     public void mouseMoved(java.awt.event.MouseEvent e) {
         // TODO Auto-generated method stub

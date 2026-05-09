@@ -7,15 +7,24 @@ import java.awt.event.MouseMotionListener;
 import com.platformer.gamestate.Gamestate;
 import com.platformer.core.GamePanel;
 
+/**
+ * Routes mouse input to the active game state.
+ */
 public class MouseInputs implements MouseListener, MouseMotionListener {
 
     private GamePanel gamePanel;
 
+    /**
+     * Creates a mouse input router for the given game panel.
+     *
+     * @param gamePanel panel hosting the game
+     */
     public MouseInputs(GamePanel gamePanel) {
         this.gamePanel = gamePanel;
     }
 
     @SuppressWarnings("incomplete-switch")
+    /** {@inheritDoc} */
     @Override
     public void mouseDragged(MouseEvent e) {
         switch (Gamestate.state) {
@@ -27,6 +36,7 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
     }
 
     @SuppressWarnings("incomplete-switch")
+    /** {@inheritDoc} */
     @Override
     public void mouseMoved(MouseEvent e) {
         switch (Gamestate.state) {
@@ -40,6 +50,7 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
     }
 
     @SuppressWarnings("incomplete-switch")
+    /** {@inheritDoc} */
     @Override
     public void mousePressed(MouseEvent e) {
         switch (Gamestate.state) {
@@ -53,6 +64,7 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
     }
 
     @SuppressWarnings("incomplete-switch")
+    /** {@inheritDoc} */
     @Override
     public void mouseReleased(MouseEvent e) {
         switch (Gamestate.state) {
@@ -65,16 +77,19 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void mouseEntered(MouseEvent e) {
         // Not In use
     }
 
+    /** {@inheritDoc} */
     @Override
     public void mouseExited(MouseEvent e) {
         // Not In use
     }
 
+    /** {@inheritDoc} */
     @Override
     public void mouseClicked(MouseEvent e) {
         switch (Gamestate.state) {

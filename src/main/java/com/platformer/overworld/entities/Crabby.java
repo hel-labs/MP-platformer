@@ -6,14 +6,27 @@ import static com.platformer.overworld.utils.Constants.Dialogue.*;
 
 import com.platformer.overworld.states.Playing;
 
+/**
+ * Ground-based crab enemy with short-range melee attack.
+ */
 public class Crabby extends Enemy {
 
+    /**
+     * @param x spawn x
+     * @param y spawn y
+     */
     public Crabby(float x, float y) {
         super(x, y, CRABBY_WIDTH, CRABBY_HEIGHT, CRABBY);
         initHitbox(22, 19);
         initAttackBox(82, 19, 30);
     }
 
+    /**
+     * Updates AI, animation, and attack box.
+     *
+     * @param lvlData level collision data
+     * @param playing playing state
+     */
     public void update(int[][] lvlData, Playing playing) {
         updateBehavior(lvlData, playing);
         updateAnimationTick();

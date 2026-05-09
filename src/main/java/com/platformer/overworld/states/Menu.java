@@ -22,6 +22,9 @@ import com.platformer.gamestate.*;
 
 import javax.imageio.ImageIO;
 
+/**
+ * Main menu state with background and menu buttons.
+ */
 public class Menu extends State implements Statemethods {
 
     private MenuButton[] buttons = new MenuButton[5];
@@ -30,6 +33,9 @@ public class Menu extends State implements Statemethods {
     private Map<Character, BufferedImage> bigTextGlyphs;
     private boolean leaderboardOverlayNeeded;
 
+    /**
+     * @param game owning game instance
+     */
     public Menu(Game game) {
         super(game);
         loadButtons();
@@ -72,6 +78,9 @@ public class Menu extends State implements Statemethods {
     }
 
     @Override
+    /**
+     * Updates menu button state.
+     */
     public void update() {
         for (MenuButton mb : buttons) {
             mb.update();
@@ -79,6 +88,11 @@ public class Menu extends State implements Statemethods {
     }
 
     @Override
+    /**
+     * Draws menu background and buttons.
+     *
+     * @param g graphics context
+     */
     public void draw(Graphics g) {
         g.drawImage(backgroundImgPink, 0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT, null);
         g.drawImage(backgroundImg, menuX, menuY, menuWidth, menuHeight, null);
@@ -227,6 +241,11 @@ public class Menu extends State implements Statemethods {
     }
 
     @Override
+    /**
+     * Handles mouse press actions.
+     *
+     * @param e mouse event
+     */
     public void mousePressed(MouseEvent e) {
         for (MenuButton mb : buttons) {
             if (isIn(e, mb)) {
@@ -236,6 +255,11 @@ public class Menu extends State implements Statemethods {
     }
 
     @Override
+    /**
+     * Handles mouse release actions.
+     *
+     * @param e mouse event
+     */
     public void mouseReleased(MouseEvent e) {
         for (MenuButton mb : buttons) {
             if (isIn(e, mb)) {
@@ -259,6 +283,11 @@ public class Menu extends State implements Statemethods {
     }
 
     @Override
+    /**
+     * Handles hover updates.
+     *
+     * @param e mouse event
+     */
     public void mouseMoved(MouseEvent e) {
         for (MenuButton mb : buttons) {
             mb.setMouseOver(false);
@@ -274,6 +303,11 @@ public class Menu extends State implements Statemethods {
     }
 
     @Override
+    /**
+     * Unused mouse click handler.
+     *
+     * @param e mouse event
+     */
     public void mouseClicked(MouseEvent e) {
         // TODO Auto-generated method stub
 

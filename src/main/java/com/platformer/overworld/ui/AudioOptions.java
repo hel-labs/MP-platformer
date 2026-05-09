@@ -9,6 +9,9 @@ import java.awt.event.MouseEvent;
 
 import com.platformer.core.Game;
 
+/**
+ * Audio control widget containing mute toggles and volume slider.
+ */
 public class AudioOptions {
 
     private VolumeButton volumeButton;
@@ -16,6 +19,9 @@ public class AudioOptions {
 
     private Game game;
 
+    /**
+     * @param game owning game instance
+     */
     public AudioOptions(Game game) {
         this.game = game;
         createSoundButtons();
@@ -36,6 +42,9 @@ public class AudioOptions {
         sfxButton = new SoundButton(soundX, sfxY, SOUND_SIZE, SOUND_SIZE);
     }
 
+    /**
+     * Updates button states.
+     */
     public void update() {
         musicButton.update();
         sfxButton.update();
@@ -43,6 +52,11 @@ public class AudioOptions {
         volumeButton.update();
     }
 
+    /**
+     * Draws the audio controls.
+     *
+     * @param g graphics context
+     */
     public void draw(Graphics g) {
         // Sound buttons
         musicButton.draw(g);
@@ -52,6 +66,11 @@ public class AudioOptions {
         volumeButton.draw(g);
     }
 
+    /**
+     * Handles dragging the volume slider.
+     *
+     * @param e mouse event
+     */
     public void mouseDragged(MouseEvent e) {
         if (volumeButton.isMousePressed()) {
             float valueBefore = volumeButton.getFloatValue();
@@ -63,6 +82,11 @@ public class AudioOptions {
         }
     }
 
+    /**
+     * Handles mouse press on audio controls.
+     *
+     * @param e mouse event
+     */
     public void mousePressed(MouseEvent e) {
         if (isIn(e, musicButton)) {
             musicButton.setMousePressed(true);
@@ -73,6 +97,11 @@ public class AudioOptions {
         }
     }
 
+    /**
+     * Handles mouse release on audio controls.
+     *
+     * @param e mouse event
+     */
     public void mouseReleased(MouseEvent e) {
         if (isIn(e, musicButton)) {
             if (musicButton.isMousePressed()) {
@@ -93,6 +122,11 @@ public class AudioOptions {
         volumeButton.resetBools();
     }
 
+    /**
+     * Handles hover state updates.
+     *
+     * @param e mouse event
+     */
     public void mouseMoved(MouseEvent e) {
         musicButton.setMouseOver(false);
         sfxButton.setMouseOver(false);

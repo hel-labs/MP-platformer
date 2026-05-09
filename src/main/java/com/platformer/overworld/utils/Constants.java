@@ -2,11 +2,15 @@ package com.platformer.overworld.utils;
 
 import com.platformer.core.Game;
 
+/**
+ * Centralized constants for overworld gameplay and UI.
+ */
 public class Constants {
 
     public static final float GRAVITY = 0.04f * Game.SCALE;
     public static final int ANI_SPEED = 25;
 
+    /** Dialogue effect constants. */
     public static class Dialogue {
 
         public static final int QUESTION = 0;
@@ -15,6 +19,10 @@ public class Constants {
         public static final int DIALOGUE_WIDTH = (int) (14 * Game.SCALE);
         public static final int DIALOGUE_HEIGHT = (int) (12 * Game.SCALE);
 
+        /**
+         * @param type dialogue type
+         * @return frame count for the dialogue type
+         */
         public static int GetSpriteAmount(int type) {
             switch (type) {
                 case QUESTION, EXCLAMATION:
@@ -25,6 +33,7 @@ public class Constants {
         }
     }
 
+    /** Projectile sizing and speed constants. */
     public static class Projectiles {
 
         public static final int CANNON_BALL_DEFAULT_WIDTH = 15;
@@ -35,6 +44,7 @@ public class Constants {
         public static final float SPEED = 0.75f * Game.SCALE;
     }
 
+    /** Object type and sizing constants. */
     public static class ObjectConstants {
 
         public static final int RED_POTION = 0;
@@ -71,6 +81,10 @@ public class Constants {
         public static final int CANNON_WIDTH = (int) (CANNON_WIDTH_DEFAULT * Game.SCALE);
         public static final int CANNON_HEIGHT = (int) (CANNON_HEIGHT_DEFAULT * Game.SCALE);
 
+        /**
+         * @param object_type object type id
+         * @return sprite count for the object type
+         */
         public static int GetSpriteAmount(int object_type) {
             switch (object_type) {
                 case RED_POTION, BLUE_POTION:
@@ -83,6 +97,10 @@ public class Constants {
             return 1;
         }
 
+        /**
+         * @param treeType tree type id
+         * @return x offset for drawing
+         */
         public static int GetTreeOffsetX(int treeType) {
             switch (treeType) {
                 case TREE_ONE:
@@ -96,6 +114,10 @@ public class Constants {
             return 0;
         }
 
+        /**
+         * @param treeType tree type id
+         * @return y offset for drawing
+         */
         public static int GetTreeOffsetY(int treeType) {
 
             switch (treeType) {
@@ -108,6 +130,10 @@ public class Constants {
 
         }
 
+        /**
+         * @param treeType tree type id
+         * @return tree sprite width
+         */
         public static int GetTreeWidth(int treeType) {
             switch (treeType) {
                 case TREE_ONE:
@@ -121,6 +147,10 @@ public class Constants {
             return 0;
         }
 
+        /**
+         * @param treeType tree type id
+         * @return tree sprite height
+         */
         public static int GetTreeHeight(int treeType) {
             switch (treeType) {
                 case TREE_ONE:
@@ -133,6 +163,7 @@ public class Constants {
         }
     }
 
+    /** Enemy type, size, and combat constants. */
     public static class EnemyConstants {
 
         public static final int CRABBY = 0;
@@ -166,6 +197,11 @@ public class Constants {
         public static final int SHARK_DRAWOFFSET_X = (int) (8 * Game.SCALE);
         public static final int SHARK_DRAWOFFSET_Y = (int) (6 * Game.SCALE);
 
+        /**
+         * @param enemy_type enemy type id
+         * @param enemy_state state id
+         * @return sprite count for the enemy state
+         */
         public static int GetSpriteAmount(int enemy_type, int enemy_state) {
             switch (enemy_state) {
 
@@ -193,6 +229,10 @@ public class Constants {
 
         }
 
+        /**
+         * @param enemy_type enemy type id
+         * @return maximum health
+         */
         public static int GetMaxHealth(int enemy_type) {
             switch (enemy_type) {
                 case CRABBY:
@@ -204,6 +244,10 @@ public class Constants {
             }
         }
 
+        /**
+         * @param enemy_type enemy type id
+         * @return damage dealt per hit
+         */
         public static int GetEnemyDmg(int enemy_type) {
             switch (enemy_type) {
                 case CRABBY:
@@ -218,6 +262,7 @@ public class Constants {
         }
     }
 
+    /** Environment and background sizing constants. */
     public static class Environment {
 
         public static final int BIG_CLOUD_WIDTH_DEFAULT = 448;
@@ -231,8 +276,10 @@ public class Constants {
         public static final int SMALL_CLOUD_HEIGHT = (int) (SMALL_CLOUD_HEIGHT_DEFAULT * Game.SCALE);
     }
 
+    /** UI sizing constants. */
     public static class UI {
 
+        /** Main menu button dimensions. */
         public static class Buttons {
 
             public static final int B_WIDTH_DEFAULT = 140;
@@ -241,12 +288,14 @@ public class Constants {
             public static final int B_HEIGHT = (int) (B_HEIGHT_DEFAULT * Game.SCALE);
         }
 
+        /** Pause menu button dimensions. */
         public static class PauseButtons {
 
             public static final int SOUND_SIZE_DEFAULT = 42;
             public static final int SOUND_SIZE = (int) (SOUND_SIZE_DEFAULT * Game.SCALE);
         }
 
+        /** URM button dimensions. */
         public static class URMButtons {
 
             public static final int URM_DEFAULT_SIZE = 56;
@@ -254,6 +303,7 @@ public class Constants {
 
         }
 
+        /** Volume slider dimensions. */
         public static class VolumeButtons {
 
             public static final int VOLUME_DEFAULT_WIDTH = 28;
@@ -266,6 +316,7 @@ public class Constants {
         }
     }
 
+    /** Direction identifiers. */
     public static class Directions {
 
         public static final int LEFT = 0;
@@ -274,6 +325,7 @@ public class Constants {
         public static final int DOWN = 3;
     }
 
+    /** Player animation and combat constants. */
     public static class PlayerConstants {
 
         public static final int IDLE = 0;
@@ -284,6 +336,10 @@ public class Constants {
         public static final int HIT = 5;
         public static final int DEAD = 6;
 
+        /**
+         * @param player_action action id
+         * @return sprite count for the action
+         */
         public static int GetSpriteAmount(int player_action) {
             switch (player_action) {
                 case DEAD:

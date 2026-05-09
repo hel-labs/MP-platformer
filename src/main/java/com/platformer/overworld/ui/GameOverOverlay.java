@@ -12,6 +12,9 @@ import com.platformer.overworld.states.Playing;
 import com.platformer.core.Game;
 import com.platformer.overworld.utils.LoadSave;
 
+/**
+ * Overlay shown when the player loses all lives.
+ */
 public class GameOverOverlay {
 
     private Playing playing;
@@ -19,6 +22,9 @@ public class GameOverOverlay {
     private int imgX, imgY, imgW, imgH;
     private UrmButton menu, play;
 
+    /**
+     * @param playing active playing state
+     */
     public GameOverOverlay(Playing playing) {
         this.playing = playing;
         createImg();
@@ -43,6 +49,11 @@ public class GameOverOverlay {
 
     }
 
+    /**
+     * Draws the overlay.
+     *
+     * @param g graphics context
+     */
     public void draw(Graphics g) {
         g.setColor(new Color(0, 0, 0, 200));
         g.fillRect(0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT);
@@ -53,6 +64,9 @@ public class GameOverOverlay {
         play.draw(g);
     }
 
+    /**
+     * Updates button states.
+     */
     public void update() {
         menu.update();
         play.update();
@@ -62,6 +76,11 @@ public class GameOverOverlay {
         return b.getBounds().contains(e.getX(), e.getY());
     }
 
+    /**
+     * Updates hover state based on mouse movement.
+     *
+     * @param e mouse event
+     */
     public void mouseMoved(MouseEvent e) {
         play.setMouseOver(false);
         menu.setMouseOver(false);
@@ -73,6 +92,11 @@ public class GameOverOverlay {
         }
     }
 
+    /**
+     * Handles mouse release actions.
+     *
+     * @param e mouse event
+     */
     public void mouseReleased(MouseEvent e) {
         if (isIn(menu, e)) {
             if (menu.isMousePressed()) {
@@ -90,6 +114,11 @@ public class GameOverOverlay {
         play.resetBools();
     }
 
+    /**
+     * Handles mouse press actions.
+     *
+     * @param e mouse event
+     */
     public void mousePressed(MouseEvent e) {
         if (isIn(menu, e)) {
             menu.setMousePressed(true);

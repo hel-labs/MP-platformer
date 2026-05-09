@@ -4,10 +4,18 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 import javax.swing.JFrame;
 
+/**
+ * Swing window wrapper that hosts the game panel.
+ */
 public class GameWindow {
 
     private final JFrame jframe;
 
+    /**
+     * Creates and displays the main game window.
+     *
+     * @param gamePanel panel to render inside the window
+     */
     public GameWindow(GamePanel gamePanel) {
 
         jframe = new JFrame();
@@ -32,6 +40,11 @@ public class GameWindow {
         });
     }
 
+    /**
+     * Toggles fullscreen mode.
+     *
+     * @param fullscreen true to enter fullscreen
+     */
     public void setFullscreen(boolean fullscreen) {
 
         jframe.dispose();

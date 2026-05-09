@@ -6,6 +6,9 @@ import java.awt.image.BufferedImage;
 import com.platformer.overworld.utils.LoadSave;
 import static com.platformer.overworld.utils.Constants.UI.VolumeButtons.*;
 
+/**
+ * Draggable slider for master volume control.
+ */
 public class VolumeButton extends PauseButton {
 
     private BufferedImage[] imgs;
@@ -15,6 +18,12 @@ public class VolumeButton extends PauseButton {
     private int buttonX, minX, maxX;
     private float floatValue = 0f;
 
+    /**
+     * @param x left x of slider bar
+     * @param y top y of slider bar
+     * @param width slider width
+     * @param height slider height
+     */
     public VolumeButton(int x, int y, int width, int height) {
         super(x + width / 2, y, VOLUME_WIDTH, height);
         bounds.x -= VOLUME_WIDTH / 2;
@@ -37,6 +46,9 @@ public class VolumeButton extends PauseButton {
 
     }
 
+    /**
+     * Updates hover/press frame index.
+     */
     public void update() {
         index = 0;
         if (mouseOver) {
@@ -48,6 +60,11 @@ public class VolumeButton extends PauseButton {
 
     }
 
+    /**
+     * Draws the slider and handle.
+     *
+     * @param g graphics context
+     */
     public void draw(Graphics g) {
 
         g.drawImage(slider, x, y, width, height, null);
@@ -55,6 +72,11 @@ public class VolumeButton extends PauseButton {
 
     }
 
+    /**
+     * Moves the slider handle to the given x position.
+     *
+     * @param x target x
+     */
     public void changeX(int x) {
         if (x < minX) {
             buttonX = minX;
@@ -74,27 +96,35 @@ public class VolumeButton extends PauseButton {
         floatValue = value / range;
     }
 
+    /**
+     * Resets hover and pressed flags.
+     */
     public void resetBools() {
         mouseOver = false;
         mousePressed = false;
     }
 
+    /** @return true if mouse is over the handle */
     public boolean isMouseOver() {
         return mouseOver;
     }
 
+    /** @param mouseOver new hover state */
     public void setMouseOver(boolean mouseOver) {
         this.mouseOver = mouseOver;
     }
 
+    /** @return true if handle is pressed */
     public boolean isMousePressed() {
         return mousePressed;
     }
 
+    /** @param mousePressed new pressed state */
     public void setMousePressed(boolean mousePressed) {
         this.mousePressed = mousePressed;
     }
 
+    /** @return current slider value in [0,1] */
     public float getFloatValue() {
         return floatValue;
     }

@@ -13,6 +13,9 @@ import java.util.ArrayList;
 import com.platformer.core.Game;
 import com.platformer.overworld.utils.LoadSave;
 
+/**
+ * Credits screen with scrolling credits art and animated characters.
+ */
 public class Credits extends State implements Statemethods {
 
     private BufferedImage backgroundImg, creditsImg;
@@ -21,6 +24,9 @@ public class Credits extends State implements Statemethods {
 
     private ArrayList<ShowEntity> entitiesList;
 
+    /**
+     * @param game owning game instance
+     */
     public Credits(Game game) {
         super(game);
         backgroundImg = LoadSave.GetSpriteAtlas(LoadSave.MENU_BACKGROUND_IMG);
@@ -48,6 +54,7 @@ public class Credits extends State implements Statemethods {
         return arr;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void update() {
         bgYFloat -= 0.2f;
@@ -56,6 +63,7 @@ public class Credits extends State implements Statemethods {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void draw(Graphics g) {
         g.drawImage(backgroundImg, 0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT, null);
@@ -66,24 +74,28 @@ public class Credits extends State implements Statemethods {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void mouseMoved(MouseEvent e) {
         // TODO Auto-generated method stub
 
     }
 
+    /** {@inheritDoc} */
     @Override
     public void mousePressed(MouseEvent e) {
         // TODO Auto-generated method stub
 
     }
 
+    /** {@inheritDoc} */
     @Override
     public void mouseReleased(MouseEvent e) {
         // TODO Auto-generated method stub
 
     }
 
+    /** {@inheritDoc} */
     @Override
     public void mouseClicked(MouseEvent e) {
     }

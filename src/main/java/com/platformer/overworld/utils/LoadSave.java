@@ -9,6 +9,9 @@ import java.net.URL;
 
 import javax.imageio.ImageIO;
 
+/**
+ * Loads sprite atlases and level resources from disk.
+ */
 public class LoadSave {
 
     public static final String PLAYER_ATLAS = "player_sprites.png";
@@ -47,6 +50,12 @@ public class LoadSave {
     public static final String WATER_BOTTOM = "water.png";
     public static final String SHIP = "ship.png";
 
+    /**
+     * Loads a sprite atlas by file name from /res.
+     *
+     * @param fileName resource file name
+     * @return loaded image or null
+     */
     public static BufferedImage GetSpriteAtlas(String fileName) {
         BufferedImage img = null;
         InputStream is = LoadSave.class.getResourceAsStream("/res/" + fileName);
@@ -65,6 +74,11 @@ public class LoadSave {
         return img;
     }
 
+    /**
+     * Loads all level images from /res/lvls in numerical order.
+     *
+     * @return ordered level images
+     */
     public static BufferedImage[] GetAllLevels() {
         URL url = LoadSave.class.getResource("/res/lvls");
         File file = null;

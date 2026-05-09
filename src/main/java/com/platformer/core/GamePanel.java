@@ -9,21 +9,33 @@ import java.awt.Graphics2D;
 import static com.platformer.core.Game.GAME_HEIGHT;
 import static com.platformer.core.Game.GAME_WIDTH;
 
+/**
+ * Swing panel that renders the game with letterboxing and scaling.
+ */
 public class GamePanel extends JPanel {
 
     private Game game;
 
+    /**
+     * Creates a panel bound to the given game instance.
+     *
+     * @param game active game instance
+     */
     public GamePanel(Game game) {
         this.game = game;
         setPanelSize();
         setBackground(Color.BLACK);
     }
 
+    /**
+     * Sets the preferred panel size based on the game resolution.
+     */
     public void setPanelSize() {
         Dimension size = new Dimension(GAME_WIDTH, GAME_HEIGHT);
         setPreferredSize(size);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -51,6 +63,9 @@ public class GamePanel extends JPanel {
         }
     }
 
+    /**
+     * @return owning game instance
+     */
     public Game getGame() {
         return game;
     }

@@ -10,6 +10,9 @@ import com.platformer.gamestate.Gamestate;
 import com.platformer.core.Game;
 import com.platformer.overworld.utils.LoadSave;
 
+/**
+ * Overlay shown when the full game is completed.
+ */
 public class GameCompletedOverlay {
 
     private Playing playing;
@@ -17,6 +20,9 @@ public class GameCompletedOverlay {
     private MenuButton quit, credit;
     private int imgX, imgY, imgW, imgH;
 
+    /**
+     * @param playing active playing state
+     */
     public GameCompletedOverlay(Playing playing) {
         this.playing = playing;
         createImg();
@@ -37,6 +43,11 @@ public class GameCompletedOverlay {
 
     }
 
+    /**
+     * Draws the overlay.
+     *
+     * @param g graphics context
+     */
     public void draw(Graphics g) {
         g.setColor(new Color(0, 0, 0, 200));
         g.fillRect(0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT);
@@ -47,6 +58,9 @@ public class GameCompletedOverlay {
         quit.draw(g);
     }
 
+    /**
+     * Updates button states.
+     */
     public void update() {
         credit.update();
         quit.update();
@@ -56,6 +70,11 @@ public class GameCompletedOverlay {
         return b.getBounds().contains(e.getX(), e.getY());
     }
 
+    /**
+     * Updates hover state based on mouse movement.
+     *
+     * @param e mouse event
+     */
     public void mouseMoved(MouseEvent e) {
         credit.setMouseOver(false);
         quit.setMouseOver(false);
@@ -67,6 +86,11 @@ public class GameCompletedOverlay {
         }
     }
 
+    /**
+     * Handles mouse release actions.
+     *
+     * @param e mouse event
+     */
     public void mouseReleased(MouseEvent e) {
         if (isIn(quit, e)) {
             if (quit.isMousePressed()) {
@@ -87,6 +111,11 @@ public class GameCompletedOverlay {
         credit.resetBools();
     }
 
+    /**
+     * Handles mouse press actions.
+     *
+     * @param e mouse event
+     */
     public void mousePressed(MouseEvent e) {
         if (isIn(quit, e)) {
             quit.setMousePressed(true);

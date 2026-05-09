@@ -8,6 +8,9 @@ import java.util.Random;
 import com.platformer.core.Game;
 import com.platformer.overworld.utils.LoadSave;
 
+/**
+ * Simple rain particle effect for the overworld.
+ */
 public class Rain {
 
     private Point2D.Float[] drops;
@@ -17,6 +20,9 @@ public class Rain {
 
     // Worth knowing, adding particles this way can cost a lot in
     // computer power. Disable it if the game lags.
+    /**
+     * Initializes rain particles and sprite resources.
+     */
     public Rain() {
         rand = new Random();
         drops = new Point2D.Float[1000];
@@ -34,6 +40,11 @@ public class Rain {
         return new Point2D.Float((int) getNewX(0), rand.nextInt(Game.GAME_HEIGHT));
     }
 
+    /**
+     * Updates particle positions.
+     *
+     * @param xLvlOffset camera offset
+     */
     public void update(int xLvlOffset) {
         for (Point2D.Float p : drops) {
             p.y += rainSpeed;
@@ -49,6 +60,12 @@ public class Rain {
         return value;
     }
 
+    /**
+     * Draws rain particles.
+     *
+     * @param g graphics context
+     * @param xLvlOffset camera offset
+     */
     public void draw(Graphics g, int xLvlOffset) {
         for (Point2D.Float p : drops) {
             g.drawImage(rainParticle, (int) p.getX() - xLvlOffset, (int) p.getY(), 3, 12, null);

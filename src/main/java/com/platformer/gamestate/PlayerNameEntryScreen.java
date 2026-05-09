@@ -20,6 +20,9 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
+/**
+ * Screen for entering and persisting the player name.
+ */
 public class PlayerNameEntryScreen extends State implements Statemethods {
 
     private static final int MAX_NAME_LENGTH = 16;
@@ -34,6 +37,9 @@ public class PlayerNameEntryScreen extends State implements Statemethods {
     private final Map<Character, BufferedImage> bigTextGlyphs;
     private final StringBuilder nameBuffer = new StringBuilder();
 
+    /**
+     * @param game owning game instance
+     */
     public PlayerNameEntryScreen(Game game) {
         super(game);
         backgroundPink = LoadSave.GetSpriteAtlas(LoadSave.MENU_BACKGROUND_IMG);
@@ -45,6 +51,7 @@ public class PlayerNameEntryScreen extends State implements Statemethods {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void update() {
         InputHandler input = game.getInputHandler();
@@ -58,6 +65,7 @@ public class PlayerNameEntryScreen extends State implements Statemethods {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void draw(Graphics g) {
         Graphics2D g2 = (Graphics2D) g.create();
@@ -115,6 +123,11 @@ public class PlayerNameEntryScreen extends State implements Statemethods {
         }
     }
 
+    /**
+     * Adds a character to the input buffer while name entry is active.
+     *
+     * @param typed typed character
+     */
     public void handleKeyTyped(char typed) {
         if (Gamestate.state != Gamestate.NAME_ENTRY) {
             return;
@@ -133,6 +146,11 @@ public class PlayerNameEntryScreen extends State implements Statemethods {
         }
     }
 
+    /**
+     * Handles control keys like backspace during name entry.
+     *
+     * @param keyCode key code
+     */
     public void handleKeyPressed(int keyCode) {
         if (Gamestate.state != Gamestate.NAME_ENTRY) {
             return;
@@ -241,18 +259,22 @@ public class PlayerNameEntryScreen extends State implements Statemethods {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void mouseClicked(java.awt.event.MouseEvent e) {
     }
 
+    /** {@inheritDoc} */
     @Override
     public void mousePressed(java.awt.event.MouseEvent e) {
     }
 
+    /** {@inheritDoc} */
     @Override
     public void mouseReleased(java.awt.event.MouseEvent e) {
     }
 
+    /** {@inheritDoc} */
     @Override
     public void mouseMoved(java.awt.event.MouseEvent e) {
     }

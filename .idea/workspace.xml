@@ -5,8 +5,62 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="879c77fa-3cf6-4696-b2b9-537a3916d18d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/leaderboard.txt" beforeDir="false" afterPath="$PROJECT_DIR$/leaderboard.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/battle/actions/BattleAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/battle/actions/BattleAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/battle/actions/FightAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/battle/actions/FightAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/battle/actions/FleeAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/battle/actions/FleeAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/battle/actions/SpareAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/battle/actions/SpareAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/core/BattleSnapshot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/core/BattleSnapshot.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/core/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/core/Game.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/core/GamePanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/core/GamePanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/core/GameWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/core/GameWindow.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/core/MainClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/core/MainClass.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/gamestate/Credits.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/gamestate/Credits.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/gamestate/GameOptions.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/gamestate/GameOptions.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/gamestate/Gamestate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/gamestate/Gamestate.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/gamestate/Leaderboard.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/gamestate/Leaderboard.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/gamestate/PlayerNameEntryScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/gamestate/PlayerNameEntryScreen.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/gamestate/State.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/gamestate/State.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/gamestate/Statemethods.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/gamestate/Statemethods.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/gamestate/TitleScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/gamestate/TitleScreen.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/input/InputHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/input/InputHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/input/MouseInputs.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/input/MouseInputs.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/effects/DialogueEffect.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/effects/DialogueEffect.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/effects/Rain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/effects/Rain.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/entities/Crabby.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/entities/Crabby.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/entities/Enemy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/entities/Enemy.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/entities/EnemyManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/entities/EnemyManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/entities/Entity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/entities/Entity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/entities/Pinkstar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/entities/Pinkstar.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/entities/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/entities/Player.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/entities/Shark.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/entities/Shark.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/levels/Level.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/levels/Level.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/levels/LevelManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/levels/LevelManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/objects/BackgroundTree.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/objects/BackgroundTree.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/objects/Cannon.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/objects/Cannon.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/objects/GameContainer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/objects/GameContainer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/objects/GameObject.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/objects/GameObject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/objects/Grass.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/objects/Grass.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/objects/ObjectManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/objects/ObjectManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/objects/Potion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/objects/Potion.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/objects/Projectile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/objects/Projectile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/objects/Spike.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/objects/Spike.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/states/Menu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/states/Menu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/states/Playing.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/states/Playing.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/ui/AudioOptions.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/ui/AudioOptions.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/ui/GameCompletedOverlay.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/ui/GameCompletedOverlay.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/ui/GameOverOverlay.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/ui/GameOverOverlay.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/ui/LevelCompletedOverlay.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/ui/LevelCompletedOverlay.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/ui/MenuButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/ui/MenuButton.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/ui/PauseButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/ui/PauseButton.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/ui/PauseOverlay.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/ui/PauseOverlay.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/ui/SoundButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/ui/SoundButton.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/ui/UrmButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/ui/UrmButton.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/ui/VolumeButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/ui/VolumeButton.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/utils/Constants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/utils/Constants.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/utils/HelpMethods.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/utils/HelpMethods.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/utils/LoadSave.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/platformer/overworld/utils/LoadSave.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -130,7 +184,7 @@
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" />
+        <option name="scriptParameters" value="" />
         <option name="taskDescriptions">
           <list />
         </option>
@@ -159,6 +213,10 @@
       <option name="filePath" />
       <method v="2" />
     </configuration>
+    <list>
+      <item itemvalue="Gradle.E:/Game/Java Projects/MP-Platformer_fix/MP-platformer" />
+      <item itemvalue="Gradle.MP-platformer [run]" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="Gradle.MP-platformer [run]" />
@@ -178,7 +236,16 @@
       <workItem from="1776708610794" duration="943000" />
       <workItem from="1776838796594" duration="5030000" />
       <workItem from="1776872046858" duration="5876000" />
-      <workItem from="1776920607961" duration="3160000" />
+      <workItem from="1776920607961" duration="4684000" />
+      <workItem from="1777021659416" duration="420000" />
+      <workItem from="1777282549077" duration="3169000" />
+      <workItem from="1777301917132" duration="4606000" />
+      <workItem from="1777565683516" duration="311000" />
+      <workItem from="1778267066554" duration="1993000" />
+      <workItem from="1778304922204" duration="3808000" />
+      <workItem from="1778319024578" duration="82000" />
+      <workItem from="1778319633402" duration="2016000" />
+      <workItem from="1778324598380" duration="93000" />
     </task>
     <servers />
   </component>

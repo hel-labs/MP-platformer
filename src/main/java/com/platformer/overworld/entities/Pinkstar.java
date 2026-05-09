@@ -8,6 +8,9 @@ import static com.platformer.overworld.utils.Constants.Directions.*;
 
 import com.platformer.overworld.states.Playing;
 
+/**
+ * Rolling enemy that charges toward the player.
+ */
 public class Pinkstar extends Enemy {
 
     private boolean preRoll = true;
@@ -15,11 +18,21 @@ public class Pinkstar extends Enemy {
     private int tickAfterRollInIdle;
     private int rollDurationTick, rollDuration = 300;
 
+    /**
+     * @param x spawn x
+     * @param y spawn y
+     */
     public Pinkstar(float x, float y) {
         super(x, y, PINKSTAR_WIDTH, PINKSTAR_HEIGHT, PINKSTAR);
         initHitbox(17, 21);
     }
 
+    /**
+     * Updates AI and animation.
+     *
+     * @param lvlData level collision data
+     * @param playing playing state
+     */
     public void update(int[][] lvlData, Playing playing) {
         updateBehavior(lvlData, playing);
         updateAnimationTick();
@@ -98,6 +111,12 @@ public class Pinkstar extends Enemy {
 
     }
 
+    /**
+     * Moves the enemy and handles roll-over when attacking.
+     *
+     * @param lvlData level collision data
+     * @param playing playing state
+     */
     protected void move(int[][] lvlData, Playing playing) {
         float xSpeed = 0;
 

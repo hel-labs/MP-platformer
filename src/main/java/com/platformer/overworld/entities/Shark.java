@@ -8,14 +8,27 @@ import static com.platformer.overworld.utils.HelpMethods.IsFloor;
 
 import com.platformer.overworld.states.Playing;
 
+/**
+ * Fast enemy with a forward lunge attack.
+ */
 public class Shark extends Enemy {
 
+    /**
+     * @param x spawn x
+     * @param y spawn y
+     */
     public Shark(float x, float y) {
         super(x, y, SHARK_WIDTH, SHARK_HEIGHT, SHARK);
         initHitbox(18, 22);
         initAttackBox(20, 20, 20);
     }
 
+    /**
+     * Updates AI, animation, and attack box.
+     *
+     * @param lvlData level collision data
+     * @param playing playing state
+     */
     public void update(int[][] lvlData, Playing playing) {
         updateBehavior(lvlData, playing);
         updateAnimationTick();
@@ -69,6 +82,12 @@ public class Shark extends Enemy {
         }
     }
 
+    /**
+     * Performs the lunge movement during attack.
+     *
+     * @param lvlData level collision data
+     * @param playing playing state
+     */
     protected void attackMove(int[][] lvlData, Playing playing) {
         float xSpeed = 0;
 

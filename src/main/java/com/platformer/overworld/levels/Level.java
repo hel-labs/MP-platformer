@@ -12,6 +12,9 @@ import com.platformer.core.Game;
 import static com.platformer.overworld.utils.Constants.EnemyConstants.*;
 import static com.platformer.overworld.utils.Constants.ObjectConstants.*;
 
+/**
+ * Represents a parsed level with tile, enemy, and object data.
+ */
 public class Level {
 
     private BufferedImage img;
@@ -32,6 +35,9 @@ public class Level {
     private int maxLvlOffsetX;
     private Point playerSpawn;
 
+    /**
+     * @param img level image used for data extraction
+     */
     public Level(BufferedImage img) {
         this.img = img;
         lvlData = new int[img.getHeight()][img.getWidth()];
@@ -108,54 +114,71 @@ public class Level {
         maxLvlOffsetX = Game.TILES_SIZE * maxTilesOffset;
     }
 
+    /**
+     * @param x tile x
+     * @param y tile y
+     * @return sprite index at the tile location
+     */
     public int getSpriteIndex(int x, int y) {
         return lvlData[y][x];
     }
 
+    /** @return collision data for the level */
     public int[][] getLevelData() {
         return lvlData;
     }
 
+    /** @return maximum horizontal offset */
     public int getLvlOffset() {
         return maxLvlOffsetX;
     }
 
+    /** @return player spawn point */
     public Point getPlayerSpawn() {
         return playerSpawn;
     }
 
+    /** @return crab enemies list */
     public ArrayList<Crabby> getCrabs() {
         return crabs;
     }
 
+    /** @return shark enemies list */
     public ArrayList<Shark> getSharks() {
         return sharks;
     }
 
+    /** @return potions list */
     public ArrayList<Potion> getPotions() {
         return potions;
     }
 
+    /** @return breakable containers list */
     public ArrayList<GameContainer> getContainers() {
         return containers;
     }
 
+    /** @return spikes list */
     public ArrayList<Spike> getSpikes() {
         return spikes;
     }
 
+    /** @return cannons list */
     public ArrayList<Cannon> getCannons() {
         return cannons;
     }
 
+    /** @return pinkstar enemies list */
     public ArrayList<Pinkstar> getPinkstars() {
         return pinkstars;
     }
 
+    /** @return background trees list */
     public ArrayList<BackgroundTree> getTrees() {
         return trees;
     }
 
+    /** @return grass decorations list */
     public ArrayList<Grass> getGrass() {
         return grass;
     }

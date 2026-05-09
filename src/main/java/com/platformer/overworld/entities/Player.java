@@ -17,6 +17,9 @@ import com.platformer.battle.core.BattleOutcome;
 import com.platformer.core.Game;
 import com.platformer.overworld.utils.LoadSave;
 
+/**
+ * Overworld player character with movement, combat, and UI rendering.
+ */
 public class Player extends Entity {
 
     private BufferedImage[][] animations;
@@ -73,6 +76,13 @@ public class Player extends Entity {
     // Freeze flag — set true during battle so physics don't run
     private boolean frozen = false;
 
+    /**
+     * @param x spawn x
+     * @param y spawn y
+     * @param width sprite width
+     * @param height sprite height
+     * @param playing playing state
+     */
     public Player(float x, float y, int width, int height, Playing playing) {
         super(x, y, width, height);
         this.playing = playing;
@@ -85,6 +95,11 @@ public class Player extends Entity {
         initAttackBox();
     }
 
+    /**
+     * Sets the current spawn position.
+     *
+     * @param spawn spawn point
+     */
     public void setSpawn(Point spawn) {
         this.x = spawn.x;
         this.y = spawn.y;
@@ -97,6 +112,9 @@ public class Player extends Entity {
         resetAttackBox();
     }
 
+    /**
+     * Updates movement, combat, and animation state.
+     */
     public void update() {
         updateHealthBar();
         updatePowerBar();
@@ -237,6 +255,12 @@ public class Player extends Entity {
         }
     }
 
+    /**
+     * Renders the player and UI.
+     *
+     * @param g graphics context
+     * @param lvlOffset level x offset
+     */
     public void render(Graphics g, int lvlOffset) {
         g.drawImage(animations[state][aniIndex], (int) (hitbox.x - xDrawOffset) - lvlOffset + flipX,
                 (int) (hitbox.y - yDrawOffset + (int) (pushDrawOffset)), width * flipW, height, null);
@@ -276,6 +300,12 @@ public class Player extends Entity {
         }
     }
 
+    /**
+     * Sets the player world position.
+     *
+     * @param x world x
+     * @param y world y
+     */
     public void setPosition(float x, float y) {
         this.x = x;
         this.y = y;
@@ -285,19 +315,33 @@ public class Player extends Entity {
         }
     }
 
+    /** @return maximum battle HP */
     public int getMaxHp() {
         return maxHp;
     }
 
+    /**
+     * Sets battle HP and keeps overworld health in sync.
+     *
+     * @param hp new battle HP
+     */
     public void setBattleHp(int hp) {
         this.hp = Math.max(0, Math.min(hp, maxHp));
         this.currentHealth = this.hp;
     }
 
+    /**
+     * Syncs overworld health from the battle HP value.
+     */
     public void syncHealthFromBattle() {
         setCurrentHealth(hp);
     }
 
+    /**
+     * Sets overworld health and syncs battle HP.
+     *
+     * @param health new health value
+     */
     public void setCurrentHealth(int health) {
         this.currentHealth = Math.max(0, Math.min(health, maxHealth));
         syncBattleHealthFromCurrent();
@@ -447,6 +491,11 @@ public class Player extends Entity {
         }
     }
 
+    /**
+     * Changes health and applies hit state when damaged.
+     *
+     * @param value delta amount
+     */
     public void changeHealth(int value) {
         if (value < 0) {
             if (state == HIT) {
@@ -461,6 +510,12 @@ public class Player extends Entity {
         syncBattleHealthFromCurrent();
     }
 
+    /**
+     * Changes health and applies knockback based on enemy position.
+     *
+     * @param value delta amount
+     * @param e source enemy
+     */
     public void changeHealth(int value, Enemy e) {
         if (state == HIT) {
             return;
@@ -476,11 +531,19 @@ public class Player extends Entity {
         }
     }
 
+    /**
+     * Forces the player to zero health.
+     */
     public void kill() {
         currentHealth = 0;
         syncBattleHealthFromCurrent();
     }
 
+    /**
+     * Changes the power meter value.
+     *
+     * @param value delta amount
+     */
     public void changePower(int value) {
         powerValue += value;
         powerValue = Math.max(Math.min(powerValue, powerMaxValue), 0);
@@ -498,6 +561,11 @@ public class Player extends Entity {
         statusBarImg = LoadSave.GetSpriteAtlas(LoadSave.STATUS_BAR);
     }
 
+    /**
+     * Loads collision data for movement and physics.
+     *
+     * @param lvlData level collision data
+     */
     public void loadLvlData(int[][] lvlData) {
         this.lvlData = lvlData;
         if (!IsEntityOnFloor(hitbox, lvlData)) {
@@ -505,33 +573,55 @@ public class Player extends Entity {
         }
     }
 
+    /**
+     * Resets movement input flags.
+     */
     public void resetDirBooleans() {
         left = false;
         right = false;
         jumpRequest = false;
     }
 
+    /**
+     * Sets whether the player is attacking.
+     *
+     * @param attacking new attacking flag
+     */
     public void setAttacking(boolean attacking) {
         this.attacking = attacking;
     }
 
+    /** @return true if moving left */
     public boolean isLeft() {
         return left;
     }
 
+    /** @return true if moving right */
     public boolean isRight() {
         return right;
     }
 
+    /**
+     * Sets directional movement inputs.
+     *
+     * @param left moving left flag
+     * @param right moving right flag
+     */
     public void setMoving(boolean left, boolean right) {
         this.left = left;
         this.right = right;
     }
 
+    /**
+     * Requests a jump on the next update.
+     */
     public void requestJump() {
         this.jumpRequest = true;
     }
 
+    /**
+     * Resets player state after death or level transition.
+     */
     public void resetAll() {
         resetDirBooleans();
         inAir = false;
@@ -562,10 +652,14 @@ public class Player extends Entity {
         }
     }
 
+    /** @return current tile row */
     public int getTileY() {
         return tileY;
     }
 
+    /**
+     * Triggers a power attack if enough power is available.
+     */
     public void powerAttack() {
         if (powerAttackActive) {
             return;
@@ -577,18 +671,34 @@ public class Player extends Entity {
 
     }
 
+    /**
+     * Applies a battle outcome to update HP.
+     *
+     * @param outcome battle outcome
+     */
     public void applyOutcome(BattleOutcome outcome) {
         setBattleHp(outcome.hpRemaining);
     }
 
+    /**
+     * Freezes or unfreezes overworld physics.
+     *
+     * @param frozen new frozen flag
+     */
     public void setFrozen(boolean frozen) {
         this.frozen = frozen;
     }
 
+    /** @return true if physics are frozen */
     public boolean isFrozen() {
         return frozen;
     }
 
+    /**
+     * Creates a battle snapshot of the current player stats.
+     *
+     * @return battle snapshot
+     */
     public com.platformer.core.BattleSnapshot createSnapshot() {
         syncBattleHealthFromCurrent();
         return new com.platformer.core.BattleSnapshot(hp, maxHp, attack, powerValue, powerMaxValue);

@@ -12,6 +12,9 @@ import static com.platformer.overworld.utils.Constants.*;
 
 import com.platformer.core.Game;
 
+/**
+ * Base class for overworld enemies with shared AI helpers.
+ */
 public abstract class Enemy extends Entity {
 
     protected int enemyType;
@@ -23,6 +26,13 @@ public abstract class Enemy extends Entity {
     protected boolean attackChecked;
     protected int attackBoxOffsetX;
 
+    /**
+     * @param x world x
+     * @param y world y
+     * @param width sprite width
+     * @param height sprite height
+     * @param enemyType constant enemy type id
+     */
     public Enemy(float x, float y, int width, int height, int enemyType) {
         super(x, y, width, height);
         this.enemyType = enemyType;
@@ -32,11 +42,17 @@ public abstract class Enemy extends Entity {
         walkSpeed = Game.SCALE * 0.35f;
     }
 
+    /**
+     * Positions the attack box relative to the hitbox.
+     */
     protected void updateAttackBox() {
         attackBox.x = hitbox.x - attackBoxOffsetX;
         attackBox.y = hitbox.y;
     }
 
+    /**
+     * Positions the attack box based on facing direction.
+     */
     protected void updateAttackBoxFlip() {
         if (walkDir == RIGHT) {
             attackBox.x = hitbox.x + hitbox.width;
@@ -47,11 +63,23 @@ public abstract class Enemy extends Entity {
         attackBox.y = hitbox.y;
     }
 
+    /**
+     * Initializes the attack box dimensions and offset.
+     *
+     * @param w width
+     * @param h height
+     * @param attackBoxOffsetX offset in pixels
+     */
     protected void initAttackBox(int w, int h, int attackBoxOffsetX) {
         attackBox = new Rectangle2D.Float(x, y, (int) (w * Game.SCALE), (int) (h * Game.SCALE));
         this.attackBoxOffsetX = (int) (Game.SCALE * attackBoxOffsetX);
     }
 
+    /**
+     * Performs first update checks for air state.
+     *
+     * @param lvlData level collision data
+     */
     protected void firstUpdateCheck(int[][] lvlData) {
         if (!IsEntityOnFloor(hitbox, lvlData)) {
             inAir = true;
@@ -59,6 +87,12 @@ public abstract class Enemy extends Entity {
         firstUpdate = false;
     }
 
+    /**
+     * Handles in-air physics and environment hazards.
+     *
+     * @param lvlData level collision data
+     * @param playing playing state
+     */
     protected void inAirChecks(int[][] lvlData, Playing playing) {
         if (state != HIT && state != DEAD) {
             updateInAir(lvlData);
@@ -69,6 +103,11 @@ public abstract class Enemy extends Entity {
         }
     }
 
+    /**
+     * Updates vertical movement while in the air.
+     *
+     * @param lvlData level collision data
+     */
     protected void updateInAir(int[][] lvlData) {
         if (CanMoveHere(hitbox.x, hitbox.y + airSpeed, hitbox.width, hitbox.height, lvlData)) {
             hitbox.y += airSpeed;
@@ -80,6 +119,11 @@ public abstract class Enemy extends Entity {
         }
     }
 
+    /**
+     * Moves horizontally and flips direction on collision.
+     *
+     * @param lvlData level collision data
+     */
     protected void move(int[][] lvlData) {
         float xSpeed = 0;
 
@@ -99,6 +143,11 @@ public abstract class Enemy extends Entity {
         changeWalkDir();
     }
 
+    /**
+     * Turns to face the player.
+     *
+     * @param player player instance
+     */
     protected void turnTowardsPlayer(Player player) {
         if (player.hitbox.x > hitbox.x) {
             walkDir = RIGHT;
@@ -107,6 +156,11 @@ public abstract class Enemy extends Entity {
         }
     }
 
+    /**
+     * @param lvlData level collision data
+     * @param player player instance
+     * @return true if the player is visible in line of sight
+     */
     protected boolean canSeePlayer(int[][] lvlData, Player player) {
         int playerTileY = (int) (player.getHitbox().y / Game.TILES_SIZE);
         if (playerTileY == tileY) {
@@ -119,11 +173,19 @@ public abstract class Enemy extends Entity {
         return false;
     }
 
+    /**
+     * @param player player instance
+     * @return true if player is within sight range
+     */
     protected boolean isPlayerInRange(Player player) {
         int absValue = (int) Math.abs(player.hitbox.x - hitbox.x);
         return absValue <= attackDistance * 5;
     }
 
+    /**
+     * @param player player instance
+     * @return true if player is close enough to attack
+     */
     protected boolean isPlayerCloseForAttack(Player player) {
         int absValue = (int) Math.abs(player.hitbox.x - hitbox.x);
         switch (enemyType) {
@@ -137,6 +199,11 @@ public abstract class Enemy extends Entity {
         return false;
     }
 
+    /**
+     * Applies damage and updates state.
+     *
+     * @param amount damage amount
+     */
     public void hurt(int amount) {
         currentHealth -= amount;
         if (currentHealth <= 0) {
@@ -153,6 +220,12 @@ public abstract class Enemy extends Entity {
         }
     }
 
+    /**
+     * Checks if attack box hits the player.
+     *
+     * @param attackBox attack bounds
+     * @param player player instance
+     */
     protected void checkPlayerHit(Rectangle2D.Float attackBox, Player player) {
         if (attackBox.intersects(player.hitbox)) {
             player.changeHealth(-GetEnemyDmg(enemyType), this);
@@ -164,6 +237,9 @@ public abstract class Enemy extends Entity {
         attackChecked = true;
     }
 
+    /**
+     * Advances animation frames based on state.
+     */
     protected void updateAnimationTick() {
         aniTick++;
         if (aniTick >= ANI_SPEED) {
@@ -196,6 +272,9 @@ public abstract class Enemy extends Entity {
         }
     }
 
+    /**
+     * Flips walking direction.
+     */
     protected void changeWalkDir() {
         if (walkDir == LEFT) {
             walkDir = RIGHT;
@@ -204,6 +283,9 @@ public abstract class Enemy extends Entity {
         }
     }
 
+    /**
+     * Resets enemy to its initial spawn state.
+     */
     public void resetEnemy() {
         hitbox.x = x;
         hitbox.y = y;
@@ -217,6 +299,7 @@ public abstract class Enemy extends Entity {
 
     }
 
+    /** @return x flip offset for drawing */
     public int flipX() {
         if (walkDir == RIGHT) {
             return width;
@@ -225,6 +308,7 @@ public abstract class Enemy extends Entity {
         }
     }
 
+    /** @return width multiplier for drawing */
     public int flipW() {
         if (walkDir == RIGHT) {
             return -1;
@@ -233,14 +317,17 @@ public abstract class Enemy extends Entity {
         }
     }
 
+    /** @return true if enemy is active */
     public boolean isActive() {
         return active;
     }
 
+    /** @param b new active flag */
     public void setActive(boolean b) {
         this.active = b;
     }
 
+    /** @return current knockback draw offset */
     public float getPushDrawOffset() {
         return pushDrawOffset;
     }

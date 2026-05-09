@@ -11,6 +11,9 @@ import com.platformer.overworld.states.Playing;
 import com.platformer.overworld.utils.LoadSave;
 import static com.platformer.overworld.utils.Constants.EnemyConstants.*;
 
+/**
+ * Manages overworld enemies, their updates, and rendering.
+ */
 public class EnemyManager {
 
     private Playing playing;
@@ -21,15 +24,28 @@ public class EnemyManager {
     // Deactivated when battle is won, stays active if fled.
     private Enemy pendingBattleEnemy = null;
 
+    /**
+     * @param playing active playing state
+     */
     public EnemyManager(Playing playing) {
         this.playing = playing;
         loadEnemyImgs();
     }
 
+    /**
+     * Loads enemies for a new level.
+     *
+     * @param level level data
+     */
     public void loadEnemies(Level level) {
         this.currentLevel = level;
     }
 
+    /**
+     * Updates enemy AI and checks for battle triggers.
+     *
+     * @param lvlData level collision data
+     */
     public void update(int[][] lvlData) {
         Player player = playing.getPlayer();
 
@@ -108,6 +124,11 @@ public class EnemyManager {
         playing.getGame().startBattle(snapshot, battleEnemy);
     }
 
+    /**
+     * Applies battle outcome to pending enemy.
+     *
+     * @param playerWon true if the player won the battle
+     */
     public void onBattleEnd(boolean playerWon) {
         if (playerWon && pendingBattleEnemy != null) {
             pendingBattleEnemy.setActive(false);
@@ -115,6 +136,12 @@ public class EnemyManager {
         pendingBattleEnemy = null;
     }
 
+    /**
+     * Draws all active enemies.
+     *
+     * @param g graphics context
+     * @param xLvlOffset level x offset
+     */
     public void draw(Graphics g, int xLvlOffset) {
         drawCrabs(g, xLvlOffset);
         drawPinkstars(g, xLvlOffset);
@@ -154,6 +181,11 @@ public class EnemyManager {
         }
     }
 
+    /**
+     * Checks if a player attack hit any enemy.
+     *
+     * @param attackBox player attack bounds
+     */
     public void checkEnemyHit(Rectangle2D.Float attackBox) {
         for (Crabby c : currentLevel.getCrabs()) {
             if (c.isActive() && c.getState() != DEAD && c.getState() != HIT) {
@@ -207,6 +239,9 @@ public class EnemyManager {
         return tempArr;
     }
 
+    /**
+     * Resets all enemies to their spawn state.
+     */
     public void resetAllEnemies() {
         for (Crabby c : currentLevel.getCrabs()) {
             c.resetEnemy();

@@ -9,6 +9,9 @@ import com.platformer.overworld.ui.*;
 import com.platformer.overworld.utils.LoadSave;
 import static com.platformer.overworld.utils.Constants.UI.URMButtons.*;
 
+/**
+ * Options screen with audio controls and a menu return button.
+ */
 public class GameOptions extends State implements Statemethods {
 
     private AudioOptions audioOptions;
@@ -16,6 +19,9 @@ public class GameOptions extends State implements Statemethods {
     private int bgX, bgY, bgW, bgH;
     private UrmButton menuB;
 
+    /**
+     * @param game owning game instance
+     */
     public GameOptions(Game game) {
         super(game);
         loadImgs();
@@ -40,12 +46,14 @@ public class GameOptions extends State implements Statemethods {
         bgY = (int) (33 * Game.SCALE);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void update() {
         menuB.update();
         audioOptions.update();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void draw(Graphics g) {
         g.drawImage(backgroundImg, 0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT, null);
@@ -55,10 +63,16 @@ public class GameOptions extends State implements Statemethods {
         audioOptions.draw(g);
     }
 
+    /**
+     * Forwards drag input to the audio slider.
+     *
+     * @param e mouse event
+     */
     public void mouseDragged(MouseEvent e) {
         audioOptions.mouseDragged(e);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void mousePressed(MouseEvent e) {
         if (isIn(e, menuB)) {
@@ -68,6 +82,7 @@ public class GameOptions extends State implements Statemethods {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void mouseReleased(MouseEvent e) {
         if (isIn(e, menuB)) {
@@ -80,6 +95,7 @@ public class GameOptions extends State implements Statemethods {
         menuB.resetBools();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void mouseMoved(MouseEvent e) {
         menuB.setMouseOver(false);
@@ -91,6 +107,7 @@ public class GameOptions extends State implements Statemethods {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void mouseClicked(MouseEvent e) {
         // TODO Auto-generated method stub

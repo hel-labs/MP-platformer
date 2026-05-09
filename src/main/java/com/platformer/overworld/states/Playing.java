@@ -35,6 +35,9 @@ import com.platformer.overworld.ui.LevelCompletedOverlay;
 import com.platformer.overworld.ui.PauseOverlay;
 import com.platformer.overworld.utils.LoadSave;
 
+/**
+ * Active gameplay state for overworld exploration.
+ */
 public class Playing extends State implements Statemethods {
 
     private Player player;
@@ -50,6 +53,7 @@ public class Playing extends State implements Statemethods {
 
     private boolean paused = false;
     private boolean battleTriggered = false;
+    /** Accumulated score for the current run. */
     public double points = 0;
     private long runStartTime;
 
@@ -78,6 +82,10 @@ public class Playing extends State implements Statemethods {
     private int shipAni, shipTick, shipDir = 1;
     private float shipHeightDelta, shipHeightChange = 0.05f * Game.SCALE;
 
+    /**
+     * @param game owning game instance
+     * @param inputHandler input handler for gameplay
+     */
     public Playing(Game game, InputHandler inputHandler) {
         super(game);
         this.inputHandler = inputHandler;
@@ -137,6 +145,9 @@ public class Playing extends State implements Statemethods {
         }
     }
 
+    /**
+     * Advances to the next level and resets state.
+     */
     public void loadNextLevel() {
         levelManager.setLevelIndex(levelManager.getLevelIndex() + 1);
         levelManager.loadNextLevel();
@@ -174,6 +185,9 @@ public class Playing extends State implements Statemethods {
     }
 
     @Override
+    /**
+     * Updates gameplay logic and overlays.
+     */
     public void update() {
         handleInput();
         if (paused) {
@@ -245,6 +259,13 @@ public class Playing extends State implements Statemethods {
         }
     }
 
+    /**
+     * Adds a dialogue effect at the given world position.
+     *
+     * @param x world x
+     * @param y world y
+     * @param type dialogue type
+     */
     public void addDialogue(int x, int y, int type) {
         // Not adding a new one, we are recycling. #ThinkGreen lol
         dialogEffects.add(new DialogueEffect(x, y - (int) (Game.SCALE * 15), type));
@@ -272,6 +293,11 @@ public class Playing extends State implements Statemethods {
     }
 
     @Override
+    /**
+     * Draws the world and overlays.
+     *
+     * @param g graphics context
+     */
     public void draw(Graphics g) {
         g.drawImage(backgroundImg, 0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT, null);
 
@@ -319,15 +345,24 @@ public class Playing extends State implements Statemethods {
         }
     }
 
+    /**
+     * Marks the game as completed and saves the run.
+     */
     public void setGameCompleted() {
         saveRunAndReset();
         gameCompleted = true;
     }
 
+    /**
+     * Clears the game-completed flag.
+     */
     public void resetGameCompleted() {
         gameCompleted = false;
     }
 
+    /**
+     * Resets the level state and managers.
+     */
     public void resetAll() {
         gameOver = false;
         paused = false;
@@ -351,28 +386,58 @@ public class Playing extends State implements Statemethods {
         }
     }
 
+    /**
+     * Sets the game over flag and saves the run.
+     *
+     * @param gameOver new game over flag
+     */
     public void setGameOver(boolean gameOver) {
         saveRunAndReset();
         this.gameOver = gameOver;
     }
 
+    /**
+     * Checks player attack against breakable objects.
+     *
+     * @param attackBox player attack bounds
+     */
     public void checkObjectHit(Rectangle2D.Float attackBox) {
         objectManager.checkObjectHit(attackBox);
     }
 
+    /**
+     * Checks player attack against enemies.
+     *
+     * @param attackBox player attack bounds
+     */
     public void checkEnemyHit(Rectangle2D.Float attackBox) {
         enemyManager.checkEnemyHit(attackBox);
     }
 
+    /**
+     * Checks potion collisions.
+     *
+     * @param hitbox player hitbox
+     */
     public void checkPotionTouched(Rectangle2D.Float hitbox) {
         objectManager.checkObjectTouched(hitbox);
     }
 
+    /**
+     * Checks spike collisions.
+     *
+     * @param p player instance
+     */
     public void checkSpikesTouched(Player p) {
         objectManager.checkSpikesTouched(p);
     }
 
     @Override
+    /**
+     * Handles mouse click attacks.
+     *
+     * @param e mouse event
+     */
     public void mouseClicked(MouseEvent e) {
         if (!gameOver) {
             if (e.getButton() == MouseEvent.BUTTON1) {
@@ -383,6 +448,11 @@ public class Playing extends State implements Statemethods {
         }
     }
 
+    /**
+     * Handles drag input for pause overlay.
+     *
+     * @param e mouse event
+     */
     public void mouseDragged(MouseEvent e) {
         if (!gameOver && !gameCompleted && !lvlCompleted) {
             if (paused) {
@@ -392,6 +462,11 @@ public class Playing extends State implements Statemethods {
     }
 
     @Override
+    /**
+     * Handles mouse press events.
+     *
+     * @param e mouse event
+     */
     public void mousePressed(MouseEvent e) {
         if (gameOver) {
             gameOverOverlay.mousePressed(e);
@@ -406,6 +481,11 @@ public class Playing extends State implements Statemethods {
     }
 
     @Override
+    /**
+     * Handles mouse release events.
+     *
+     * @param e mouse event
+     */
     public void mouseReleased(MouseEvent e) {
         if (gameOver) {
             gameOverOverlay.mouseReleased(e);
@@ -419,6 +499,11 @@ public class Playing extends State implements Statemethods {
     }
 
     @Override
+    /**
+     * Handles mouse hover updates.
+     *
+     * @param e mouse event
+     */
     public void mouseMoved(MouseEvent e) {
         if (gameOver) {
             gameOverOverlay.mouseMoved(e);
@@ -431,6 +516,11 @@ public class Playing extends State implements Statemethods {
         }
     }
 
+    /**
+     * Marks the level as completed and queues transition.
+     *
+     * @param levelCompleted completion flag
+     */
     public void setLevelCompleted(boolean levelCompleted) {
         game.getAudioPlayer().lvlCompleted();
         if (levelManager.getLevelIndex() + 1 >= levelManager.getAmountOfLevels()) {
@@ -444,38 +534,63 @@ public class Playing extends State implements Statemethods {
         this.lvlCompleted = levelCompleted;
     }
 
+    /**
+     * Sets the maximum level offset.
+     *
+     * @param lvlOffset max offset
+     */
     public void setMaxLvlOffset(int lvlOffset) {
         this.maxLvlOffsetX = lvlOffset;
     }
 
+    /**
+     * Unpauses gameplay.
+     */
     public void unpauseGame() {
         paused = false;
     }
 
+    /**
+     * Clears movement input when focus is lost.
+     */
     public void windowFocusLost() {
         player.resetDirBooleans();
     }
 
+    /** @return player instance */
     public Player getPlayer() {
         return player;
     }
 
+    /** @return enemy manager */
     public EnemyManager getEnemyManager() {
         return enemyManager;
     }
 
+    /** @return object manager */
     public ObjectManager getObjectManager() {
         return objectManager;
     }
 
+    /** @return level manager */
     public LevelManager getLevelManager() {
         return levelManager;
     }
 
+    /**
+     * Sets the player dying animation flag.
+     *
+     * @param playerDying new flag
+     */
     public void setPlayerDying(boolean playerDying) {
         this.playerDying = playerDying;
     }
 
+    /**
+     * Applies the result of a battle and updates player state.
+     *
+     * @param outcome battle outcome
+     */
     public void applyBattleOutcome(BattleOutcome outcome) {
         player.setFrozen(false);
         battleTriggered = false;
@@ -505,6 +620,7 @@ public class Playing extends State implements Statemethods {
         }
     }
 
+    /** @return true if game over overlay is active */
     public boolean isGameOver() {
         return gameOver;
     }
@@ -536,18 +652,32 @@ public class Playing extends State implements Statemethods {
         }
     }
 
+    /** @return true if a battle is active */
     public boolean isBattleTriggered() {
         return battleTriggered;
     }
 
+    /**
+     * Sets the battle active flag.
+     *
+     * @param b new battle flag
+     */
     public void setBattleTriggered(boolean b) {
         battleTriggered = b;
     }
 
+    /**
+     * Adds points to the current run.
+     *
+     * @param value points to add
+     */
     public void addPoints(double value) {
         points += value;
     }
 
+    /**
+     * Saves current run stats and resets progression values.
+     */
     public void saveRunAndReset() {
         long runEndTime = System.currentTimeMillis();
         long durationSeconds = (runEndTime - runStartTime) / 1000;

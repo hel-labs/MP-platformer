@@ -10,6 +10,9 @@ import com.platformer.core.Game;
 import com.platformer.overworld.utils.LoadSave;
 import static com.platformer.overworld.utils.Constants.UI.URMButtons.*;
 
+/**
+ * Pause menu overlay with audio controls.
+ */
 public class PauseOverlay {
 
     private Playing playing;
@@ -18,6 +21,9 @@ public class PauseOverlay {
     private AudioOptions audioOptions;
     private UrmButton menuB, replayB, unpauseB;
 
+    /**
+     * @param playing active playing state
+     */
     public PauseOverlay(Playing playing) {
         this.playing = playing;
         loadBackground();
@@ -44,6 +50,9 @@ public class PauseOverlay {
         bgY = (int) (25 * Game.SCALE);
     }
 
+    /**
+     * Updates buttons and audio controls.
+     */
     public void update() {
 
         menuB.update();
@@ -54,6 +63,11 @@ public class PauseOverlay {
 
     }
 
+    /**
+     * Draws the pause overlay.
+     *
+     * @param g graphics context
+     */
     public void draw(Graphics g) {
         // Background
         g.drawImage(backgroundImg, bgX, bgY, bgW, bgH, null);
@@ -67,10 +81,20 @@ public class PauseOverlay {
 
     }
 
+    /**
+     * Forwards drag input to audio controls.
+     *
+     * @param e mouse event
+     */
     public void mouseDragged(MouseEvent e) {
         audioOptions.mouseDragged(e);
     }
 
+    /**
+     * Handles mouse press actions.
+     *
+     * @param e mouse event
+     */
     public void mousePressed(MouseEvent e) {
         if (isIn(e, menuB)) {
             menuB.setMousePressed(true);
@@ -83,6 +107,11 @@ public class PauseOverlay {
         }
     }
 
+    /**
+     * Handles mouse release actions.
+     *
+     * @param e mouse event
+     */
     public void mouseReleased(MouseEvent e) {
         if (isIn(e, menuB)) {
             if (menuB.isMousePressed()) {
@@ -108,6 +137,11 @@ public class PauseOverlay {
         unpauseB.resetBools();
     }
 
+    /**
+     * Handles hover state updates.
+     *
+     * @param e mouse event
+     */
     public void mouseMoved(MouseEvent e) {
         menuB.setMouseOver(false);
         replayB.setMouseOver(false);

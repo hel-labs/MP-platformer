@@ -6,8 +6,14 @@ import com.platformer.battle.entities.BattlePlayer;
 import com.platformer.battle.entities.BattleEnemy;
 import com.platformer.battle.strategies.DamageStrategy;
 
+/**
+ * Action that performs a player attack.
+ */
 public class FightAction extends BattleAction {
 
+    /**
+     * Executes a player attack and returns the outcome.
+     */
     @Override
     public BattleResult execute(BattleContext ctx) {
         BattlePlayer player = ctx.getPlayer();
@@ -29,11 +35,13 @@ public class FightAction extends BattleAction {
         return BattleResult.playerAttacked(damage, msg);
     }
 
+    /** @return action label */
     @Override
     public String getLabel() {
         return "FIGHT";
     }
 
+    /** @return action description */
     @Override
     public String getDescription() {
         return "Attack the enemy.";

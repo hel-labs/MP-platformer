@@ -4,8 +4,16 @@ import static com.platformer.overworld.utils.Constants.ObjectConstants.*;
 
 import com.platformer.core.Game;
 
+/**
+ * Breakable container (box or barrel) that can drop items.
+ */
 public class GameContainer extends GameObject {
 
+    /**
+     * @param x world x
+     * @param y world y
+     * @param objType container type id
+     */
     public GameContainer(int x, int y, int objType) {
         super(x, y, objType);
         createHitbox();
@@ -28,6 +36,9 @@ public class GameContainer extends GameObject {
         hitbox.x += xDrawOffset / 2;
     }
 
+    /**
+     * Updates animation while the container is breaking.
+     */
     public void update() {
         if (doAnimation) {
             updateAnimationTick();
