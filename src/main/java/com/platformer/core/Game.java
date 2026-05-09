@@ -112,8 +112,6 @@ public class Game implements Runnable {
         switch (Gamestate.state) {
 
             case MENU -> {
-                pollMenuInput();
-                inputHandler.tick();
             }
             case PLAYING -> {
                 playing.update();
