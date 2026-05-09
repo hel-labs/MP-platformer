@@ -12,13 +12,17 @@ public class AnimationController {
     private Animation current = null;
 
     public void addAnimation(String key, Animation animation) {
+        // Registers named animations to respective keys at the start during entity creation
         if (key == null || key.isBlank()) {
             throw new IllegalArgumentException("Animation Key can't be blank!");
         }
         animations.put(key, animation);
     }
 
+    // Play animations referred by the key
     public void play(String key) {
+        // Returns if referred animation alr playing
+        // Removes the constant resetting of animation to first frame called by reset()
         if (key.equals(currentKey)) {
             return;
         }
@@ -30,6 +34,8 @@ public class AnimationController {
         current.reset();
     }
 
+    // Replay animations, play without the currentKey check
+    // To play ongoing animation from start in qucik succession
     public void forceReplay(String key) {
         if (!animations.containsKey(key)) {
             throw new DataException("Animation key not found");
@@ -39,12 +45,14 @@ public class AnimationController {
         current.reset();
     }
 
+    // Forwards tick to current animation
     public void update(float delta) {
         if (current != null) {
             current.update(delta);
         }
     }
 
+    // Acessor methods
     public BufferedImage getCurrentFrame() {
         return current != null ? current.getCurrentFrame() : null;
     }

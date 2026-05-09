@@ -85,6 +85,7 @@ public class BattleUI {
     private final int staminaBarYStart = (int) (34 * Game.SCALE);
 
     public BattleUI() {
+        // Loads the data of battle assets
         battleBg = LoadSave.GetSpriteAtlas(LoadSave.PLAYING_BG_IMG);
         bigCloud = LoadSave.GetSpriteAtlas(LoadSave.BIG_CLOUDS);
         smallCloud = LoadSave.GetSpriteAtlas(LoadSave.SMALL_CLOUDS);
@@ -96,6 +97,7 @@ public class BattleUI {
     public void render(Graphics2D g, BattleContext ctx, int selectedAction, List<BattleAction> actions,
             boolean showActionMenu, List<TalkOption> talkOptions, int selectedTalkOpt, boolean showTalkMenu,
             DialogueBox dialogueBox) {
+        // Renders the loaded assets
         renderBackground(g);
         renderCombatants(g, ctx);
         renderPlayerStatusTopLeft(g, ctx);
@@ -173,7 +175,7 @@ public class BattleUI {
         if (sprite != null) {
             int eh = Math.max(ui(72), targetH);
             int ew = (int) (sprite.getWidth() * (eh / (float) sprite.getHeight()));
-            // Keep source orientation so enemy faces left with current sprites.
+            // Enemy faces left with current sprites.
             g.drawImage(sprite, centerX - ew / 2, groundY - eh, ew, eh, null);
         } else {
             int ew = (int) (SCREEN_H * 0.18f);

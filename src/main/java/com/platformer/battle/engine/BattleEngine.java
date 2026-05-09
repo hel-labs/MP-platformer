@@ -22,6 +22,7 @@ public class BattleEngine {
         );
     }
 
+    // Execute the selected action
     public BattleResult executePlayerAction(int index, BattleContext ctx) {
         if (index < 0 || index >= playerActions.size()) {
             throw new BattleException("Invalid action index: " + index);
@@ -34,6 +35,7 @@ public class BattleEngine {
         return result;
     }
 
+    // Execute enemy action automatically
     public BattleResult executeEnemyTurn(BattleContext ctx) {
         BattleEnemy enemy = ctx.getEnemy();
         if (enemy.isDefeated()) {

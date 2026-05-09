@@ -1,4 +1,4 @@
-package com.platformer.overworld.effects;
+package com.platformer.utils.effects;
 
 import static com.platformer.utils.Constants.ANI_SPEED;
 import static com.platformer.utils.Constants.Dialogue.*;

@@ -71,6 +71,14 @@ public class Constants {
         public static final int CANNON_WIDTH = (int) (CANNON_WIDTH_DEFAULT * Game.SCALE);
         public static final int CANNON_HEIGHT = (int) (CANNON_HEIGHT_DEFAULT * Game.SCALE);
 
+        public static final int COIN = 100;
+        public static final int COIN_VALUE = 5;
+        public static final int COIN_WIDTH_DEFAULT = 15;
+        public static final int COIN_HEIGHT_DEFAULT = 15;
+        public static final int COIN_WIDTH = (int) (COIN_WIDTH_DEFAULT * Game.SCALE);
+        public static final int COIN_HEIGHT = (int) (COIN_HEIGHT_DEFAULT * Game.SCALE);
+        public static final int COIN_ANI_FRAMES = 1; 
+
         public static int GetSpriteAmount(int object_type) {
             switch (object_type) {
                 case RED_POTION, BLUE_POTION:

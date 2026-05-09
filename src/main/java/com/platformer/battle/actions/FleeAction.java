@@ -14,10 +14,13 @@ public class FleeAction extends BattleAction {
 
     @Override
     public BattleResult execute(BattleContext ctx) {
+        // Flee fails if enemy has flee disabled (like shark enemy)
         if (!ctx.getEnemy().isFleeAllowed()) {
             return BattleResult.fleeFailed();
         }
 
+        // Randomized flee chance calculation
+        // Inceases for each talk action
         float chance = Math.min(MAX_FLEE_CHANCE,
                 BASE_FLEE_CHANCE + ctx.getTalkCount() * TALK_FLEE_BONUS);
 

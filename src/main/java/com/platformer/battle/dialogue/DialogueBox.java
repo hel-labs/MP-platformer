@@ -17,6 +17,7 @@ public class DialogueBox {
     private static final Font TEXT_FONT = new Font("Monospaced", Font.PLAIN, Math.max(14, Math.round(13 * com.platformer.core.Game.SCALE)));
 
     public void setText(String text) {
+        // Resets dialoguebox
         this.fullText = text == null ? "" : text;
         this.displayedText = "";
         this.charTimer = 0f;
@@ -27,7 +28,7 @@ public class DialogueBox {
         if (finished) {
             return;
         }
-
+        // Updates displayed text portion based on tick/time 
         charTimer += dt;
         int charsToShow = (int) (charTimer / CHAR_DELAY);
         charsToShow = Math.min(charsToShow, fullText.length());
@@ -38,6 +39,7 @@ public class DialogueBox {
         }
     }
 
+    // Skips to end when player presses confirm
     public void skipToEnd() {
         displayedText = fullText;
         finished = true;
@@ -51,6 +53,7 @@ public class DialogueBox {
         return fullText.isEmpty();
     }
 
+    // Draws the dialoguebox and texts
     public void render(Graphics2D g, int x, int y, int width, int height) {
         g.setColor(BG_COLOR);
         g.fillRoundRect(x, y, width, height, CORNER_RADIUS, CORNER_RADIUS);
@@ -78,6 +81,7 @@ public class DialogueBox {
         }
     }
 
+    // draws the displayed texts
     private void drawWrapped(Graphics2D g, String text,
             int x, int y, int maxWidth) {
         if (text == null || text.isEmpty()) {

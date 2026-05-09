@@ -7,8 +7,8 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
 import com.platformer.core.Game;
-import com.platformer.overworld.ui.*;
 import com.platformer.utils.LoadSave;
+import com.platformer.utils.ui.*;
 
 public class GameOptions extends State implements Statemethods {
 

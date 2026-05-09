@@ -17,6 +17,6 @@ public class EscalatingDice implements DamageStrategy {
 
     @Override
     public String describe() {
-        return "Your power grows with each turn!";
+        return "The power grows with each turn!";
     }
 }

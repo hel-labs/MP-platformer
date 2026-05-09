@@ -23,17 +23,17 @@ import com.platformer.core.Game;
 import com.platformer.gamestate.State;
 import com.platformer.gamestate.Statemethods;
 import com.platformer.input.InputHandler;
-import com.platformer.overworld.effects.DialogueEffect;
-import com.platformer.overworld.effects.Rain;
 import com.platformer.overworld.entities.EnemyManager;
 import com.platformer.overworld.entities.Player;
 import com.platformer.overworld.levels.LevelManager;
 import com.platformer.overworld.objects.ObjectManager;
-import com.platformer.overworld.ui.GameCompletedOverlay;
-import com.platformer.overworld.ui.GameOverOverlay;
-import com.platformer.overworld.ui.LevelCompletedOverlay;
-import com.platformer.overworld.ui.PauseOverlay;
 import com.platformer.utils.LoadSave;
+import com.platformer.utils.effects.DialogueEffect;
+import com.platformer.utils.effects.Rain;
+import com.platformer.utils.ui.GameCompletedOverlay;
+import com.platformer.utils.ui.GameOverOverlay;
+import com.platformer.utils.ui.LevelCompletedOverlay;
+import com.platformer.utils.ui.PauseOverlay;
 
 public class Playing extends State implements Statemethods {
 

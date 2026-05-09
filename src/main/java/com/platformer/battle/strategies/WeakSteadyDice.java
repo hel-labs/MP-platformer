@@ -9,6 +9,6 @@ public class WeakSteadyDice implements DamageStrategy {
 
     @Override
     public String describe() {
-        return "Your power lies dormant as you strike steadily.";
+        return "The power lies dormant as the steady strike lands.";
     }
 }

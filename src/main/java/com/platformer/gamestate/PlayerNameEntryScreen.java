@@ -150,7 +150,7 @@ public class PlayerNameEntryScreen extends State implements Statemethods {
         }
 
         PlayerProfileManager.setCurrentPlayerName(entered);
-        setGamestate(Gamestate.MENU);
+        setGamestate(Gamestate.PLAYING);
     }
 
     private String getEnteredName() {

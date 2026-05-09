@@ -2,6 +2,7 @@ package com.platformer.battle.engine;
 
 public class BattleResult {
 
+    // Self explanatory methods
     public enum Type {
         PLAYER_ATTACKED,
         ENEMY_ATTACKED,

@@ -12,6 +12,7 @@ public class Animation {
     private boolean finished = false;
 
     public Animation(BufferedImage[] frames, float frameDuration, boolean looping) {
+        // Animation frames using array of built-in buffered image class 
         if (frames == null || frames.length == 0) {
             throw new IllegalArgumentException("Zero Animation Frames provided. At least one is required!");
         }
@@ -25,6 +26,7 @@ public class Animation {
             return;
         }
 
+        // Update animation frames and terminate animation if end reached
         timer += delta;
         if (timer >= frameDuration) {
             timer -= frameDuration;
@@ -41,6 +43,7 @@ public class Animation {
         }
     }
 
+    // Accessor Methods
     public BufferedImage getCurrentFrame() {
         return frames[currentFrame];
     }
@@ -49,6 +52,15 @@ public class Animation {
         return finished;
     }
 
+    public int getFrameCount() {
+        return frames.length;
+    }
+
+    public boolean isLooping() {
+        return looping;
+    }
+
+    // Mutator methods
     public void reset() {
         currentFrame = 0;
         timer = 0;
@@ -60,11 +72,4 @@ public class Animation {
         finished = !looping;
     }
 
-    public int getFrameCount() {
-        return frames.length;
-    }
-
-    public boolean isLooping() {
-        return looping;
-    }
 }

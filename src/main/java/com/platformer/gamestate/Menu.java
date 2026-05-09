@@ -5,8 +5,8 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
 import com.platformer.core.Game;
-import com.platformer.overworld.ui.MenuButton;
 import com.platformer.utils.LoadSave;
+import com.platformer.utils.ui.MenuButton;
 
 public class Menu extends State implements Statemethods {
 
@@ -31,7 +31,7 @@ public class Menu extends State implements Statemethods {
     }
 
     private void loadButtons() {
-        buttons[0] = new MenuButton(Game.GAME_WIDTH / 2, (int) (130 * Game.SCALE), 0, Gamestate.PLAYING);
+        buttons[0] = new MenuButton(Game.GAME_WIDTH / 2, (int) (130 * Game.SCALE), 0, Gamestate.NAME_ENTRY);
         buttons[1] = new MenuButton(Game.GAME_WIDTH / 2, (int) (180 * Game.SCALE), 1, Gamestate.OPTIONS);
         buttons[2] = new MenuButton(Game.GAME_WIDTH / 2, (int) (230 * Game.SCALE), 3, Gamestate.CREDITS);
         buttons[3] = new MenuButton(Game.GAME_WIDTH / 2, (int) (280 * Game.SCALE), 0, Gamestate.LEADERBOARD);

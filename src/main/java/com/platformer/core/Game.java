@@ -6,8 +6,8 @@ import com.platformer.gamestate.*;
 import com.platformer.input.*;
 import com.platformer.gamestate.Menu;
 import com.platformer.gamestate.Playing;
-import com.platformer.overworld.ui.AudioOptions;
 import com.platformer.utils.AudioPlayer;
+import com.platformer.utils.ui.AudioOptions;
 
 import java.awt.Graphics;
 import java.awt.event.KeyAdapter;

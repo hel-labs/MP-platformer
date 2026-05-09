@@ -1,4 +1,4 @@
-package com.platformer.overworld.effects;
+package com.platformer.utils.effects;
 
 import java.awt.Graphics;
 import java.awt.geom.Point2D;

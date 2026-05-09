@@ -3,8 +3,8 @@ package com.platformer.gamestate;
 import java.awt.event.MouseEvent;
 
 import com.platformer.utils.AudioPlayer;
+import com.platformer.utils.ui.MenuButton;
 import com.platformer.core.Game;
-import com.platformer.overworld.ui.MenuButton;
 
 public class State {
 

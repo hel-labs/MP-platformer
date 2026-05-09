@@ -1,4 +1,4 @@
-package com.platformer.overworld.ui;
+package com.platformer.utils.ui;
 
 import java.awt.Color;
 import java.awt.Graphics;

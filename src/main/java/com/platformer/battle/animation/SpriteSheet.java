@@ -1,7 +1,5 @@
 package com.platformer.battle.animation;
 
-import com.platformer.exceptions.*;
-
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -13,6 +11,7 @@ public class SpriteSheet {
     private final int frameHeight;
 
     public SpriteSheet(String resourcePath, int frameWidth, int frameHeight) {
+        // Loads png from specified path, and splits it to the bufferedImage
         this.frameHeight = frameHeight;
         this.frameWidth = frameWidth;
 
@@ -31,9 +30,11 @@ public class SpriteSheet {
     }
 
     public BufferedImage getFrame(int col, int row) {
+        // Gets single frames from bufferedImage and gets their positions
         int x = col * frameWidth;
         int y = row * frameHeight;
 
+        // Check to ensure the provided image is within bounds
         if (x + frameWidth > sheet.getWidth() || y + frameHeight > sheet.getHeight()) {
             return makePlaceholderSheet(frameWidth, frameHeight);
         }
@@ -41,6 +42,8 @@ public class SpriteSheet {
     }
 
     public BufferedImage[] getRow(int row, int frameCount) {
+        // Creates an array of frames from the bufferedImage
+        // Each row depics a specific state, standard spritesheet usage
         BufferedImage[] frames = new BufferedImage[frameCount];
         for (int i = 0; i < frameCount; i++) {
             frames[i] = getFrame(i, row);
@@ -48,6 +51,7 @@ public class SpriteSheet {
         return frames;
     }
 
+    // Accessors
     public int getFrameWidth() {
         return frameWidth;
     }
@@ -65,6 +69,7 @@ public class SpriteSheet {
     }
 
     private BufferedImage makePlaceholderSheet(int fw, int fh) {
+        // Placeholder sprite method for missing player sprites
         int cols = 6;
         int rows = 6;
         BufferedImage img = new BufferedImage(fw * cols, fh * rows,
@@ -73,20 +78,22 @@ public class SpriteSheet {
         g.setColor(java.awt.Color.DARK_GRAY);
         g.fillRect(0, 0, img.getWidth(), img.getHeight());
         g.setColor(java.awt.Color.LIGHT_GRAY);
-        g.fillOval(fw / 4, 2, fw / 2, fw / 2);          // head
+        g.fillOval(fw / 4, 2, fw / 2, fw / 2); // head
         g.fillRect(fw / 4, fw / 2 + 2, fw / 2, fh / 2); // body
         g.dispose();
         return img;
     }
 
-    private BufferedImage makePlaceholderFrame(int fw, int fh,
-            java.awt.Color color) {
-        BufferedImage img = new BufferedImage(fw, fh,
-                BufferedImage.TYPE_INT_ARGB);
-        java.awt.Graphics2D g = img.createGraphics();
-        g.setColor(color);
-        g.fillRect(0, 0, fw, fh);
-        g.dispose();
-        return img;
-    }
+    // Unused in current version, used for placeholder frames when we had no
+    // spritesheets
+    // private BufferedImage makePlaceholderFrame(int fw, int fh,
+    // java.awt.Color color) {
+    // BufferedImage img = new BufferedImage(fw, fh,
+    // BufferedImage.TYPE_INT_ARGB);
+    // java.awt.Graphics2D g = img.createGraphics();
+    // g.setColor(color);
+    // g.fillRect(0, 0, fw, fh);
+    // g.dispose();
+    // return img;
+    // }
 }

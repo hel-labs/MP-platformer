@@ -44,6 +44,7 @@ public class BattleState {
             InputHandler input,
             AudioPlayer audioPlayer,
             Consumer<BattleOutcome> onDone) {
+        //Initiates the battle state by loading required objects
         this.ctx = ctx;
         this.input = input;
         this.audioPlayer = audioPlayer;
@@ -54,6 +55,7 @@ public class BattleState {
     }
 
     public void onEnter() {
+        // Resets everything when new battle starts
         phase = Phase.ENCOUNTER_DIALOGUE;
         selectedAction = 0;
         lastResult = null;
@@ -63,10 +65,12 @@ public class BattleState {
     }
 
     public void onExit() {
+        // Logs battle exit, based on gameDev suggestion
         GameLogger.get().info("Battle ended: " + ctx.getEnemy().getName());
     }
 
     public void update(float dt) {
+        // Updates animation, dialogue pointer and enemy timer
         dialogueBox.update(dt);
         if (ctx.getPlayer().getAnimator() != null) {
             ctx.getPlayer().getAnimator().update(dt);
@@ -87,9 +91,11 @@ public class BattleState {
     }
 
     public void draw(Graphics g) {
+        // Draws and updates the GUI part
         boolean showAction = (phase == Phase.PLAYER_TURN);
         boolean showTalk = (phase == Phase.TALK_SELECTION);
 
+        // Graphics2D typecast for gradient and stroke
         ui.render((Graphics2D) g, ctx,
                 selectedAction, engine.getPlayerActions(), showAction,
                 talkOptions, selectedTalkOpt, showTalk,
@@ -98,7 +104,10 @@ public class BattleState {
 
     public void handleInput() {
         switch (phase) {
-
+            // Standard input handling
+            // Player turn takes specified inputs
+            // Enemy turn takes no input
+            // Dialogue takes specified input
             case ENCOUNTER_DIALOGUE -> {
                 if (input.isJustPressed(InputHandler.CONFIRM)||input.isJustPressed(InputHandler.ENTER)) {
                     if (!dialogueBox.isFinished()) {
@@ -199,13 +208,13 @@ public class BattleState {
                     || lastResult.getType() == BattleResult.Type.ENEMY_DEFEATED) {
                 audioPlayer.playAttackSound();
             }
-
+            // Returns if enemy or player is dead based on previous result
             if (lastResult.isTerminal()) {
                 phase = Phase.PLAYER_RESULT;
                 dialogueBox.setText(lastResult.getMessage());
                 return;
             }
-
+            // Otherwise, update based on selected option
             switch (lastResult.getType()) {
                 case TALK_INITIATED -> {
                     talkOptions = ctx.getEnemy().getTalkOptions(ctx.getTalkCount());
@@ -230,6 +239,7 @@ public class BattleState {
     }
 
     private void resolveTalkOption(TalkOption option) {
+        // Talk option handler, updates hostility and talkCounts
         TalkAction talkAction = (TalkAction) engine.getPlayerActions().get(1);
         lastResult = talkAction.resolveOption(option, ctx);
         ctx.setLastResult(lastResult);
@@ -241,6 +251,7 @@ public class BattleState {
     }
 
     private void executeEnemyTurn() {
+        // Enemy damage strategy, automatic based on timer
         try {
             lastResult = engine.executeEnemyTurn(ctx);
             ctx.setLastResult(lastResult);
@@ -253,7 +264,9 @@ public class BattleState {
     }
 
     private void exitBattle() {
+        // RUns when terminal dialogue is confirmed
         onExit();
+        // Battle outcome created based on result
         BattleOutcome outcome;
         if (lastResult == null) {
             outcome = new BattleOutcome(BattleOutcome.Result.WIN,
@@ -275,6 +288,7 @@ public class BattleState {
     }
 
     private String buildTerminalMessage(BattleResult result) {
+        // Text based on battle outcome
         return switch (result.getType()) {
             case ENEMY_DEFEATED ->
                 result.getMessage() + "\n* The path is clear.";

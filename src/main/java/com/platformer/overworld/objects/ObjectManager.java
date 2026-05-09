@@ -25,6 +25,7 @@ public class ObjectManager {
     private ArrayList<Potion> potions;
     private ArrayList<GameContainer> containers;
     private ArrayList<Projectile> projectiles = new ArrayList<>();
+    private CoinManager coinManager;
 
     private Level currentLevel;
 
@@ -32,6 +33,7 @@ public class ObjectManager {
         this.playing = playing;
         currentLevel = playing.getLevelManager().getCurrentLevel();
         loadImgs();
+        coinManager = new CoinManager(playing);
     }
 
     public void checkSpikesTouched(Player p) {
@@ -74,7 +76,8 @@ public class ObjectManager {
             if (gc.isActive() && !gc.doAnimation) {
                 if (gc.getObjType() == BARREL && gc.getHitbox().intersects(attackbox)) {
                     gc.setAnimation(true);
-                    potions.add(new Potion((int) (gc.getHitbox().x + gc.getHitbox().width / 2), (int) (gc.getHitbox().y - gc.getHitbox().height / 2), RED_POTION));
+                    potions.add(new Potion((int) (gc.getHitbox().x + gc.getHitbox().width / 2),
+                            (int) (gc.getHitbox().y - gc.getHitbox().height / 2), RED_POTION));
                     playing.addPoints(1);
                     return;
                 }
@@ -87,6 +90,7 @@ public class ObjectManager {
         potions = new ArrayList<>(newLevel.getPotions());
         containers = new ArrayList<>(newLevel.getContainers());
         projectiles.clear();
+        coinManager.loadCoins(newLevel);
     }
 
     private void loadImgs() {
@@ -152,6 +156,8 @@ public class ObjectManager {
 
         updateCannons(lvlData, player);
         updateProjectiles(lvlData, player);
+        coinManager.update();
+        coinManager.checkCoinTouched(player);
 
     }
 
@@ -229,11 +235,13 @@ public class ObjectManager {
         drawCannons(g, xLvlOffset);
         drawProjectiles(g, xLvlOffset);
         drawGrass(g, xLvlOffset);
+        coinManager.draw(g, xLvlOffset);
     }
 
     private void drawGrass(Graphics g, int xLvlOffset) {
         for (Grass grass : currentLevel.getGrass()) {
-            g.drawImage(grassImgs[grass.getType()], grass.getX() - xLvlOffset, grass.getY(), (int) (32 * Game.SCALE), (int) (32 * Game.SCALE), null);
+            g.drawImage(grassImgs[grass.getType()], grass.getX() - xLvlOffset, grass.getY(), (int) (32 * Game.SCALE),
+                    (int) (32 * Game.SCALE), null);
         }
     }
 
@@ -244,7 +252,8 @@ public class ObjectManager {
             if (type == 9) {
                 type = 8;
             }
-            g.drawImage(treeImgs[type - 7][bt.getAniIndex()], bt.getX() - xLvlOffset + GetTreeOffsetX(bt.getType()), (int) (bt.getY() + GetTreeOffsetY(bt.getType())), GetTreeWidth(bt.getType()),
+            g.drawImage(treeImgs[type - 7][bt.getAniIndex()], bt.getX() - xLvlOffset + GetTreeOffsetX(bt.getType()),
+                    (int) (bt.getY() + GetTreeOffsetY(bt.getType())), GetTreeWidth(bt.getType()),
                     GetTreeHeight(bt.getType()), null);
         }
     }
@@ -252,7 +261,8 @@ public class ObjectManager {
     private void drawProjectiles(Graphics g, int xLvlOffset) {
         for (Projectile p : projectiles) {
             if (p.isActive()) {
-                g.drawImage(cannonBallImg, (int) (p.getHitbox().x - xLvlOffset), (int) (p.getHitbox().y), CANNON_BALL_WIDTH, CANNON_BALL_HEIGHT, null);
+                g.drawImage(cannonBallImg, (int) (p.getHitbox().x - xLvlOffset), (int) (p.getHitbox().y),
+                        CANNON_BALL_WIDTH, CANNON_BALL_HEIGHT, null);
             }
         }
     }
@@ -272,7 +282,8 @@ public class ObjectManager {
 
     private void drawTraps(Graphics g, int xLvlOffset) {
         for (Spike s : currentLevel.getSpikes()) {
-            g.drawImage(spikeImg, (int) (s.getHitbox().x - xLvlOffset), (int) (s.getHitbox().y - s.getyDrawOffset()), SPIKE_WIDTH, SPIKE_HEIGHT, null);
+            g.drawImage(spikeImg, (int) (s.getHitbox().x - xLvlOffset), (int) (s.getHitbox().y - s.getyDrawOffset()),
+                    SPIKE_WIDTH, SPIKE_HEIGHT, null);
         }
 
     }
@@ -284,7 +295,9 @@ public class ObjectManager {
                 if (gc.getObjType() == BARREL) {
                     type = 1;
                 }
-                g.drawImage(containerImgs[type][gc.getAniIndex()], (int) (gc.getHitbox().x - gc.getxDrawOffset() - xLvlOffset), (int) (gc.getHitbox().y - gc.getyDrawOffset()), CONTAINER_WIDTH,
+                g.drawImage(containerImgs[type][gc.getAniIndex()],
+                        (int) (gc.getHitbox().x - gc.getxDrawOffset() - xLvlOffset),
+                        (int) (gc.getHitbox().y - gc.getyDrawOffset()), CONTAINER_WIDTH,
                         CONTAINER_HEIGHT, null);
             }
         }
@@ -297,7 +310,9 @@ public class ObjectManager {
                 if (p.getObjType() == RED_POTION) {
                     type = 1;
                 }
-                g.drawImage(potionImgs[type][p.getAniIndex()], (int) (p.getHitbox().x - p.getxDrawOffset() - xLvlOffset), (int) (p.getHitbox().y - p.getyDrawOffset()), POTION_WIDTH, POTION_HEIGHT,
+                g.drawImage(potionImgs[type][p.getAniIndex()],
+                        (int) (p.getHitbox().x - p.getxDrawOffset() - xLvlOffset),
+                        (int) (p.getHitbox().y - p.getyDrawOffset()), POTION_WIDTH, POTION_HEIGHT,
                         null);
             }
         }
@@ -314,5 +329,7 @@ public class ObjectManager {
         for (Cannon c : currentLevel.getCannons()) {
             c.reset();
         }
+        coinManager.reset();
+        coinManager.loadCoins(playing.getLevelManager().getCurrentLevel());
     }
 }

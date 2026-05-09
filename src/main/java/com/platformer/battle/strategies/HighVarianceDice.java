@@ -13,6 +13,6 @@ public class HighVarianceDice implements DamageStrategy {
 
     @Override
     public String describe() {
-        return "Your unleashed power storms the battlefield.";
+        return "The unleashed power storms the battlefield.";
     }
 }

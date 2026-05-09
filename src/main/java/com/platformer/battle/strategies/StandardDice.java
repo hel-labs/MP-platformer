@@ -13,6 +13,6 @@ public class StandardDice implements DamageStrategy {
 
     @Override
     public String describe() {
-        return "You rol the standard die.";
+        return "The standard die has been rolled.";
     }
 }

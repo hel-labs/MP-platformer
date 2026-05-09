@@ -2,6 +2,7 @@ package com.platformer.battle.core;
 
 public class BattleOutcome {
 
+    // Enum for all possible outcomes
     public enum Result {
         WIN, LOSE, FLEE
     }
@@ -9,11 +10,13 @@ public class BattleOutcome {
     public final Result result;
     public final int hpRemaining;
 
+    // Creates the result of the battle; used by Game.java
     public BattleOutcome(Result result, int hpRemaining) {
         this.result = result;
         this.hpRemaining = hpRemaining;
     }
 
+    // Accessors
     public boolean isWin() {
         return result == Result.WIN;
     }

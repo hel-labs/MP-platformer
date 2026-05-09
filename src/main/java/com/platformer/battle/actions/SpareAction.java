@@ -7,10 +7,12 @@ public class SpareAction extends BattleAction {
 
     @Override
     public BattleResult execute(BattleContext ctx) {
+        // Spare enemy if hostility is at stable stage
         if (ctx.getEnemy().isMercyReady(ctx)) {
             ctx.getEnemy().onSpared();
             return BattleResult.mercyGranted(ctx.getEnemy().getName());
         }
+        // Return hint if hostility still not low enough
         return BattleResult.hint(ctx.getEnemy().getMercyHint(ctx));
     }
 
