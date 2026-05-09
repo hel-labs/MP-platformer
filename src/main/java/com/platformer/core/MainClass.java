@@ -1,0 +1,13 @@
+package com.platformer.core;
+
+public class MainClass {
+
+    public static void main(String[] args) {
+
+        System.setProperty("sun.java2d.uiScale", "1");
+        System.setProperty("sun.java2d.dpiaware", "true");
+        new Game();
+
+    }
+
+}

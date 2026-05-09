@@ -1,0 +1,644 @@
+.
+├── bin
+│   └── main
+│       ├── com
+│       │   └── platformer
+│       │       ├── battle
+│       │       │   ├── actions
+│       │       │   │   ├── BattleAction.class
+│       │       │   │   ├── FightAction.class
+│       │       │   │   ├── FleeAction.class
+│       │       │   │   ├── SpareAction.class
+│       │       │   │   └── TalkAction.class
+│       │       │   ├── animation
+│       │       │   │   ├── Animation.class
+│       │       │   │   ├── AnimationController.class
+│       │       │   │   └── SpriteSheet.class
+│       │       │   ├── core
+│       │       │   │   ├── BattleManager.class
+│       │       │   │   ├── BattleOutcome$Result.class
+│       │       │   │   ├── BattleOutcome.class
+│       │       │   │   ├── BattleState$Phase.class
+│       │       │   │   └── BattleState.class
+│       │       │   ├── dialogue
+│       │       │   │   └── DialogueBox.class
+│       │       │   ├── engine
+│       │       │   │   ├── BattleContext.class
+│       │       │   │   ├── BattleEngine.class
+│       │       │   │   ├── BattleResult$Type.class
+│       │       │   │   └── BattleResult.class
+│       │       │   ├── entities
+│       │       │   │   ├── BattleEnemy.class
+│       │       │   │   ├── BattlePlayer.class
+│       │       │   │   ├── CrabbyBattleEnemy.class
+│       │       │   │   ├── PinkstarBattleEnemy.class
+│       │       │   │   ├── PlaceholderEnemy.class
+│       │       │   │   └── SharkBattleEnemy.class
+│       │       │   ├── strategies
+│       │       │   │   ├── DamageStrategy.class
+│       │       │   │   ├── EscalatingDice.class
+│       │       │   │   ├── HighVarianceDice.class
+│       │       │   │   ├── StandardDice.class
+│       │       │   │   └── WeakSteadyDice.class
+│       │       │   ├── talk
+│       │       │   │   └── TalkOption.class
+│       │       │   └── ui
+│       │       │       └── BattleUI.class
+│       │       ├── core
+│       │       │   ├── BattleSnapshot.class
+│       │       │   ├── Game.class
+│       │       │   ├── GamePanel.class
+│       │       │   ├── GameWindow$1.class
+│       │       │   ├── GameWindow.class
+│       │       │   └── MainClass.class
+│       │       ├── exceptions
+│       │       │   ├── BattleException.class
+│       │       │   ├── DataException.class
+│       │       │   ├── EnemyAlreadyDeadException.class
+│       │       │   └── GameException.class
+│       │       ├── gamestate
+│       │       │   ├── Credits$ShowEntity.class
+│       │       │   ├── Credits.class
+│       │       │   ├── GameOptions.class
+│       │       │   ├── Gamestate.class
+│       │       │   ├── State.class
+│       │       │   └── Statemethods.class
+│       │       ├── input
+│       │       │   ├── InputHandler$1.class
+│       │       │   ├── InputHandler$2.class
+│       │       │   ├── InputHandler.class
+│       │       │   └── MouseInputs.class
+│       │       ├── overworld
+│       │       │   ├── effects
+│       │       │   │   ├── DialogueEffect.class
+│       │       │   │   └── Rain.class
+│       │       │   ├── entities
+│       │       │   │   ├── Crabby.class
+│       │       │   │   ├── Enemy.class
+│       │       │   │   ├── EnemyManager.class
+│       │       │   │   ├── Entity.class
+│       │       │   │   ├── Pinkstar.class
+│       │       │   │   ├── Player.class
+│       │       │   │   └── Shark.class
+│       │       │   ├── levels
+│       │       │   │   ├── Level.class
+│       │       │   │   └── LevelManager.class
+│       │       │   ├── objects
+│       │       │   │   ├── BackgroundTree.class
+│       │       │   │   ├── Cannon.class
+│       │       │   │   ├── GameContainer.class
+│       │       │   │   ├── GameObject.class
+│       │       │   │   ├── Grass.class
+│       │       │   │   ├── ObjectManager.class
+│       │       │   │   ├── Potion.class
+│       │       │   │   ├── Projectile.class
+│       │       │   │   └── Spike.class
+│       │       │   ├── states
+│       │       │   │   ├── Menu.class
+│       │       │   │   └── Playing.class
+│       │       │   ├── ui
+│       │       │   │   ├── AudioOptions.class
+│       │       │   │   ├── GameCompletedOverlay.class
+│       │       │   │   ├── GameOverOverlay.class
+│       │       │   │   ├── LevelCompletedOverlay.class
+│       │       │   │   ├── MenuButton.class
+│       │       │   │   ├── PauseButton.class
+│       │       │   │   ├── PauseOverlay.class
+│       │       │   │   ├── SoundButton.class
+│       │       │   │   ├── UrmButton.class
+│       │       │   │   └── VolumeButton.class
+│       │       │   └── utils
+│       │       │       ├── Constants$Dialogue.class
+│       │       │       ├── Constants$Directions.class
+│       │       │       ├── Constants$EnemyConstants.class
+│       │       │       ├── Constants$Environment.class
+│       │       │       ├── Constants$ObjectConstants.class
+│       │       │       ├── Constants$PlayerConstants.class
+│       │       │       ├── Constants$Projectiles.class
+│       │       │       ├── Constants$UI$Buttons.class
+│       │       │       ├── Constants$UI$PauseButtons.class
+│       │       │       ├── Constants$UI$URMButtons.class
+│       │       │       ├── Constants$UI$VolumeButtons.class
+│       │       │       ├── Constants$UI.class
+│       │       │       ├── Constants.class
+│       │       │       ├── HelpMethods.class
+│       │       │       └── LoadSave.class
+│       │       └── utils
+│       │           ├── AudioPlayer.class
+│       │           ├── GameLogger.class
+│       │           └── ScreenShake.class
+│       └── res
+│           ├── audio
+│           │   ├── attack1.wav
+│           │   ├── attack2.wav
+│           │   ├── attack3.wav
+│           │   ├── dead.wav
+│           │   ├── die.wav
+│           │   ├── gameover.wav
+│           │   ├── jump.wav
+│           │   ├── level1.wav
+│           │   ├── level2.wav
+│           │   ├── lvlcompleted.wav
+│           │   └── menu.wav
+│           ├── background_menu.png
+│           ├── ball.png
+│           ├── big_clouds.png
+│           ├── button_atlas.png
+│           ├── cannon_atlas.png
+│           ├── completed_sprite.png
+│           ├── crabby_sprite.png
+│           ├── credits_list.png
+│           ├── death_screen.png
+│           ├── exclamation_atlas.png
+│           ├── game_completed.png
+│           ├── grass_atlas.png
+│           ├── health_power_bar.png
+│           ├── level_one_data_long.png
+│           ├── level_one_data.png
+│           ├── lvls
+│           │   ├── 1.png
+│           │   ├── 2.png
+│           │   ├── 3.png
+│           │   ├── 4.png
+│           │   └── 5.png
+│           ├── menu_background.png
+│           ├── objects_sprites.png
+│           ├── options_background.png
+│           ├── outside_sprites.png
+│           ├── outside_sprites.tsx
+│           ├── pause_menu.png
+│           ├── pinkstar_atlas.png
+│           ├── player_sprites.png
+│           ├── playing_bg_img.png
+│           ├── potions_sprites.png
+│           ├── question_atlas.png
+│           ├── rain_particle.png
+│           ├── shark_atlas.png
+│           ├── ship.png
+│           ├── small_clouds.png
+│           ├── sound_button.png
+│           ├── trap_atlas.png
+│           ├── tree_one_atlas.png
+│           ├── tree_two_atlas.png
+│           ├── urm_buttons.png
+│           ├── volume_buttons.png
+│           ├── water_atlas_animation.png
+│           └── water.png
+├── build
+│   ├── classes
+│   │   └── java
+│   │       └── main
+│   │           └── com
+│   │               └── platformer
+│   │                   ├── battle
+│   │                   │   ├── actions
+│   │                   │   │   ├── BattleAction.class
+│   │                   │   │   ├── FightAction.class
+│   │                   │   │   ├── FleeAction.class
+│   │                   │   │   ├── SpareAction.class
+│   │                   │   │   └── TalkAction.class
+│   │                   │   ├── animation
+│   │                   │   │   ├── Animation.class
+│   │                   │   │   ├── AnimationController.class
+│   │                   │   │   └── SpriteSheet.class
+│   │                   │   ├── core
+│   │                   │   │   ├── BattleManager.class
+│   │                   │   │   ├── BattleOutcome$Result.class
+│   │                   │   │   ├── BattleOutcome.class
+│   │                   │   │   ├── BattleState$1.class
+│   │                   │   │   ├── BattleState$Phase.class
+│   │                   │   │   └── BattleState.class
+│   │                   │   ├── dialogue
+│   │                   │   │   └── DialogueBox.class
+│   │                   │   ├── engine
+│   │                   │   │   ├── BattleContext.class
+│   │                   │   │   ├── BattleEngine.class
+│   │                   │   │   ├── BattleResult$Type.class
+│   │                   │   │   └── BattleResult.class
+│   │                   │   ├── entities
+│   │                   │   │   ├── BattleEnemy.class
+│   │                   │   │   ├── BattlePlayer.class
+│   │                   │   │   ├── CrabbyBattleEnemy.class
+│   │                   │   │   ├── PinkstarBattleEnemy.class
+│   │                   │   │   ├── PlaceholderEnemy.class
+│   │                   │   │   └── SharkBattleEnemy.class
+│   │                   │   ├── strategies
+│   │                   │   │   ├── DamageStrategy.class
+│   │                   │   │   ├── EscalatingDice.class
+│   │                   │   │   ├── HighVarianceDice.class
+│   │                   │   │   ├── StandardDice.class
+│   │                   │   │   └── WeakSteadyDice.class
+│   │                   │   ├── talk
+│   │                   │   │   └── TalkOption.class
+│   │                   │   └── ui
+│   │                   │       └── BattleUI.class
+│   │                   ├── core
+│   │                   │   ├── BattleSnapshot.class
+│   │                   │   ├── Game$1.class
+│   │                   │   ├── Game.class
+│   │                   │   ├── GamePanel.class
+│   │                   │   ├── GameWindow$1.class
+│   │                   │   ├── GameWindow.class
+│   │                   │   └── MainClass.class
+│   │                   ├── exceptions
+│   │                   │   ├── BattleException.class
+│   │                   │   ├── DataException.class
+│   │                   │   ├── EnemyAlreadyDeadException.class
+│   │                   │   └── GameException.class
+│   │                   ├── gamestate
+│   │                   │   ├── Credits$ShowEntity.class
+│   │                   │   ├── Credits.class
+│   │                   │   ├── GameOptions.class
+│   │                   │   ├── Gamestate.class
+│   │                   │   ├── State$1.class
+│   │                   │   ├── State.class
+│   │                   │   └── Statemethods.class
+│   │                   ├── input
+│   │                   │   ├── InputHandler$1.class
+│   │                   │   ├── InputHandler$2.class
+│   │                   │   ├── InputHandler.class
+│   │                   │   ├── MouseInputs$1.class
+│   │                   │   └── MouseInputs.class
+│   │                   ├── overworld
+│   │                   │   ├── effects
+│   │                   │   │   ├── DialogueEffect.class
+│   │                   │   │   └── Rain.class
+│   │                   │   ├── entities
+│   │                   │   │   ├── Crabby.class
+│   │                   │   │   ├── Enemy.class
+│   │                   │   │   ├── EnemyManager.class
+│   │                   │   │   ├── Entity.class
+│   │                   │   │   ├── Pinkstar.class
+│   │                   │   │   ├── Player.class
+│   │                   │   │   └── Shark.class
+│   │                   │   ├── levels
+│   │                   │   │   ├── Level.class
+│   │                   │   │   └── LevelManager.class
+│   │                   │   ├── objects
+│   │                   │   │   ├── BackgroundTree.class
+│   │                   │   │   ├── Cannon.class
+│   │                   │   │   ├── GameContainer.class
+│   │                   │   │   ├── GameObject.class
+│   │                   │   │   ├── Grass.class
+│   │                   │   │   ├── ObjectManager.class
+│   │                   │   │   ├── Potion.class
+│   │                   │   │   ├── Projectile.class
+│   │                   │   │   └── Spike.class
+│   │                   │   ├── states
+│   │                   │   │   ├── Menu.class
+│   │                   │   │   └── Playing.class
+│   │                   │   ├── ui
+│   │                   │   │   ├── AudioOptions.class
+│   │                   │   │   ├── GameCompletedOverlay.class
+│   │                   │   │   ├── GameOverOverlay.class
+│   │                   │   │   ├── LevelCompletedOverlay.class
+│   │                   │   │   ├── MenuButton.class
+│   │                   │   │   ├── PauseButton.class
+│   │                   │   │   ├── PauseOverlay.class
+│   │                   │   │   ├── SoundButton.class
+│   │                   │   │   ├── UrmButton.class
+│   │                   │   │   └── VolumeButton.class
+│   │                   │   └── utils
+│   │                   │       ├── Constants$Dialogue.class
+│   │                   │       ├── Constants$Directions.class
+│   │                   │       ├── Constants$EnemyConstants.class
+│   │                   │       ├── Constants$Environment.class
+│   │                   │       ├── Constants$ObjectConstants.class
+│   │                   │       ├── Constants$PlayerConstants.class
+│   │                   │       ├── Constants$Projectiles.class
+│   │                   │       ├── Constants$UI$Buttons.class
+│   │                   │       ├── Constants$UI$PauseButtons.class
+│   │                   │       ├── Constants$UI$URMButtons.class
+│   │                   │       ├── Constants$UI$VolumeButtons.class
+│   │                   │       ├── Constants$UI.class
+│   │                   │       ├── Constants.class
+│   │                   │       ├── HelpMethods.class
+│   │                   │       └── LoadSave.class
+│   │                   └── utils
+│   │                       ├── AudioPlayer.class
+│   │                       ├── GameLogger.class
+│   │                       └── ScreenShake.class
+│   ├── generated
+│   │   └── sources
+│   │       ├── annotationProcessor
+│   │       │   └── java
+│   │       │       └── main
+│   │       └── headers
+│   │           └── java
+│   │               └── main
+│   ├── resources
+│   │   └── main
+│   │       └── res
+│   │           ├── audio
+│   │           │   ├── attack1.wav
+│   │           │   ├── attack2.wav
+│   │           │   ├── attack3.wav
+│   │           │   ├── dead.wav
+│   │           │   ├── die.wav
+│   │           │   ├── gameover.wav
+│   │           │   ├── jump.wav
+│   │           │   ├── level1.wav
+│   │           │   ├── level2.wav
+│   │           │   ├── lvlcompleted.wav
+│   │           │   └── menu.wav
+│   │           ├── background_menu.png
+│   │           ├── ball.png
+│   │           ├── big_clouds.png
+│   │           ├── button_atlas.png
+│   │           ├── cannon_atlas.png
+│   │           ├── completed_sprite.png
+│   │           ├── crabby_sprite.png
+│   │           ├── credits_list.png
+│   │           ├── death_screen.png
+│   │           ├── exclamation_atlas.png
+│   │           ├── game_completed.png
+│   │           ├── grass_atlas.png
+│   │           ├── health_power_bar.png
+│   │           ├── level_one_data_long.png
+│   │           ├── level_one_data.png
+│   │           ├── lvls
+│   │           │   ├── 1.png
+│   │           │   ├── 2.png
+│   │           │   ├── 3.png
+│   │           │   ├── 4.png
+│   │           │   └── 5.png
+│   │           ├── menu_background.png
+│   │           ├── objects_sprites.png
+│   │           ├── options_background.png
+│   │           ├── outside_sprites.png
+│   │           ├── outside_sprites.tsx
+│   │           ├── pause_menu.png
+│   │           ├── pinkstar_atlas.png
+│   │           ├── player_sprites.png
+│   │           ├── playing_bg_img.png
+│   │           ├── potions_sprites.png
+│   │           ├── question_atlas.png
+│   │           ├── rain_particle.png
+│   │           ├── shark_atlas.png
+│   │           ├── ship.png
+│   │           ├── small_clouds.png
+│   │           ├── sound_button.png
+│   │           ├── trap_atlas.png
+│   │           ├── tree_one_atlas.png
+│   │           ├── tree_two_atlas.png
+│   │           ├── urm_buttons.png
+│   │           ├── volume_buttons.png
+│   │           ├── water_atlas_animation.png
+│   │           └── water.png
+│   └── tmp
+│       └── compileJava
+│           ├── compileTransaction
+│           │   ├── backup-dir
+│           │   └── stash-dir
+│           │       ├── AudioOptions.class.uniqueId27
+│           │       ├── AudioPlayer.class.uniqueId30
+│           │       ├── BattleState$1.class.uniqueId50
+│           │       ├── BattleState$Phase.class.uniqueId15
+│           │       ├── BattleState.class.uniqueId1
+│           │       ├── BattleUI.class.uniqueId24
+│           │       ├── Cannon.class.uniqueId49
+│           │       ├── Constants$Dialogue.class.uniqueId46
+│           │       ├── Constants$Directions.class.uniqueId36
+│           │       ├── Constants$EnemyConstants.class.uniqueId51
+│           │       ├── Constants$Environment.class.uniqueId11
+│           │       ├── Constants$ObjectConstants.class.uniqueId31
+│           │       ├── Constants$PlayerConstants.class.uniqueId52
+│           │       ├── Constants$Projectiles.class.uniqueId40
+│           │       ├── Constants$UI$Buttons.class.uniqueId12
+│           │       ├── Constants$UI$PauseButtons.class.uniqueId56
+│           │       ├── Constants$UI$URMButtons.class.uniqueId44
+│           │       ├── Constants$UI$VolumeButtons.class.uniqueId28
+│           │       ├── Constants$UI.class.uniqueId13
+│           │       ├── Constants.class.uniqueId2
+│           │       ├── Crabby.class.uniqueId9
+│           │       ├── Credits$ShowEntity.class.uniqueId47
+│           │       ├── Credits.class.uniqueId48
+│           │       ├── DialogueBox.class.uniqueId26
+│           │       ├── DialogueEffect.class.uniqueId6
+│           │       ├── Enemy.class.uniqueId33
+│           │       ├── EnemyManager.class.uniqueId20
+│           │       ├── Entity.class.uniqueId45
+│           │       ├── Game$1.class.uniqueId10
+│           │       ├── Game.class.uniqueId59
+│           │       ├── GameCompletedOverlay.class.uniqueId32
+│           │       ├── GameContainer.class.uniqueId19
+│           │       ├── GameObject.class.uniqueId55
+│           │       ├── GameOptions.class.uniqueId17
+│           │       ├── GameOverOverlay.class.uniqueId16
+│           │       ├── GamePanel.class.uniqueId4
+│           │       ├── GameWindow$1.class.uniqueId23
+│           │       ├── GameWindow.class.uniqueId60
+│           │       ├── HelpMethods.class.uniqueId61
+│           │       ├── Level.class.uniqueId54
+│           │       ├── LevelCompletedOverlay.class.uniqueId18
+│           │       ├── LevelManager.class.uniqueId7
+│           │       ├── MainClass.class.uniqueId34
+│           │       ├── MenuButton.class.uniqueId35
+│           │       ├── Menu.class.uniqueId42
+│           │       ├── MouseInputs$1.class.uniqueId8
+│           │       ├── MouseInputs.class.uniqueId53
+│           │       ├── ObjectManager.class.uniqueId29
+│           │       ├── PauseOverlay.class.uniqueId21
+│           │       ├── Pinkstar.class.uniqueId5
+│           │       ├── Player.class.uniqueId0
+│           │       ├── Playing.class.uniqueId3
+│           │       ├── Potion.class.uniqueId57
+│           │       ├── Projectile.class.uniqueId38
+│           │       ├── Rain.class.uniqueId14
+│           │       ├── Shark.class.uniqueId41
+│           │       ├── SoundButton.class.uniqueId58
+│           │       ├── Spike.class.uniqueId43
+│           │       ├── State$1.class.uniqueId39
+│           │       ├── State.class.uniqueId22
+│           │       ├── UrmButton.class.uniqueId25
+│           │       └── VolumeButton.class.uniqueId37
+│           └── previous-compilation-data.bin
+├── build.gradle
+├── Documentation
+│   ├── Development Documentation.md
+│   ├── Technical_Implementations.md
+│   └── To-Do.md
+├── eclipse-formatter.xml
+├── gradle
+│   └── wrapper
+│       ├── gradle-wrapper.jar
+│       └── gradle-wrapper.properties
+├── gradlew
+├── gradlew.bat
+├── LICENSE
+├── PROGRESS.md
+├── README.md
+├── src
+│   └── main
+│       ├── java
+│       │   └── com
+│       │       └── platformer
+│       │           ├── battle
+│       │           │   ├── actions
+│       │           │   │   ├── BattleAction.java
+│       │           │   │   ├── FightAction.java
+│       │           │   │   ├── FleeAction.java
+│       │           │   │   ├── SpareAction.java
+│       │           │   │   └── TalkAction.java
+│       │           │   ├── animation
+│       │           │   │   ├── AnimationController.java
+│       │           │   │   ├── Animation.java
+│       │           │   │   └── SpriteSheet.java
+│       │           │   ├── core
+│       │           │   │   ├── BattleManager.java
+│       │           │   │   ├── BattleOutcome.java
+│       │           │   │   └── BattleState.java
+│       │           │   ├── dialogue
+│       │           │   │   └── DialogueBox.java
+│       │           │   ├── engine
+│       │           │   │   ├── BattleContext.java
+│       │           │   │   ├── BattleEngine.java
+│       │           │   │   └── BattleResult.java
+│       │           │   ├── entities
+│       │           │   │   ├── BattleEnemy.java
+│       │           │   │   ├── BattlePlayer.java
+│       │           │   │   ├── BlueSlime.java
+│       │           │   │   ├── CrabbyBattleEnemy.java
+│       │           │   │   ├── GreenSlime.java
+│       │           │   │   ├── PinkstarBattleEnemy.java
+│       │           │   │   ├── PlaceholderEnemy.java
+│       │           │   │   ├── RedSline.java
+│       │           │   │   └── SharkBattleEnemy.java
+│       │           │   ├── strategies
+│       │           │   │   ├── DamageStrategy.java
+│       │           │   │   ├── EscalatingDice.java
+│       │           │   │   ├── HighVarianceDice.java
+│       │           │   │   ├── StandardDice.java
+│       │           │   │   └── WeakSteadyDice.java
+│       │           │   ├── talk
+│       │           │   │   └── TalkOption.java
+│       │           │   └── ui
+│       │           │       └── BattleUI.java
+│       │           ├── core
+│       │           │   ├── BattleSnapshot.java
+│       │           │   ├── Game.java
+│       │           │   ├── GamePanel.java
+│       │           │   ├── GameWindow.java
+│       │           │   └── MainClass.java
+│       │           ├── exceptions
+│       │           │   ├── BattleException.java
+│       │           │   ├── DataException.java
+│       │           │   ├── EnemyAlreadyDeadException.java
+│       │           │   └── GameException.java
+│       │           ├── gamestate
+│       │           │   ├── Credits.java
+│       │           │   ├── GameOptions.java
+│       │           │   ├── Gamestate.java
+│       │           │   ├── State.java
+│       │           │   └── Statemethods.java
+│       │           ├── input
+│       │           │   ├── InputHandler.java
+│       │           │   └── MouseInputs.java
+│       │           ├── overworld
+│       │           │   ├── effects
+│       │           │   │   ├── DialogueEffect.java
+│       │           │   │   └── Rain.java
+│       │           │   ├── entities
+│       │           │   │   ├── Crabby.java
+│       │           │   │   ├── Enemy.java
+│       │           │   │   ├── EnemyManager.java
+│       │           │   │   ├── Entity.java
+│       │           │   │   ├── Pinkstar.java
+│       │           │   │   ├── Player.java
+│       │           │   │   └── Shark.java
+│       │           │   ├── levels
+│       │           │   │   ├── Level.java
+│       │           │   │   └── LevelManager.java
+│       │           │   ├── objects
+│       │           │   │   ├── BackgroundTree.java
+│       │           │   │   ├── Cannon.java
+│       │           │   │   ├── GameContainer.java
+│       │           │   │   ├── GameObject.java
+│       │           │   │   ├── Grass.java
+│       │           │   │   ├── ObjectManager.java
+│       │           │   │   ├── Potion.java
+│       │           │   │   ├── Projectile.java
+│       │           │   │   └── Spike.java
+│       │           │   ├── states
+│       │           │   │   ├── Menu.java
+│       │           │   │   └── Playing.java
+│       │           │   ├── ui
+│       │           │   │   ├── AudioOptions.java
+│       │           │   │   ├── GameCompletedOverlay.java
+│       │           │   │   ├── GameOverOverlay.java
+│       │           │   │   ├── LevelCompletedOverlay.java
+│       │           │   │   ├── MenuButton.java
+│       │           │   │   ├── PauseButton.java
+│       │           │   │   ├── PauseOverlay.java
+│       │           │   │   ├── SoundButton.java
+│       │           │   │   ├── UrmButton.java
+│       │           │   │   └── VolumeButton.java
+│       │           │   └── utils
+│       │           │       ├── Constants.java
+│       │           │       ├── HelpMethods.java
+│       │           │       └── LoadSave.java
+│       │           └── utils
+│       │               ├── AudioPlayer.java
+│       │               ├── GameLogger.java
+│       │               └── ScreenShake.java
+│       └── resources
+│           └── res
+│               ├── audio
+│               │   ├── attack1.wav
+│               │   ├── attack2.wav
+│               │   ├── attack3.wav
+│               │   ├── dead.wav
+│               │   ├── die.wav
+│               │   ├── gameover.wav
+│               │   ├── jump.wav
+│               │   ├── level1.wav
+│               │   ├── level2.wav
+│               │   ├── lvlcompleted.wav
+│               │   └── menu.wav
+│               ├── background_menu.png
+│               ├── ball.png
+│               ├── big_clouds.png
+│               ├── button_atlas.png
+│               ├── cannon_atlas.png
+│               ├── completed_sprite.png
+│               ├── crabby_sprite.png
+│               ├── credits_list.png
+│               ├── death_screen.png
+│               ├── exclamation_atlas.png
+│               ├── game_completed.png
+│               ├── grass_atlas.png
+│               ├── health_power_bar.png
+│               ├── level_one_data_long.png
+│               ├── level_one_data.png
+│               ├── lvls
+│               │   ├── 1.png
+│               │   ├── 2.png
+│               │   ├── 3.png
+│               │   ├── 4.png
+│               │   └── 5.png
+│               ├── menu_background.png
+│               ├── objects_sprites.png
+│               ├── options_background.png
+│               ├── outside_sprites.png
+│               ├── outside_sprites.tsx
+│               ├── pause_menu.png
+│               ├── pinkstar_atlas.png
+│               ├── player_sprites.png
+│               ├── playing_bg_img.png
+│               ├── potions_sprites.png
+│               ├── question_atlas.png
+│               ├── rain_particle.png
+│               ├── shark_atlas.png
+│               ├── ship.png
+│               ├── small_clouds.png
+│               ├── sound_button.png
+│               ├── trap_atlas.png
+│               ├── tree_one_atlas.png
+│               ├── tree_two_atlas.png
+│               ├── urm_buttons.png
+│               ├── volume_buttons.png
+│               ├── water_atlas_animation.png
+│               └── water.png
+└── tree.txt
+
+113 directories, 529 files
