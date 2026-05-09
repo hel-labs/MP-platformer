@@ -46,20 +46,33 @@ public class CoinManager {
         int cols = lvlData[0].length;
 
         // Collect spike tile columns to exclude
-        java.util.Set<Long> spikePositions = new java.util.HashSet<>();
+        java.util.Set<Long> excluded = new java.util.HashSet<>();
         for (com.platformer.overworld.objects.Spike s : level.getSpikes()) {
             int spikeCol = (int) (s.getHitbox().x / Game.TILES_SIZE);
             int spikeRow = (int) (s.getHitbox().y / Game.TILES_SIZE);
             // Block the spike tile row and one above it
-            spikePositions.add(encode(spikeCol, spikeRow));
-            spikePositions.add(encode(spikeCol, spikeRow - 1));
+            excluded.add(encode(spikeCol, spikeRow));
+            excluded.add(encode(spikeCol, spikeRow - 1));
+        }
+        // Exclude tiles occupied by potions
+        for (com.platformer.overworld.objects.Potion p : level.getPotions()) {
+            int pc = (int) (p.getHitbox().x / Game.TILES_SIZE);
+            int pr = (int) (p.getHitbox().y / Game.TILES_SIZE);
+            excluded.add(encode(pc, pr));
+        }
+
+        // Exclude tiles occupied by containers (box/barrel)
+        for (com.platformer.overworld.objects.GameContainer gc : level.getContainers()) {
+            int gc_c = (int) (gc.getHitbox().x / Game.TILES_SIZE);
+            int gc_r = (int) (gc.getHitbox().y / Game.TILES_SIZE);
+            excluded.add(encode(gc_c, gc_r));
         }
 
         // Finds locations without water/spikes etc.
         List<int[]> validPositions = new ArrayList<>();
         for (int row = 0; row < rows - 1; row++) {
             for (int col = 0; col < cols; col++) {
-                if (spikePositions.contains(encode(col, row)))
+                if (excluded.contains(encode(col, row)))
                     continue; // skip spike zones
                 int tileVal = lvlData[row][col];
                 if (tileVal == 11) {

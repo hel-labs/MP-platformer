@@ -60,6 +60,11 @@ public class AudioPlayer {
 
     private Clip getClip(String name) {
         URL url = getClass().getResource("/res/audio/" + name + ".wav");
+        if (url == null) {
+            System.err.println("Missing audio resource: /res/audio/" + name + ".wav");
+            return null;
+        }
+
         AudioInputStream audio;
 
         try {
@@ -84,17 +89,14 @@ public class AudioPlayer {
     }
 
     public void stopSong() {
-        if (songs[currentSongId].isActive()) {
-            songs[currentSongId].stop();
+        Clip current = songs[currentSongId];
+        if (current != null && current.isRunning()) {
+            current.stop();
         }
     }
 
     public void setLevelSong(int lvlIndex) {
-        if (lvlIndex % 2 == 0) {
-            playSong(LEVEL_1);
-        } else {
-            playSong(LEVEL_2);
-        }
+        playSong(LEVEL_1);
     }
 
     public void setBattleSong() {
@@ -113,6 +115,10 @@ public class AudioPlayer {
     }
 
     public void playEffect(int effect) {
+        if (effect < 0 || effect >= effects.length || effects[effect] == null) {
+            return;
+        }
+
         if (effects[effect].getMicrosecondPosition() > 0) {
             effects[effect].setMicrosecondPosition(0);
         }
@@ -120,6 +126,10 @@ public class AudioPlayer {
     }
 
     public void playSong(int song) {
+        if (song < 0 || song >= songs.length || songs[song] == null) {
+            return;
+        }
+
         stopSong();
 
         currentSongId = song;
@@ -131,16 +141,20 @@ public class AudioPlayer {
     public void toggleSongMute() {
         this.songMute = !songMute;
         for (Clip c : songs) {
-            BooleanControl booleanControl = (BooleanControl) c.getControl(BooleanControl.Type.MUTE);
-            booleanControl.setValue(songMute);
+            if (c != null) {
+                BooleanControl booleanControl = (BooleanControl) c.getControl(BooleanControl.Type.MUTE);
+                booleanControl.setValue(songMute);
+            }
         }
     }
 
     public void toggleEffectMute() {
         this.effectMute = !effectMute;
         for (Clip c : effects) {
-            BooleanControl booleanControl = (BooleanControl) c.getControl(BooleanControl.Type.MUTE);
-            booleanControl.setValue(effectMute);
+            if (c != null) {
+                BooleanControl booleanControl = (BooleanControl) c.getControl(BooleanControl.Type.MUTE);
+                booleanControl.setValue(effectMute);
+            }
         }
         if (!effectMute) {
             playEffect(JUMP);
@@ -149,7 +163,12 @@ public class AudioPlayer {
 
     private void updateSongVolume() {
 
-        FloatControl gainControl = (FloatControl) songs[currentSongId].getControl(FloatControl.Type.MASTER_GAIN);
+        Clip current = songs[currentSongId];
+        if (current == null) {
+            return;
+        }
+
+        FloatControl gainControl = (FloatControl) current.getControl(FloatControl.Type.MASTER_GAIN);
         float range = gainControl.getMaximum() - gainControl.getMinimum();
         float gain = (range * volume) + gainControl.getMinimum();
         gainControl.setValue(gain);
@@ -158,10 +177,12 @@ public class AudioPlayer {
 
     private void updateEffectsVolume() {
         for (Clip c : effects) {
-            FloatControl gainControl = (FloatControl) c.getControl(FloatControl.Type.MASTER_GAIN);
-            float range = gainControl.getMaximum() - gainControl.getMinimum();
-            float gain = (range * volume) + gainControl.getMinimum();
-            gainControl.setValue(gain);
+            if (c != null) {
+                FloatControl gainControl = (FloatControl) c.getControl(FloatControl.Type.MASTER_GAIN);
+                float range = gainControl.getMaximum() - gainControl.getMinimum();
+                float gain = (range * volume) + gainControl.getMinimum();
+                gainControl.setValue(gain);
+            }
         }
     }
 

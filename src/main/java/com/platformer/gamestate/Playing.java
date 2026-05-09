@@ -534,6 +534,9 @@ public class Playing extends State implements Statemethods {
         if (jump) {
             player.requestJump();
         }
+        if(inputHandler.isJustPressed(InputHandler.CONFIRM)){
+            player.setAttacking(true);
+        }
     }
 
     public boolean isBattleTriggered() {
