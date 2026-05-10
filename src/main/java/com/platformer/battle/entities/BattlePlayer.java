@@ -1,8 +1,12 @@
 package com.platformer.battle.entities;
 
 import com.platformer.battle.strategies.DamageStrategy;
+import com.platformer.battle.strategies.EscalatingDice;
+import com.platformer.battle.strategies.HighVarianceDice;
 import com.platformer.battle.strategies.StandardDice;
+import com.platformer.battle.strategies.WeakSteadyDice;
 import com.platformer.core.BattleSnapshot;
+
 import com.platformer.battle.animation.*;
 
 public class BattlePlayer {
@@ -12,7 +16,12 @@ public class BattlePlayer {
     private int attack;
     private int stamina;
     private int maxStamina;
-    private final DamageStrategy damageStrategy = new StandardDice();
+    public DamageStrategy[] damageStrategies = {
+            new StandardDice(),
+            new EscalatingDice(),
+            new WeakSteadyDice(),
+            new HighVarianceDice()
+    };
     private AnimationController animator;
 
     public BattlePlayer(BattleSnapshot snapshot) {
@@ -81,6 +90,6 @@ public class BattlePlayer {
     }
 
     public DamageStrategy getDamageStrategy() {
-        return damageStrategy;
+        return damageStrategies[(int) (0 + Math.random() * damageStrategies.length)];
     }
 }

@@ -5,6 +5,10 @@ import com.platformer.battle.animation.AnimationController;
 import com.platformer.battle.animation.SpriteSheet;
 import com.platformer.battle.engine.BattleContext;
 import com.platformer.battle.strategies.DamageStrategy;
+import com.platformer.battle.strategies.EscalatingDice;
+import com.platformer.battle.strategies.HighVarianceDice;
+import com.platformer.battle.strategies.StandardDice;
+import com.platformer.battle.strategies.WeakSteadyDice;
 import com.platformer.battle.talk.TalkOption;
 import java.awt.image.BufferedImage;
 
@@ -18,6 +22,13 @@ public abstract class BattleEnemy {
     protected boolean fleeAllowed = true;
     protected AnimationController animator;
     protected BufferedImage battleSprite;
+
+    public DamageStrategy[] damageStrategies = {
+            new StandardDice(),
+            new EscalatingDice(),
+            new WeakSteadyDice(),
+            new HighVarianceDice()
+    };
 
     public abstract String getName();
 

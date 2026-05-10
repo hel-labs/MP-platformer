@@ -32,7 +32,7 @@ public class PinkstarBattleEnemy extends BattleEnemy {
 
     @Override
     public DamageStrategy getDamageStrategy() {
-        return new HighVarianceDice();
+        return damageStrategies[(int) (0 + Math.random() * damageStrategies.length)];
     }
 
     @Override

@@ -8,8 +8,6 @@ import java.util.List;
 
 public class SharkBattleEnemy extends BattleEnemy {
 
-    private final EscalatingDice strategy = new EscalatingDice();
-
     public SharkBattleEnemy() {
         this.hp = 30;
         this.maxHp = 30;
@@ -35,7 +33,7 @@ public class SharkBattleEnemy extends BattleEnemy {
 
     @Override
     public DamageStrategy getDamageStrategy() {
-        return strategy;
+        return damageStrategies[(int) (0 + Math.random() * damageStrategies.length)];
     }
 
     @Override

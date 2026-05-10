@@ -32,7 +32,7 @@ public class CrabbyBattleEnemy extends BattleEnemy {
 
     @Override
     public DamageStrategy getDamageStrategy() {
-        return new StandardDice();
+        return damageStrategies[(int) (0 + Math.random() * damageStrategies.length)];
     }
 
     @Override
