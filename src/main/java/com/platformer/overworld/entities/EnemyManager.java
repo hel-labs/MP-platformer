@@ -65,7 +65,7 @@ public class EnemyManager {
         }
 
         if (!isAnyActive) {
-            npc.setActive(true);
+            playing.setLevelCompleted(true);
         }
 
         if (npc.isActive()) {
